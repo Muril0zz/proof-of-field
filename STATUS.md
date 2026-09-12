@@ -27,6 +27,13 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 - **Buyer com LLM testado na HSK** (`NETWORK=hsk-testnet pnpm buyer:ai "..."`): compra as conformes, recusa a de 26 ha, escreve relatório em docs/reports/. ~70 s por execução. Limite diário da AgentWallet subiu pra 300 MockUSDT (token de teste, sem valor).
 - Chave da Anthropic está no .env (fora do git). **Rotacionar depois do evento**, ela passou pelo chat.
 
+## FEITO 12/09 ~11:00
+- **Lote com vários produtores**: Fazenda A (porta 4020, imóveis …9C62 e …4C8E) e Fazenda B (porta 4021, chave FARMER2, imóvel …0A28). `./scripts/dev-up.sh` sobe os dois. Buyer LLM recebe a lista de agentes.
+- Atestados carregam o **número do CAR** (polígono oficial); comprador pula "unregistered" por padrão. Fora da cobertura PRODES → recusa (422).
+- `registry_stats`: lê o registro on-chain (4 atestados, 2 produtores). Corrida de recibo entre RPCs corrigida (retry dos dois lados).
+- Deck depersonalizado: sem Nixar/Abunã/nome; slide 2 com as grandes tradings; slide 8 "built to scale".
+- Comando da demo: `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021`
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).
