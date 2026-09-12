@@ -28,7 +28,7 @@ button { font: inherit; color: inherit; }
 code, .mono { font-family: var(--mono); font-size: 12px; }
 
 .app { display: grid; grid-template-columns: 400px 1fr; height: 100%; }
-@media (max-width: 960px) { .app { grid-template-columns: 350px 1fr; } .map-ui.bl { display: none; } .brand small { display: none; } .panel-head { padding: 12px 14px; } .chip { font-size: 11px; padding: 3px 7px; } .section { padding: 14px; } }
+@media (max-width: 960px) { .app { grid-template-columns: 350px 1fr; } .map-ui.bl { display: none; } .panel-head .brand small { display: none; } .panel-head .chip { display: none; } .panel-head { padding: 12px 14px; } .section { padding: 14px; } }
 @media (max-width: 560px) { .app { grid-template-columns: 1fr; grid-template-rows: 1fr 46vh; } .panel { order: 2; border-right: 0; border-top: 1px solid var(--line); } .panel-head { flex-wrap: wrap; } }
 
 /* ---------- panel ---------- */
