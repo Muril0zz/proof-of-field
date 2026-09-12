@@ -36,7 +36,7 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
    ```
    Explorer: https://testnet-explorer.hsk.xyz
 5. **Renomear os imóveis** em `data/samples.json` se algum for a sua fazenda de verdade (hoje estão como "CAR …9C62 · Porto Velho/RO"). Não inventei nomes de propósito.
-6. **Slides**: montar a partir de `docs/PITCH.md` (8 slides). Usar os screenshots de `docs/shots/`.
+6. **Slides**: deck HTML pronto em `docs/slides/index.html` (abrir no Chrome, F = fullscreen, ← → navega, P = imprimir PDF). Ajustar slide 8 (link do GitHub) e o que quiser. Roteiro e Q&A em `docs/PITCH.md`.
 7. **Gravar vídeo de backup** da demo assim que a HSK estiver funcionando.
 
 ## Riscos / fragilidades que sobraram
