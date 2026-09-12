@@ -165,8 +165,14 @@ app.get('/proof/:hash', async (c) => {
   let payment; try { payment = decodePayment(header); } catch { return c.json({ error: 'bad X-PAYMENT' }, 400); }
   const tx = payment.payload.txHash;
   if (usedPayments.has(tx)) return c.json({ error: 'payment already used' }, 402);
-  const receipt = await pub.getTransactionReceipt({ hash: tx }).catch(() => null);
-  if (!receipt || receipt.status !== 'success') return c.json({ error: 'payment tx not found/failed' }, 402);
+  // Public RPCs are load-balanced: a tx the buyer just saw mined may not be visible on the node we hit. Retry briefly.
+  let receipt: any = null;
+  for (let i = 0; i < 12 && !receipt; i++) {
+    receipt = await pub.getTransactionReceipt({ hash: tx }).catch(() => null);
+    if (!receipt) await new Promise((r) => setTimeout(r, 1000));
+  }
+  if (!receipt) return c.json({ error: 'payment tx not found (yet)', retry: true }, 402);
+  if (receipt.status !== 'success') return c.json({ error: 'payment tx failed' }, 402);
   const transfers = (parseEventLogs({ abi: usdtAbi as any, logs: receipt.logs, eventName: 'Transfer' }) as any[])
     .filter((l) => l.address.toLowerCase() === dep.usdt.toLowerCase() && (l.args as any).to.toLowerCase() === account.address.toLowerCase());
   const paid = transfers.reduce((s, l) => s + BigInt((l.args as any).value), 0n);

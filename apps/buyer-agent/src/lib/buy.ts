@@ -102,7 +102,15 @@ export async function buyProof(url: string, log: Log = silentLog): Promise<BuyRe
   log.info(explorerTx(NETWORK, payTx));
 
   log.step(3, 'Retrying with X-PAYMENT');
-  const r2 = await fetch(url, { headers: { 'X-PAYMENT': encodePayment({ x402Version: 1, scheme: 'exact', network: NETWORK, payload: { txHash: payTx, payer: account.address } }) } });
+  const header = { 'X-PAYMENT': encodePayment({ x402Version: 1, scheme: 'exact', network: NETWORK, payload: { txHash: payTx, payer: account.address } }) };
+  let r2 = await fetch(url, { headers: header });
+  for (let i = 0; i < 6 && r2.status === 402; i++) {
+    const body = await r2.clone().json().catch(() => ({}));
+    if (!body.retry) break;
+    log.info(`seller has not seen the tx yet, retrying (${i + 1}/6)`);
+    await new Promise((r) => setTimeout(r, 2000));
+    r2 = await fetch(url, { headers: header });
+  }
   if (r2.status !== 200) throw new BuyError('delivery', `farmer refused: ${r2.status} ${await r2.text()}`);
   const { proof, report, car: carRef, registered: isRegistered } = await r2.json();
   log.ok('proof received');
