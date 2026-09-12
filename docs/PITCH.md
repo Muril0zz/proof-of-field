@@ -1,4 +1,47 @@
-# Proof of Field — pitch (3 min) + Q&A prep (2 min)
+# Proof of Field — 3-minute presentation (1 min pitch · 2 min demo) + 2 min Q&A
+
+## Before walking up (checklist)
+- Console open at http://localhost:5173, PRODES layer OFF, no field selected. Two proofs already listed: …9C62 (clean) and …4C8E (26 ha). Sales section empty (delete `data/farmer-payments.hsk-testnet.*.json` and restart the farmer agent if not).
+- Terminal with this typed, NOT executed: `cd ~/Documents/Projetos_Codigo/eag-buildathon && NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020."`
+- Explorer tab: https://testnet-explorer.hsk.xyz/address/0xe0e5e881542266aac1b3457fdd33147c761b46dd
+- Slides open on slide 1, fullscreen.
+
+## 1 minute pitch (slides 1 → 5, ~12 s each)
+
+**Slide 1 (0:00).** "Hi, I'm Murilo. I have a farm in the Amazon. This is Proof of Field."
+
+**Slide 2 (0:10).** "Every bag of soy or beef that leaves Brazil needs one piece of paper: proof the farm didn't deforest after 2020. Europe demands it by law, banks demand it for credit, China, our biggest buyer, is starting to demand it too."
+
+**Slide 3 (0:22).** "Today that paper takes three weeks. The farmer e-mails his entire farm map to a stranger, the trader pays a vendor per farm, and the result is a PDF nobody can verify. Then the next buyer asks again."
+
+**Slide 4 (0:37).** "We turned it into a five-dollar API call. The farmer's computer runs the official check, signs it, and puts it up for sale. The trader's AI agent buys it, pays the farmer in stablecoin, and verifies it on-chain. Two minutes, no humans, and the farm map never leaves the farm."
+
+**Slide 5 (0:50).** "The check is SQL, we run it locally. What isn't SQL is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. Let me show you."
+
+## 2 minute demo (happy path only)
+
+**0:00 [Console]** Click **…9C62**. Green verdict appears. → "This is a real 5,500-hectare property from Brazil's rural registry, checked against INPE's official deforestation map. Clean."
+
+**0:10 [Console]** Click **Sign attestation & anchor on-chain**. Wait for the hash and tx (~5 s). → "Signed by the farmer's key. Only the hash goes to HashKey Chain. The proof is now for sale."
+
+**0:20 [Terminal]** Press **Enter**. → "This is the trading company's agent. It got one sentence from the operator: buy this lot, budget 30, reject deforestation." *(It runs ~70 s. Talk over it, don't wait in silence.)*
+
+**0:30** as `list_proofs` / `policy_status` print → "It lists what the farmer sells and reads its own on-chain spending policy."
+
+**0:45** as the first `buy_proof` prints → "HTTP 402, payment required. It pays five USDT through a wallet with hard limits. Gets the proof. Verifies the signature and the registry itself, without trusting the farmer or us."
+
+**1:15** as `skip_proof` prints → "And this one it refuses: 26 hectares cleared in 2022. It says why."
+
+**1:35 [Console]** Point at **Sales**: +5.00 USDT appeared by itself. → "The farmer was paid the second his data was used."
+
+**1:45 [Explorer]** Click the payment tx. → "Every step is a public transaction on HashKey Chain."
+
+**1:55** "Farmer paid. Trader cleared. Nobody e-mailed anyone. That's Proof of Field."
+
+**Fallback** if the API stalls (>90 s): Ctrl-C, run `NETWORK=hsk-testnet pnpm buyer -- <proof URL from console>` (5 s, same four steps, no LLM). Say: "same flow, without the model deciding."
+
+## Slides 6–8 are for Q&A only
+Jump to 7 for "how does it work", 8 for "what's next / who are you".
 
 ## Slides (8)
 
