@@ -11,24 +11,28 @@
 7. **Open source & beyond.** Registry + AgentWallet + x402 farmer server são reutilizáveis pra qualquer "dado privado vendido como prova" (gado, água, carbono). Roadmap: EIP-3009 gasless, ZK (prova que ∩ = ∅ sem revelar hectares), Sentinel-2 entre releases do PRODES, passaporte bovino.
 8. **Ask.** "Queremos rodar isso nas fazendas de Abunã este ano. Compradores e bancos que queiram pilotar, falem comigo." Contato.
 
-## Demo script (90 s, ensaiar 3x)
+## Demo script (90 s, in English — rehearse 3×)
 
-Terminais abertos ANTES: (A) console do produtor no browser, (B) terminal do buyer com o comando pronto, (C) explorer HSK numa aba.
+Open BEFORE walking up: (A) farmer console in the browser, (B) terminal with the buyer command ready, (C) HSK explorer tab.
 
-1. **[Console]** "Este é o agente do produtor. Roda na máquina dele. Estes vermelhos são o PRODES, o mapa oficial de desmatamento do INPE." Clica no imóvel …4C8E. → 26 ha em 2022. "Esse aqui não passa. O sistema diz exatamente onde e quando." Aponta o polígono vermelho no mapa.
-2. Clica no …9C62. → Deforestation-free. "Esse passa." Clica **Sign attestation & anchor on-chain**. → hash + tx. "Só o hash foi pra chain. O desenho da fazenda continua aqui." Copy proof URL.
-3. **[Terminal B]** Cola o URL no buyer agent. Narra as 4 linhas: 402 → pagou 5 USDT pela carteira com política → recebeu → verificou assinatura e registro. "Nenhum humano apertou botão. O produtor foi pago no segundo em que o dado foi usado."
-4. **[Explorer]** Mostra a tx do attest e a do pagamento na HSK. Fim.
+1. **[Console]** "This is the farmer's agent. It runs on his machine. These red areas are PRODES, the official deforestation map from Brazil's space agency, INPE." Click property …4C8E → 26 ha in 2022. "This one does not pass. The system says exactly where and when." Point at the red overlap on the map.
+2. Click …9C62 → Deforestation-free. "This one passes." Click **Sign attestation & anchor on-chain** → hash + tx. "Only the hash went on-chain. The farm's map is still here, on his machine." Copy the proof URL.
+3. **[Terminal B]** Paste the URL into the buyer agent. Narrate the four steps as they print: "402, payment required. It pays five USDT through a wallet with a spending policy. It gets the proof. It verifies the signature and the registry on its own. Nobody pressed a button. The farmer was paid the second his data was used."
+4. **[Explorer]** Show the attest tx and the payment tx on HSK. Done.
 
-Fallback se a rede HSK cair: rodar tudo em `NETWORK=anvil` (idêntico, só sem explorer). Ter o vídeo gravado de manhã.
+Fallback if HSK is down: run everything with `NETWORK=anvil` (identical, no explorer). Have the backup video ready.
 
-## Q&A — respostas prontas
+## Q&A — answers in English
 
-- **"Por que blockchain? Isso funciona com banco de dados e Pix."** Duas razões. (1) O comprador é um programa: não abre conta em banco, não faz Pix. Stablecoin é a única forma de máquina pagar máquina. (2) O registro público deixa qualquer comprador, banco ou auditor verificar a prova sem confiar em mim nem numa certificadora.
-- **"O PRODES é público, por que a trading não checa sozinha?"** Ela não tem o polígono da fazenda. O que ela compra é a permissão do produtor + a assinatura dele dizendo "essa é minha área, verificada nesta data". O produtor fica dono do dado e decide quem acessa.
-- **"E se o produtor mentir sobre o polígono?"** O fieldId é o hash do polígono: se ele desenhar uma área diferente da que vende, o comprador pode exigir revelação seletiva (roadmap) ou cruzar com o CAR. Hoje a prova é "o produtor assinou que esta área X tem Y ha desmatados segundo o INPE". Igual a uma declaração assinada, só que verificável e barata.
-- **"Preço de 5 USDT é real?"** Ilustrativo. O mecanismo é o que estamos mostrando. Quem paga hoje é a trading (obrigação legal é do importador), por consulta. Pode ser banco, pode ser assinatura.
-- **"Por que HSK Chain?"** EVM, barata, patrocinadora, e o comprador-alvo é asiático. Os contratos são chain-agnostic.
-- **"Isso é x402 de verdade?"** Formato de 402 e `accepts[]` seguem a v1 do x402. Settlement hoje é transfer on-chain referenciado por tx hash; EIP-3009 gasless é o próximo passo.
-- **"Privacidade de verdade seria ZK."** Concordo. Hoje: commitment + agregado. ZK de "interseção vazia" é o roadmap e é factível porque a geometria é simples.
-- **"Quem é o time / vocês vão continuar?"** Eu tenho fazenda em Abunã e já construo plataforma de talhões pra ela. Isso vira feature da plataforma. Pilotar com vizinhos este ano.
+- **"Why blockchain? This works with a database and a bank transfer."** Two reasons. First, the buyer is a program. It has no bank account and cannot make a transfer. A stablecoin is the only way one machine pays another. Second, the public registry lets any buyer, bank or auditor verify the proof without trusting me or a certifier.
+- **"PRODES is public. Why doesn't the trader just check it themselves?"** They don't have the farm polygon. What they are buying is the farmer's permission plus his signature saying "this is my area, verified on this date." The farmer stays the owner of the data and decides who gets access.
+- **"What if the farmer lies about the polygon?"** The fieldId is the hash of the polygon. If he draws a different area than the one he sells, the buyer can require selective disclosure (on the roadmap) or cross-check against the CAR registry. Today the proof is "the farmer signed that this area X has Y hectares deforested according to INPE." Like a signed declaration, but verifiable and cheap.
+- **"Is 5 USDT a real price?"** Illustrative. The mechanism is what we are showing. Today the trader pays, because the legal obligation is on the importer, per query. It could be the bank, or a subscription.
+- **"Why HSK Chain?"** EVM, cheap, a sponsor, and the target buyer side is in Asia. The contracts are chain-agnostic.
+- **"Is this real x402?"** The 402 body and `accepts[]` follow x402 v1. Settlement today is an on-chain transfer referenced by tx hash. EIP-3009 gasless settlement is the next step.
+- **"Real privacy would be ZK."** Agreed. Today: commitment plus aggregates. A ZK proof of "empty intersection" is on the roadmap, and it is feasible because the geometry is simple.
+- **"Who is the team? Will you continue?"** I have a farm in Abunã and I already build a field-mapping platform for it. This becomes a feature of that platform. Pilot with neighbors this year.
+
+## Opening line (memorize)
+
+"Hi, I'm Murilo. I have a farm in the Amazon, and last month I learned that to sell my soy I have to hand my entire farm map to a stranger and wait three weeks. So I built the version where my computer proves it, keeps the map, and gets paid."
