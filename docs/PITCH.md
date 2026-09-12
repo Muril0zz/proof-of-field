@@ -6,37 +6,29 @@
 - Sales ledger empty (STATUS.md has the command). Slides open in another window, fullscreen, on slide 1.
 - Backup only if the page breaks: terminal with `NETWORK=hsk-testnet pnpm buyer -- <proof URL>`.
 
-## 1 minute pitch (slides 1 → 6, ~10 s each)
+## 90-second pitch (slides 1 → 2 → 3 → 4 → 6 → 9; skip 5, 7, 8)
 
-**Slide 1 (0:00).** "This is Proof of Field. It turns the compliance paperwork behind every soy and beef shipment into something machines buy and sell."
+**[1] 0:00** "This is Proof of Field. It turns the compliance paper behind every soy and beef shipment into a portable proof: signed once by the farm, bought and verified by AI agents."
 
-**Slide 2 (0:10).** "Six traders move most of Brazil's soy and beef. Each clears thousands of farms per season, and every market now asks for the same proof per farm: Europe by law, banks for credit, China as the biggest buyer. Their compliance teams do it by hand."
+**[2] 0:10** "Six traders move most of Brazil's soy and beef. Each clears thousands of farms every season, because every market now demands the same thing: proof the land didn't deforest after 2020. Europe by law. Banks for credit. China as the biggest buyer."
 
-**Slide 3 (0:22).** "Today it takes weeks. The farmer e-mails the entire farm map to a stranger, the trader pays a vendor per farm, and the result is a PDF nobody outside can verify. Then the next buyer asks again."
+**[3] 0:25** "Today that proof takes weeks. The farm e-mails its entire map to a stranger, a vendor is paid per farm, and the result is a PDF nobody outside can verify. Then the next buyer asks again."
 
-**Slide 4 (0:37).** "The checker in the middle does four things: collects the papers, runs the check, is the one you trust, and does it again for every buyer. Agents collect. Open software checks public government data. Anyone can recompute and verify the stamp, so nobody has to be trusted. And it's signed once, reused by every buyer. That's how the middleman goes away."
+**[4] 0:40** "We make the proof portable. The farm's computer crosses its official CAR polygon with government data, INPE deforestation, indigenous lands, conservation units, and signs once. Any buyer's agent picks up that same proof, verifies it on-chain, and pays the farm per use. The middleman's job splits four ways: agents collect, open software checks, anyone can recompute, and it's done once."
 
-**Slide 5 (0:48).** "No marketplace. The farm's key is its login and its properties come from SICAR. The trader asks only the suppliers it already has contracts with; their agent address is registered at onboarding like a bank account. Unknown keys are refused."
+**[6] 1:00** "The check is SQL, and we run it locally. What isn't SQL is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. The model decides; the contract enforces. That's why it's on HashKey Chain."
 
-**Slide 6 (0:56).** "The check is SQL, we run it locally. What isn't SQL is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. Let me show you."
+**[9] 1:15** "It's live on testnet with real properties and one hundred thousand real polygons. Cooperatives first, banks second, traders last. Let me show you."
 
-## 2 minute demo: one screen, two clicks
+## 90-second demo, two clicks (http://localhost:4030/demo)
 
-Say this before the first click: **"Left is a farm. Right is a trading company. Two clicks."**
+- **0:00** Click **…9C62**. → "A real property from the registry. Clean."
+- **0:10** Click **Sign once & put the proof up for sale**. → "One signature. Only the hash goes on-chain. It's for sale."
+- **0:20** Point at the ticked suppliers, click **Run agent**. → "The trader ticks its suppliers and types one sentence. That's all a human does."
+- **0:30–1:15**, as the cards appear: "It lists the proofs. Reads its own spending limit on-chain. Buys the clean one over HTTP 402 and verifies the signature and the registry itself. Refuses two properties with clearing. Refuses Pedro: real proof, but a supplier the trader never onboarded. Only onboarded suppliers get paid."
+- **1:15** Point left: "And the farm was just paid." Scroll the report: "The dossier writes itself. Same proof next season. That's Proof of Field."
 
-**Click 1 · FARM (0:00).** Click the clean property (…9C62). Green verdict. → "The farm picks its registered property. The agent checks it against INPE, indigenous lands, conservation units. Clean."
-Click **Sign once & put the proof up for sale**. Blue banner appears. → "The farm signs once. Only the hash goes to HashKey Chain. The proof is now for sale to any buyer."
-
-**Click 2 · TRADER (0:25).** Point at the suppliers and their ticked properties. → "These are the suppliers the trader already has contracts with; it ticks who to verify. One sentence: verify them before we contract, reject deforestation. That's all a human does." Click **Run agent**.
-While the log streams (~70 s), say only these, pointing at the lines as they appear:
-- "It lists what the suppliers sell, and reads its own spending limit on-chain."
-- "It buys the clean one: 402, pays five USDT, verifies the signature and the registry itself."
-- "It refuses two farms with clearing after 2020, and a third seller it never onboarded who is offering someone else's farm."
-- (point LEFT) "And the farm just got paid. Nobody e-mailed anyone."
-
-**Close (1:50).** Scroll the report on the right. → "The dossier writes itself. Same proof next season, same proof in the export file. That's Proof of Field."
-
-Do NOT open the explorer or the terminal unless asked. If asked for on-chain evidence, the report has the links.
+Two sentences to repeat in every Q&A answer: **"The model decides; the contract enforces."** · **"Signed once, verified by anyone, paid per use."**
 
 ## Slides 7–11 are for Q&A only
 Jump to 8 for "how does it work", 9 for adoption, 10 for the roadmap, 11 for the expected questions with answers (open it if a question you can't answer comes up).
