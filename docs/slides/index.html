@@ -53,6 +53,22 @@
   .stat div { border-top: 2px solid var(--line); padding-top: 1vw; }
   .stat b { display: block; font-size: 2.8vw; letter-spacing: -0.03em; } .stat.bad b { color: var(--bad); } .stat.ok b { color: var(--ok); }
   .stat span { font-size: 1.3vw; color: var(--ink-3); }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; margin-top: 1.6vw; }
+  .kpi { border: 1px solid var(--line); border-radius: 0.9vw; padding: 1.6vw 1.8vw; }
+  .kpi b { display: block; font-size: 4.4vw; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
+  .kpi.bad b { color: var(--bad); } .kpi.ok b { color: var(--ok); }
+  .kpi span { display: block; margin-top: 0.6vw; font-size: 1.25vw; color: var(--ink-2); line-height: 1.35; }
+  .bars { display: grid; grid-template-columns: 17vw 1fr 9vw; gap: 1.1vw 1.6vw; align-items: center; margin-top: 1.4vw; }
+  .bars .lbl { font-weight: 600; font-size: 1.3vw; }
+  .bars .track { display: flex; flex-direction: column; gap: 0.45vw; }
+  .bar { height: 2.1vw; border-radius: 0.4vw; display: flex; align-items: center; padding: 0 0.9vw; font-size: 1.05vw; font-weight: 600; color: #fff; white-space: nowrap; min-width: 6vw; }
+  .bar.bad { background: var(--bad); } .bar.ok { background: var(--ok); }
+  .bars .delta { font-size: 1.9vw; font-weight: 700; letter-spacing: -0.03em; color: var(--ok); text-align: right; }
+  .bars .delta small { display: block; font-size: 0.95vw; font-weight: 500; color: var(--ink-3); letter-spacing: 0; }
+  .pains { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4vw; margin-top: 1.4vw; }
+  .pain { background: var(--bad-soft); border-radius: 0.8vw; padding: 1.4vw 1.5vw; }
+  .pain b { display: block; font-size: 2.8vw; letter-spacing: -0.04em; color: var(--bad); line-height: 1; }
+  .pain span { display: block; margin-top: 0.5vw; font-size: 1.15vw; color: var(--ink-2); line-height: 1.35; }
   /* comparison */
   .cmp { display: grid; grid-template-columns: 15vw 1fr 1fr; gap: 0.6vw 1vw; margin-top: 0.4vw; }
   .cmp-h { font-weight: 700; font-size: 1.35vw; padding: 0.4vw 1vw; }
@@ -95,50 +111,57 @@
 
 <!-- 2 -->
 <section class="slide">
-  <h2>Six companies move most of Brazil's soy and beef. Each one clears thousands of farms per season.</h2>
+  <h2>Six companies move most of Brazil's soy and beef.<br/>Every market now wants the same proof, per farm.</h2>
   <div class="logos">
     <img src="logos/cargill.png" alt="Cargill" /><img src="logos/bunge.png" alt="Bunge" /><img src="logos/adm.png" alt="ADM" /><img src="logos/cofco.png" alt="COFCO" /><img src="logos/ldc.png" alt="Louis Dreyfus Company" /><img src="logos/amaggi.png" alt="Amaggi" />
   </div>
-  <div class="markets">
-    <div class="mkt"><i>how a trader works</i><b>Originate → aggregate → export</b><p>Buys from thousands of farms, blends into lots at silos and ports, sells to importers worldwide. Margins are thin; volume is everything.</p></div>
-    <div class="mkt"><i>what every market now asks</i><b>Proof per farm, not per lot</b><p>EU by law (EUDR: importer liable, fines up to 4% of turnover). Banks for credit. China, the largest buyer, moving to the same 2020 baseline.</p></div>
-    <div class="mkt"><i>the bottleneck</i><b>Compliance is done by hand</b><p>Teams e-mail suppliers, pay due-diligence vendors per farm, assemble PDFs. Every buyer asks again. The check is cheap; the coordination isn't.</p></div>
+  <div class="kpis">
+    <div class="kpi"><b>1,000s</b><span>of farms cleared by each trader, every season, before contracting</span></div>
+    <div class="kpi"><b>3</b><span>markets asking the same question: EU by law (EUDR), banks for credit, China as the #1 buyer</span></div>
+    <div class="kpi bad"><b>by hand</b><span>e-mails, PDFs and a paid vendor per farm. The check is cheap; the coordination isn't.</span></div>
   </div>
   <span class="n">2</span>
 </section>
 
 <!-- 3 -->
 <section class="slide">
-  <h2>How a trade clears today</h2>
-  <div class="tl">
-    <div class="lbl bad">Today</div>
-    <div class="chain">
-      <div class="node bad"><i>day 0</i><b>Trader asks</b><p>Compliance team e-mails each supplier for CAR, maps and documents.</p></div>
-      <div class="node bad"><i>day 1–5</i><b>Farmer sends everything</b><p>Full farm polygon, registry, deeds. To a stranger. Again for the next buyer.</p></div>
-      <div class="node bad"><i>day 5–20</i><b>Due-diligence vendor</b><p>Trader pays a provider per farm to cross-check against PRODES, embargoes, CAR.</p></div>
-      <div class="node bad"><i>day 20+</i><b>PDF report</b><p>A document nobody outside can verify. Bank asks again. Importer asks again.</p></div>
-    </div>
+  <h2>Today: three weeks, per buyer, per season.</h2>
+  <div class="chain" style="margin-top:0.4vw">
+    <div class="node bad" style="min-height:11vw"><i>day 0</i><b>Trader asks</b><p>Compliance e-mails each supplier for CAR, maps, documents.</p></div>
+    <div class="node bad" style="min-height:11vw"><i>day 1–5</i><b>Farm sends everything</b><p>The entire map, to a stranger. Again for the next buyer.</p></div>
+    <div class="node bad" style="min-height:11vw"><i>day 5–20</i><b>Paid vendor checks</b><p>Crosses the map with government data. Charges per farm.</p></div>
+    <div class="node bad" style="min-height:11vw"><i>day 20+</i><b>A PDF</b><p>Nobody outside can verify it. Bank asks again. Importer asks again.</p></div>
   </div>
-  <div class="stat bad">
-    <div><b>weeks</b><span>per lot, blocking the sale</span></div>
-    <div><b>R$ per farm, per buyer</b><span>paid by the trader, farmer gets nothing</span></div>
-    <div><b>copies everywhere</b><span>of the farmer's most sensitive data</span></div>
+  <div class="pains">
+    <div class="pain"><b>3 wk</b><span>to clear one supplier</span></div>
+    <div class="pain"><b>×N</b><span>repeated for every buyer, every season</span></div>
+    <div class="pain"><b>100%</b><span>of the farm map handed to strangers</span></div>
+    <div class="pain"><b>0</b><span>ways for anyone outside to verify the result</span></div>
   </div>
-  <p class="note">The check itself is cheap. The coordination around it is what costs weeks.</p>
   <span class="n">3</span>
 </section>
 
 <!-- 4 -->
 <section class="slide">
-  <h2>Where the middleman's work goes</h2>
-  <div class="cmp">
-    <div class="cmp-h"></div><div class="cmp-h bad">Today · a paid checker in the middle</div><div class="cmp-h ok">With Proof of Field</div>
-    <div class="cmp-l">Collecting the farm's papers</div><div class="cmp-c bad">E-mails, WhatsApp, PDFs. The farm sends its entire map to a stranger.</div><div class="cmp-c ok">The buyer's agent fetches the proof by itself. The map never leaves the farm.</div>
-    <div class="cmp-l">Running the check</div><div class="cmp-c bad">A vendor crosses the farm map with government data and charges per farm.</div><div class="cmp-c ok">Open-source software on the farm's side crosses the <b>official</b> map with the <b>same public</b> government data, in seconds.</div>
-    <div class="cmp-l">Trusting the result</div><div class="cmp-c bad">You trust the vendor's PDF. Nobody outside can check it.</div><div class="cmp-c ok">Nobody has to be trusted. The inputs are public and the stamp is on a public registry: <b>anyone can recompute and verify it</b>.</div>
-    <div class="cmp-l">Doing it again for the next buyer</div><div class="cmp-c bad">Every buyer, bank and importer asks again. Every season. Paid every time.</div><div class="cmp-c ok"><b>Signed once.</b> Every buyer this season picks up the same proof. The farm is paid per use, the checker is not.</div>
+  <h2>With Proof of Field: signed once, verified by anyone, in minutes.</h2>
+  <div class="bars">
+    <div class="lbl">Time to clear a supplier</div>
+    <div class="track"><div class="bar bad" style="width:100%">3 weeks · today</div><div class="bar ok" style="width:9%">2 min</div></div>
+    <div class="delta">−99%<small>time</small></div>
+
+    <div class="lbl">Checks per farm, per season</div>
+    <div class="track"><div class="bar bad" style="width:100%">one per buyer · trader, bank, importer, again next season</div><div class="bar ok" style="width:20%">1 signature</div></div>
+    <div class="delta">1×<small>instead of N×</small></div>
+
+    <div class="lbl">Copies of the farm map that leave the farm</div>
+    <div class="track"><div class="bar bad" style="width:100%">one per buyer, per vendor</div><div class="bar ok" style="width:9%">0</div></div>
+    <div class="delta">0<small>copies</small></div>
+
+    <div class="lbl">Who can verify the result</div>
+    <div class="track"><div class="bar bad" style="width:35%">nobody outside</div><div class="bar ok" style="width:100%">anyone: public data + public registry, recompute and check</div></div>
+    <div class="delta">∞<small>verifiers</small></div>
   </div>
-  <p class="note">Like a passport instead of a fresh notary letter for every trip. What remains is thin and replaceable: someone vouches that the key belongs to the farm (the co-op, a bank, the government).</p>
+  <p class="note">The middleman did four jobs: collect, check, be trusted, repeat. Agents collect. Open software checks. Anyone verifies. Done once. The farm is paid per use.</p>
   <span class="n">4</span>
 </section>
 
@@ -188,21 +211,17 @@
 
 <!-- 7 -->
 <section class="slide">
-  <h2>Under the hood</h2>
-  <div class="flow">
-    <div class="step priv"><i>farmer · private</i><b>Property ∩ official layers</b><p>PRODES deforestation (RO, MT, GO, Amazon + Cerrado, ~103k polygons) + indigenous lands + conservation units. Under a second on a laptop. Next: DETER alerts, IBAMA embargoes.</p></div>
-    <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed by the farmer.</p></div>
-    <div class="step"><i>HSK Chain</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
-    <div class="step pay"><i>buyer · LLM</i><b>402 → AgentWallet.pay</b><p>x402 v1 shape. On-chain USDT transfer, replay-protected, policy-enforced.</p></div>
-    <div class="step pay"><i>buyer · LLM</i><b>Verify &amp; report</b><p>Signature → same farmer anchored it → not revoked. Markdown dossier with every tx.</p></div>
+  <h2>Under the hood: real data, real chain, real decisions</h2>
+  <div class="two top" style="flex:0; align-items:stretch">
+    <div class="kpis" style="grid-template-columns:1fr 1fr; margin-top:0; gap:1.1vw">
+      <div class="kpi"><b>103,440</b><span>official INPE/PRODES polygons, RO · MT · GO, Amazon + Cerrado, indexed on a laptop</span></div>
+      <div class="kpi"><b>3</b><span>official layers per check: deforestation, indigenous lands, conservation units</span></div>
+      <div class="kpi"><b>&lt;1 s</b><span>per property check; official CAR polygon, hash anchored on HSK Chain</span></div>
+      <div class="kpi ok"><b>1 / 3</b><span>bought / refused in the live run, each with a written reason, paid through an on-chain spending policy</span></div>
+    </div>
+    <img class="shot" src="17-demo-timeline-running.png" alt="Buyer agent timeline" style="max-height:26vw;object-fit:cover;object-position:right top" />
   </div>
-  <div class="two top" style="margin-top:1.6vw; flex:0">
-    <img class="shot" src="13-buyer-desk-running.png" alt="Buyer desk: one sentence, the agent works the shipment" style="max-height:19vw;object-fit:cover;object-position:top" />
-    <ul style="padding-top:0.4vw">
-      <li><b>Honest limits today:</b> settlement by tx hash, not EIP-3009; attestations are self-signed, so this proves authenticity and integrity, not a field inspection.</li>
-      <li><b>Next:</b> EIP-3009 gasless settlement · ZK proof of empty intersection · Sentinel-2 change detection on the farmer's machine · IBAMA embargoes · cattle passports.</li>
-    </ul>
-  </div>
+  <p class="note" style="margin-top:1.2vw"><b>Stack:</b> Solidity + Foundry (7 tests) · EIP-712 attestations · x402 over HTTP · Claude agent with tools · MapLibre console · HSK Chain testnet. <b>Honest limits:</b> settlement by tx hash (EIP-3009 next); the key↔CAR binding is the buyer's onboarding today.</p>
   <span class="n">7</span>
 </section>
 
