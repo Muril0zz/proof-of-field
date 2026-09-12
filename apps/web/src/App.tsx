@@ -117,7 +117,7 @@ export function App() {
               <h2>Compliance check <span className="count">INPE / PRODES · baseline 2020</span></h2>
               {phase === 'checking' && <div className="steps"><div className="step doing"><span className="ic" />Intersecting with {prodes?.features.length.toLocaleString() ?? '…'} PRODES polygons</div></div>}
               {report && phase !== 'checking' && <Verdict report={report} label={label} />}
-              {phase === 'checked' && (
+              {phase === 'checked' && report?.coverage?.covered !== false && (
                 <>
                   <button className="btn btn-primary btn-block" style={{ marginTop: 14 }} onClick={attest}>Sign attestation &amp; anchor on-chain</button>
                   <div className="note">
@@ -198,6 +198,17 @@ export function App() {
 
 function Verdict({ report, label }: { report: Report; label: string }) {
   const ok = report.compliant ?? report.deforestedHa <= 0;
+  if (report.coverage && !report.coverage.covered) {
+    return (
+      <div className="verdict bad">
+        <div className="mark" aria-hidden><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2"><path d="M8 3v6M8 12v.5" /></svg></div>
+        <div>
+          <div className="title">Outside data coverage</div>
+          <div className="sub">{label} · {fmtHa(report.areaHa)} · this extract of PRODES covers only the Abunã region. No attestation can be issued: absence of data is not absence of deforestation.</div>
+        </div>
+      </div>
+    );
+  }
   const years = ['2021', '2022', '2023', '2024', '2025'];
   const max = Math.max(0.01, ...years.map((y) => report.byYear[y] || 0));
   return (

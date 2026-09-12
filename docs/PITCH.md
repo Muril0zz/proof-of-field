@@ -33,6 +33,7 @@ Fallback if HSK is down: run everything with `NETWORK=anvil` (identical, no expl
 - **"Is 5 USDT a real price?"** Illustrative. The mechanism is what we are showing. Today the trader pays, because the legal obligation is on the importer, per query. It could be the bank, or a subscription.
 - **"Why HSK Chain?"** EVM, cheap, a sponsor, and the target buyer side is in Asia. The contracts are chain-agnostic.
 - **"Is this real x402?"** The 402 body and `accepts[]` follow x402 v1. Settlement today is an on-chain transfer referenced by tx hash. EIP-3009 gasless settlement is the next step.
+- **"Is PRODES enough? What about a farm outside your data?"** PRODES is INPE's official annual mapping, the same first-pass source commercial due-diligence providers use. Limits: minimum mapping unit 6.25 ha, annual cadence, Amazon biome only. For the demo we loaded the Abunã region (3,445 polygons, 2020–2025, Rondônia plus the Amazonas border). If a field falls outside the loaded extent the agent refuses to attest: absence of data is not absence of deforestation. Production loads the full biome and adds DETER alerts and IBAMA embargoes.
 - **"Real privacy would be ZK."** Agreed. Today: commitment plus aggregates. A ZK proof of "empty intersection" is on the roadmap, and it is feasible because the geometry is simple.
 - **"Who is the team? Will you continue?"** I have a farm in Abunã and I already build a field-mapping platform for it. This becomes a feature of that platform. Pilot with neighbors this year.
 

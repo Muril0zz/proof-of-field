@@ -2,7 +2,9 @@ import * as turf from '@turf/turf';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 
 export interface DeforestationHit { year: number; areaHa: number; imageDate?: string; uuid?: string }
+export interface Coverage { bbox: [number, number, number, number]; covered: boolean }
 export interface DeforestationReport {
+  coverage: Coverage;
   areaHa: number;
   deforestedHa: number;          // after baseline (year > baselineYear)
   baselineYear: number;
@@ -27,6 +29,10 @@ export function checkDeforestation(
   const t0 = Date.now();
   const areaHa = turf.area(field) / 1e4;
   const bbox = turf.bbox(field);
+  // Coverage: the field must lie entirely inside the bbox of the loaded PRODES extract.
+  // Outside it, "no hits" would mean "no data", not "no deforestation" — so we refuse to conclude.
+  const dataBbox = turf.bbox(prodes as any) as [number, number, number, number];
+  const covered = bbox[0] >= dataBbox[0] && bbox[2] <= dataBbox[2] && bbox[1] >= dataBbox[1] && bbox[3] <= dataBbox[3];
   const hits: DeforestationHit[] = [];
   const byYear: Record<string, number> = {};
   const inters: Feature[] = [];
@@ -49,8 +55,9 @@ export function checkDeforestation(
   }
   const deforestedHa = hits.reduce((s, h) => s + h.areaHa, 0);
   return {
+    coverage: { bbox: dataBbox, covered },
     areaHa, deforestedHa, baselineYear, dataYear, hits, byYear,
-    compliant: deforestedHa <= toleranceHa,
+    compliant: covered && deforestedHa <= toleranceHa,
     intersections: turf.featureCollection(inters),
     ms: Date.now() - t0,
   };

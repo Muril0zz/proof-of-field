@@ -88,7 +88,7 @@ app.post('/check', async (c) => {
   const { geometry } = await c.req.json();
   const feature = { type: 'Feature', properties: {}, geometry } as any;
   const r = checkDeforestation(feature, prodes, BASELINE_YEAR);
-  return c.json({ areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, compliant: r.compliant, dataYear: r.dataYear, ms: r.ms, intersections: r.intersections });
+  return c.json({ areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, compliant: r.compliant, dataYear: r.dataYear, ms: r.ms, intersections: r.intersections, coverage: r.coverage });
 });
 
 app.post('/attest', async (c) => {
@@ -96,6 +96,10 @@ app.post('/attest', async (c) => {
   if (!geometry || !['Polygon', 'MultiPolygon'].includes(geometry.type)) return c.json({ error: 'geometry must be Polygon|MultiPolygon' }, 400);
   const feature = { type: 'Feature', properties: {}, geometry } as any;
   const r = checkDeforestation(feature, prodes, BASELINE_YEAR);
+  if (!r.coverage.covered) {
+    console.log(`[farmer] refused to attest ${label || ''}: field outside PRODES coverage bbox ${r.coverage.bbox.map((n) => n.toFixed(2)).join(',')}`);
+    return c.json({ error: 'no_coverage', message: `This field lies outside the loaded PRODES extract (bbox ${r.coverage.bbox.map((n) => n.toFixed(2)).join(', ')}). No attestation issued: absence of data is not absence of deforestation.`, coverage: r.coverage }, 422);
+  }
 
   const att: FieldAttestation = {
     fieldId: fieldIdFromPolygon(geometry),
