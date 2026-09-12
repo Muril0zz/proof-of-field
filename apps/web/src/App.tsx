@@ -236,7 +236,7 @@ function Verdict({ report, label }: { report: Report; label: string }) {
         </div>
         <div>
           <div className="title">{ok ? 'Compliant: no deforestation since 2020, no protected-area overlap' : report.deforestedHa > 0 ? `${report.deforestedHa.toFixed(2)} ha deforested since 2020${blocking.length ? ' + protected-area overlap' : ''}` : `Overlaps protected area (${blocking.reduce((s, h) => s + h.areaHa, 0).toFixed(1)} ha)`}</div>
-          <div className="sub">{label} · {fmtHa(report.areaHa)} · {report.hits} PRODES polygon{report.hits === 1 ? '' : 's'} · {(report.protectedHits || []).length} protected area{(report.protectedHits || []).length === 1 ? '' : 's'} checked · {report.ms} ms</div>
+          <div className="sub">{label} · {fmtHa(report.areaHa)} · {report.hits} PRODES polygon{report.hits === 1 ? '' : 's'} · {(report.protectedHits || []).length} protected-area overlap{(report.protectedHits || []).length === 1 ? '' : 's'} · {report.ms} ms</div>
           {blocking.map((h) => <div key={h.name} className="sub" style={{ color: 'var(--bad)' }}>✕ {h.name}: {h.areaHa.toFixed(1)} ha inside</div>)}
           {warning.map((h) => <div key={h.name} className="sub" style={{ color: 'var(--warn)' }}>△ {h.name} (sustainable use): {h.areaHa.toFixed(1)} ha, allowed, flagged</div>)}
         </div>
