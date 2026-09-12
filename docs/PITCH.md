@@ -1,12 +1,12 @@
 # Proof of Field — 3-minute presentation (1 min pitch · 2 min demo) + 2 min Q&A
 
 ## Before walking up (checklist)
-- ONE browser tab, fullscreen: **http://localhost:4030/demo** (left = FARM, right = TRADER). Nothing else on screen.
+- ONE browser tab, fullscreen: **http://localhost:4030/demo** (left = FARM, right = TRADER). Nothing else on screen. Reload the page before starting.
 - Farm side: dropdown on **João Silva** (three registered properties), none selected. Pedro Lima is the other option (one real CAR property in Nova Mamoré). Trader side: instruction pre-filled; under each supplier, every property ticked with its verdict pill. The trader can untick any property.
 - Sales ledger empty (STATUS.md has the command). Slides open in another window, fullscreen, on slide 1.
 - Backup only if the page breaks: terminal with `NETWORK=hsk-testnet pnpm buyer -- <proof URL>`.
 
-## 90-second pitch (slides 1 → 2 → 3 → 4 → 6 → 9; skip 5, 7, 8)
+## 90-second pitch (slides 1 → 2 → 3 → 4 → 5 → 8; skip 6, 7)
 
 **[1] 0:00** "This is Proof of Field. It turns the compliance paper behind every soy and beef shipment into a portable proof: signed once by the farm, bought and verified by AI agents."
 
@@ -16,9 +16,9 @@
 
 **[4] 0:40** "We make the proof portable. The farm's computer crosses its official CAR polygon with government data, INPE deforestation, indigenous lands, conservation units, and signs once. Any buyer's agent picks up that same proof, verifies it on-chain, and pays the farm per use. The middleman's job splits four ways: agents collect, open software checks, anyone can recompute, and it's done once."
 
-**[6] 1:00** "The check runs on the farm's own computer. What needs the chain is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. The model decides; the contract enforces. That's why it's on HashKey Chain."
+**[5] 1:00** "The check runs on the farm's own computer. What needs the chain is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. The model decides; the contract enforces. That's why it's on HashKey Chain."
 
-**[9] 1:15** "It's live on testnet with real properties and one hundred thousand real polygons. Cooperatives first, banks second, traders last. Let me show you."
+**[8] 1:15** "It's live on testnet with real properties and one hundred thousand real polygons. Cooperatives first, banks second, traders last. Let me show you."
 
 ## 90-second demo, two clicks (http://localhost:4030/demo)
 
@@ -30,8 +30,8 @@
 
 Two sentences to repeat in every Q&A answer: **"The model decides; the contract enforces."** · **"Signed once, verified by anyone, paid per use."**
 
-## Slides 7–11 are for Q&A only
-Jump to 8 for "how does it work", 9 for adoption, 10 for the roadmap, 11 for the expected questions with answers (open it if a question you can't answer comes up).
+## Slides 6–10 are for Q&A only
+Jump to 7 for "how does it work", 8 for adoption, 9 for the roadmap, 10 for the expected questions with answers (open it if a question you can't answer comes up).
 
 ## Demo script (90 s, in English — rehearse 3×)
 

@@ -144,18 +144,6 @@
 
 <!-- 5 -->
 <section class="slide">
-  <h2>Who talks to whom. There is no marketplace.</h2>
-  <div class="markets">
-    <div class="mkt" style="background:var(--ok-soft);border-color:transparent"><i>farm side</i><b>The key is the login</b><p>No account, no password. The farmer agent holds the farm's key, like a wallet. Properties are imported <b>once from SICAR</b>, the farmer's own CAR export by CPF. Production: gov.br sign-in, automatic import. Small farms: the <b>cooperative hosts the agent</b>; the farmer authorizes from a phone.</p></div>
-    <div class="mkt" style="background:var(--primary-soft);border-color:transparent"><i>buyer side</i><b>It asks its own suppliers</b><p>A trader, bank or co-op already has contracts with its suppliers. At onboarding it registers each supplier's <b>agent address</b>, like a bank account, and allow-lists the key. Its agent asks those suppliers, nobody else. An unknown key offering someone's farm is <b>refused</b>, even with a valid-looking proof.</p></div>
-    <div class="mkt"><i>on-chain</i><b>One registry, no owner</b><p>The hash of every attestation, who anchored it, revocations. Payments in stablecoin through the buyer's <b>AgentWallet</b>, with limits. Anyone verifies; nobody controls it. The same proof serves every buyer that asks this season.</p></div>
-  </div>
-  <p class="note">Banks, importers and cooperatives work the same way: they talk to the suppliers they already know, and the proof they get is the same one.</p>
-  <span class="n">5</span>
-</section>
-
-<!-- 6 -->
-<section class="slide">
   <h2>Where AI sits, where the chain sits</h2>
   <div class="layers">
     <div class="layer ai">
@@ -178,10 +166,10 @@
     </div>
   </div>
   <p class="note" style="font-size:1.35vw;color:var(--ink);margin-top:1.4vw">The check runs on the farm's own computer. The <b>trade</b> needs the chain: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse.</p>
-  <span class="n">6</span>
+  <span class="n">5</span>
 </section>
 
-<!-- 7 -->
+<!-- 6 -->
 <section class="slide">
   <div class="kicker">Live demo</div>
   <div class="two">
@@ -195,10 +183,10 @@
       </ul>
     </div>
   </div>
-  <span class="n">7</span>
+  <span class="n">6</span>
 </section>
 
-<!-- 8 -->
+<!-- 7 -->
 <section class="slide">
   <h2>Under the hood</h2>
   <div class="flow">
@@ -215,10 +203,10 @@
       <li><b>Next:</b> EIP-3009 gasless settlement · ZK proof of empty intersection · Sentinel-2 change detection on the farmer's machine · IBAMA embargoes · cattle passports.</li>
     </ul>
   </div>
-  <span class="n">8</span>
+  <span class="n">7</span>
 </section>
 
-<!-- 9 -->
+<!-- 8 -->
 <section class="slide">
   <h2>Adoption path: where the pain is sharpest first, traders last.</h2>
   <div class="markets">
@@ -228,10 +216,10 @@
   </div>
   <p class="lead" style="margin-top:1.8vw;font-size:1.6vw">Built to scale: every farm runs its own agent, every buyer its own; one public registry; contracts and agents generic enough for any private dataset sold as a proof.</p>
   <p class="note">Pilot partners wanted: a cooperative, a bank, a trader · github.com/Muril0zz/proof-of-field</p>
-  <span class="n">9</span>
+  <span class="n">8</span>
 </section>
 
-<!-- 10 -->
+<!-- 9 -->
 <section class="slide">
   <h2>Roadmap</h2>
   <div class="markets">
@@ -240,10 +228,10 @@
     <div class="mkt"><i>pilot</i><b>One co-op, one bank, one trader</b><p>Rondônia first: a cooperative hosting agents for its members, a bank using the same proofs for rural credit, a trader plugging a buyer agent into its compliance desk. Then Mato Grosso and Goiás, already covered.</p></div>
   </div>
   <p class="note">Later: ZK proof of "empty intersection" so even the hectares stay private · Sentinel-2 change detection on the farm's machine · cattle passports as a second asset class.</p>
-  <span class="n">10</span>
+  <span class="n">9</span>
 </section>
 
-<!-- 11 -->
+<!-- 10 -->
 <section class="slide">
   <h2>Questions we expect</h2>
   <div class="qa">
@@ -254,9 +242,10 @@
     <div><b>Is PRODES enough?</b><p>It's INPE's official annual map, minimum 6.25 ha. We add indigenous lands and conservation units today, DETER alerts and IBAMA embargoes next. Outside covered data we refuse to attest: absence of data is not absence of deforestation.</p></div>
     <div><b>Will farmers run software? Do they want USDT?</b><p>Large farms yes; small ones through their cooperative, authorizing from a phone. USDT is the testnet stand-in; production is a BRL stablecoin or an automatic off-ramp. Not solved yet, and we say so.</p></div>
     <div><b>Is this real x402?</b><p>402 body and accepts[] follow x402 v1; settlement is an on-chain transfer referenced by tx hash, replay-protected. EIP-3009 gasless settlement is next.</p></div>
+    <div><b>Is this a marketplace? How does a farmer log in?</b><p>No marketplace: a buyer asks only the suppliers it already has contracts with; their agent address is registered at onboarding, like a bank account. The farm's key is its login, properties come from its own SICAR export, and a cooperative can host the agent for small farms.</p></div>
     <div><b>Who adopts first?</b><p>Cooperatives (one compliance desk for hundreds of members), then banks (need the proof to lend), traders last, once proofs already circulate among their suppliers.</p></div>
   </div>
-  <span class="n">11</span>
+  <span class="n">10</span>
 </section>
 
 </div>
