@@ -26,10 +26,10 @@ else
 fi
 
 kill_port 4020; kill_port 4021; kill_port 4022; kill_port 4030; kill_port 5173
-# João Silva (FARMER_* key) owns two CAR properties; Maria Souza (FARMER2_* key) owns the third.
-(cd apps/farmer-agent && FARMER_NAME="João Silva" FARMER_SAMPLES=9C62FD55,4C8EDDBB nohup npx tsx src/index.ts > ../../.logs/farmer.log 2>&1 < /dev/null &)
-if [ -n "${FARMER2_PRIVATE_KEY:-}" ]; then
-  (cd apps/farmer-agent && FARMER_NAME="Maria Souza" FARMER_PRIVATE_KEY=$FARMER2_PRIVATE_KEY FARMER_PORT=4021 FARMER_PUBLIC_URL=http://localhost:4021 FARMER_SAMPLES=0A28442F nohup npx tsx src/index.ts > ../../.logs/farmer2.log 2>&1 < /dev/null &)
+# João Silva (FARMER_* key) owns all three CAR properties. Maria Souza (FARMER2_* key) is optional: set FARMER2_SAMPLES to give her properties.
+(cd apps/farmer-agent && FARMER_NAME="João Silva" FARMER_SAMPLES=9C62FD55,4C8EDDBB,0A28442F nohup npx tsx src/index.ts > ../../.logs/farmer.log 2>&1 < /dev/null &)
+if [ -n "${FARMER2_PRIVATE_KEY:-}" ] && [ -n "${FARMER2_SAMPLES:-}" ]; then
+  (cd apps/farmer-agent && FARMER_NAME="Maria Souza" FARMER_PRIVATE_KEY=$FARMER2_PRIVATE_KEY FARMER_PORT=4021 FARMER_PUBLIC_URL=http://localhost:4021 FARMER_SAMPLES=$FARMER2_SAMPLES nohup npx tsx src/index.ts > ../../.logs/farmer2.log 2>&1 < /dev/null &)
 fi
 # Pedro Lima (FARMER3_* key): an IMPOSTOR for the demo — offers João's CAR with a key the company never onboarded. Not allow-listed, not funded.
 if [ -n "${FARMER3_PRIVATE_KEY:-}" ]; then
@@ -39,13 +39,13 @@ fi
 (cd apps/buyer-agent && nohup npx tsx src/desk.ts > ../../.logs/desk.log 2>&1 < /dev/null &)
 sleep 4
 echo "✔ farmer agent João Silva  http://localhost:4020   (log: .logs/farmer.log)"
-[ -n "${FARMER2_PRIVATE_KEY:-}" ] && echo "✔ farmer agent Maria Souza http://localhost:4021   (log: .logs/farmer2.log)"
+[ -n "${FARMER2_SAMPLES:-}" ] && echo "✔ farmer agent Maria Souza http://localhost:4021   (log: .logs/farmer2.log)"
 [ -n "${FARMER3_PRIVATE_KEY:-}" ] && echo "✔ farmer agent Pedro Lima  http://localhost:4022   (impostor · log: .logs/farmer3.log)"
 echo "✔ farmer console http://localhost:5173   (log: .logs/web.log)"
 echo "✔ buyer desk     http://localhost:4030   (log: .logs/desk.log)"
 echo
-echo "buyer:  NETWORK=$NETWORK pnpm buyer -- --list http://localhost:4020 http://localhost:4021 http://localhost:4022"
+echo "buyer:  NETWORK=$NETWORK pnpm buyer -- --list http://localhost:4020 http://localhost:4022"
 echo "        NETWORK=$NETWORK pnpm buyer -- <proofUrl>"
-echo "LLM:    NETWORK=$NETWORK pnpm buyer:ai \"Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020.\" http://localhost:4020 http://localhost:4021 http://localhost:4022"
+echo "LLM:    NETWORK=$NETWORK pnpm buyer:ai \"Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020.\" http://localhost:4020 http://localhost:4022"
 disown -a 2>/dev/null || true
 exit 0

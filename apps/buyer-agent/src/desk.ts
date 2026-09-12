@@ -14,7 +14,7 @@ import { streamSSE } from 'hono/streaming';
 const ROOT = path.resolve(import.meta.dirname, '../../..');
 const PORT = Number(process.env.DESK_PORT || 4030);
 const NETWORK = process.env.NETWORK || 'anvil';
-const DEFAULT_LOT = (process.env.FARMER_URLS || 'http://localhost:4020,http://localhost:4021,http://localhost:4022').split(',');
+const DEFAULT_LOT = (process.env.FARMER_URLS || 'http://localhost:4020,http://localhost:4022').split(',');
 const strip = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '');
 const REPORTS = path.join(ROOT, 'docs', 'reports');
 

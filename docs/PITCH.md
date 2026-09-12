@@ -2,7 +2,7 @@
 
 ## Before walking up (checklist)
 - ONE browser tab, fullscreen: **http://localhost:4030/demo** (left = FARM, right = TRADER). Nothing else on screen.
-- Farm side: dropdown on **João Silva**, no property selected. (Switch to Maria Souza if a judge asks to see another farmer.) Trader side: instruction pre-filled, three suppliers ticked by name (João Silva, Maria Souza, Pedro Lima).
+- Farm side: **João Silva**, three registered properties, none selected. Trader side: instruction pre-filled, two suppliers ticked by name (João Silva, Pedro Lima).
 - Sales ledger empty (STATUS.md has the command). Slides open in another window, fullscreen, on slide 1.
 - Backup only if the page breaks: terminal with `NETWORK=hsk-testnet pnpm buyer -- <proof URL>`.
 
@@ -27,7 +27,7 @@ Say this before the first click: **"Left is a farm. Right is a trading company. 
 **Click 1 · FARM (0:00).** Click the clean property (…9C62). Green verdict. → "The farm picks its registered property. The agent checks it against INPE, indigenous lands, conservation units. Clean."
 Click **Sign once & put the proof up for sale**. Blue banner appears. → "The farm signs once. Only the hash goes to HashKey Chain. The proof is now for sale to any buyer."
 
-**Click 2 · TRADER (0:25).** Point at the three ticked suppliers. → "These are the suppliers the trader already has contracts with; it ticks who to verify. One sentence: verify them before we contract, reject deforestation. That's all a human does." Click **Run agent**.
+**Click 2 · TRADER (0:25).** Point at the two ticked suppliers. → "These are the suppliers the trader already has contracts with; it ticks who to verify. One sentence: verify them before we contract, reject deforestation. That's all a human does." Click **Run agent**.
 While the log streams (~70 s), say only these, pointing at the lines as they appear:
 - "It lists what the suppliers sell, and reads its own spending limit on-chain."
 - "It buys the clean one: 402, pays five USDT, verifies the signature and the registry itself."
@@ -48,7 +48,7 @@ Open BEFORE walking up: (A) farmer console in the browser, (B) terminal with the
 1. **[Console]** "This is the farmer's agent. It runs on his machine. These red areas are PRODES, the official deforestation map from Brazil's space agency, INPE." Click property …4C8E → 26 ha in 2022. "This one does not pass. The system says exactly where and when." Point at the red overlap on the map.
 2. Click …9C62 → Deforestation-free. "This one passes." Click **Sign attestation & anchor on-chain** → hash + tx. "Only the hash went on-chain. The farm's map is still here, on his machine." Copy the proof URL.
 3. **[Terminal B]** Run the LLM buyer agent (command pre-typed, just press Enter):
-   `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021 http://localhost:4022`
+   `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4022`
    Narrate while it runs (~70 s, so start it EARLY, right after step 2, and talk over it): "This is the trading company's agent. It got one sentence from the operator. It lists what the farmer sells, checks its own on-chain spending policy, and decides. Watch: it buys the two clean farms over HTTP 402, five USDT each, verifies signature and registry on its own, and refuses the one with 26 hectares. Nobody pressed a button. The farmer was paid the second his data was used." Point at the final summary and the compliance report path.
    **Fallback** if the API is slow or fails: `NETWORK=hsk-testnet pnpm buyer -- <proofUrl>` (deterministic, 5 s, same four steps).
 4. **[Explorer]** Show the attest tx and the payment tx on HSK. Done.
