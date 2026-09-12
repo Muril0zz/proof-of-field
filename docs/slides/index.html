@@ -181,9 +181,9 @@
 <section class="slide">
   <div class="kicker">Live demo</div>
   <div class="two">
-    <img class="shot" src="02-check-noncompliant.png" alt="Farmer console flagging 26 ha of deforestation" />
+    <img class="shot" src="15-demo-split-1280.png" alt="Demo: farm on the left, trader on the right" />
     <div>
-      <h2 style="font-size:2.5vw">Farmer: draw, check, sign, anchor.<br/>Trader: one sentence.</h2>
+      <h2 style="font-size:2.5vw">Farm: pick the property, sign once.<br/>Trader: one sentence.</h2>
       <ul>
         <li>Three sellers, four listings from the public CAR registry: one clean farm, two with post-2020 clearing, and one <b>impostor</b> offering someone else's CAR.</li>
         <li>Before contracting the harvest, the buyer's agent reviews all suppliers: clears the clean one, <b>refuses the other three</b>, and says why. Only onboarded suppliers get paid.</li>
@@ -200,7 +200,7 @@
   <div class="flow">
     <div class="step priv"><i>farmer · private</i><b>Property ∩ official layers</b><p>PRODES deforestation (RO, MT, GO, Amazon + Cerrado, ~103k polygons) + indigenous lands + conservation units. Under a second on a laptop. Next: DETER alerts, IBAMA embargoes.</p></div>
     <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed by the farmer.</p></div>
-    <div class="step"><i>HSK Chain · RPC by Chainstack</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
+    <div class="step"><i>HSK Chain</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
     <div class="step pay"><i>buyer · LLM</i><b>402 → AgentWallet.pay</b><p>x402 v1 shape. On-chain USDT transfer, replay-protected, policy-enforced.</p></div>
     <div class="step pay"><i>buyer · LLM</i><b>Verify &amp; report</b><p>Signature → same farmer anchored it → not revoked. Markdown dossier with every tx.</p></div>
   </div>
