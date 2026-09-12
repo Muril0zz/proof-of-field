@@ -33,20 +33,29 @@ export async function policyStatus(): Promise<PolicyStatus> {
   return { agentWallet: dep.agentWallet, remainingTodayUnits: remaining.toString(), perPaymentLimitUnits: per.toString(), dailyLimitUnits: daily.toString(), balanceUnits: bal.toString() };
 }
 
-export interface ProofListing { hash: string; label?: string; car: string | null; registered: boolean; farmer: string; farmerName: string; farmerAgent: string; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
+export interface ProofListing { hash: string; label?: string; car: string | null; registered: boolean; farmer: string; farmerName: string; farmerAgent: string; knownSupplier: boolean; carConflict: boolean; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
 export async function listProofs(farmerBaseUrl: string): Promise<ProofListing[]> {
   const base = farmerBaseUrl.replace(/\/$/, '');
   const [info, list] = await Promise.all([
     fetch(`${base}/`).then((r) => r.json()).catch(() => ({})) as Promise<any>,
     fetch(`${base}/attestations`).then((r) => r.json()) as Promise<any[]>,
   ]);
-  return list.map((a) => ({ hash: a.hash, label: a.label, car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, farmerName: info.name || 'Farmer agent', farmerAgent: base, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
+  return list.map((a) => ({ hash: a.hash, label: a.label, car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, farmerName: info.name || 'Farmer agent', farmerAgent: base, knownSupplier: false, carConflict: false, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
 }
 
 /** Lot = several farmer agents. Unreachable agents are reported, not fatal. */
 export async function listLot(farmerUrls: string[]): Promise<{ proofs: ProofListing[]; unreachable: string[] }> {
   const proofs: ProofListing[] = []; const unreachable: string[] = [];
   await Promise.all(farmerUrls.map(async (u) => { try { proofs.push(...(await listProofs(u))); } catch { unreachable.push(u); } }));
+  // Supplier onboarding: the company allow-lists a supplier's address in the AgentWallet after KYC/contract.
+  // A key that is not allow-listed is an unknown counterparty — even if its proof verifies, we don't know whose farm it is.
+  const farmers = [...new Set(proofs.map((p) => p.farmer.toLowerCase()))];
+  const known = new Map<string, boolean>();
+  await Promise.all(farmers.map(async (f) => { try { known.set(f, await pub.readContract({ address: dep.agentWallet, abi: agentWalletAbi, functionName: 'allowedPayee', args: [f as `0x${string}`] }) as boolean); } catch { known.set(f, false); } }));
+  // Same CAR offered by two different keys = someone is impersonating the owner.
+  const byCar = new Map<string, Set<string>>();
+  for (const p of proofs) if (p.car) { if (!byCar.has(p.car)) byCar.set(p.car, new Set()); byCar.get(p.car)!.add(p.farmer.toLowerCase()); }
+  for (const p of proofs) { p.knownSupplier = known.get(p.farmer.toLowerCase()) ?? false; p.carConflict = !!(p.car && (byCar.get(p.car)?.size ?? 0) > 1); }
   return { proofs, unreachable };
 }
 

@@ -15,7 +15,7 @@ if (args[0] === '--list') {
   const urls = args.length > 1 ? args.slice(1) : ['http://localhost:4020'];
   const { proofs, unreachable } = await listLot(urls);
   console.log(pc.bold(`\nProofs offered by ${urls.length} farmer agent(s):`));
-  for (const a of proofs) console.log(`  ${a.compliant ? pc.green('COMPLIANT   ') : pc.red('NON-COMPLIANT')} ${a.farmerName.padEnd(14)} ${a.hash}  ${a.label || ''}  ${a.areaHa.toFixed(0)} ha  ${usdt(a.priceUnits)}`);
+  for (const a of proofs) console.log(`  ${a.compliant ? pc.green('COMPLIANT   ') : pc.red('NON-COMPLIANT')} ${a.knownSupplier ? pc.dim('known  ') : pc.red('UNKNOWN')}${a.carConflict ? pc.red(' CAR-CONFLICT') : ''} ${a.farmerName.padEnd(12)} ${a.hash}  ${a.label || ''}  ${a.areaHa.toFixed(0)} ha  ${usdt(a.priceUnits)}`);
   for (const u of unreachable) console.log(pc.red(`  unreachable ${u}`));
   process.exit(0);
 }

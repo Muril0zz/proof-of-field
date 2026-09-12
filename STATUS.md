@@ -36,6 +36,8 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
 - **PRODES ampliado**: RO, MT, GO (Amazônia + Cerrado), 103k polígonos, `./scripts/fetch-prodes.sh` (150 MB, fora do git). Cobertura por estado×bioma; fora → recusa.
 
+- **Impostor na demo**: Fazenda C (porta 4022, chave FARMER3, sem gás, não cadastrada) vende o CAR da Fazenda A. Agente marca UNKNOWN + CAR-CONFLICT e recusa. Comando da demo agora tem 3 URLs.
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).

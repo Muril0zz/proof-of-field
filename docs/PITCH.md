@@ -1,8 +1,8 @@
 # Proof of Field — 3-minute presentation (1 min pitch · 2 min demo) + 2 min Q&A
 
 ## Before walking up (checklist)
-- Console open at http://localhost:5173, PRODES layer OFF, no field selected. Farmer A (port 4020) lists …9C62 (clean) and …4C8E (26 ha); Farmer B (port 4021, a neighbour, different key) lists …0A28 (18.6 ha). The lot = two farmers, three properties. Sales section empty (delete `data/farmer-payments.hsk-testnet.*.json` and restart the farmer agent if not).
-- Terminal with this typed, NOT executed: `cd ~/Documents/Projetos_Codigo/eag-buildathon && NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021`
+- Console open at http://localhost:5173, PRODES layer OFF, no field selected. Farmer A (port 4020) lists …9C62 (clean) and …4C8E (26 ha); Farmer B (port 4021, different key) lists …0A28 (18.6 ha); Farmer C (port 4022) is an **impostor**: offers Farmer A's CAR …9C62 with a key the company never onboarded. The shipment = three sellers, four listings. Sales section empty (delete `data/farmer-payments.hsk-testnet.*.json` and restart the farmer agent if not).
+- Terminal with this typed, NOT executed: `cd ~/Documents/Projetos_Codigo/eag-buildathon && NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021 http://localhost:4022`
 - Explorer tab: https://testnet-explorer.hsk.xyz/address/0xe0e5e881542266aac1b3457fdd33147c761b46dd
 - Slides open on slide 1, fullscreen.
 
@@ -30,7 +30,7 @@
 
 **0:45** as the first `buy_proof` prints → "HTTP 402, payment required. It pays five USDT through a wallet with hard limits. Gets the proof. Verifies the signature and the registry itself, without trusting the farmer or us."
 
-**1:15** as `skip_proof` prints → "And these two it refuses: 26 hectares on one, 18 on the neighbour's. It says why, per farm."
+**1:15** as `skip_proof` prints → "It refuses three: two farms with clearing after 2020, and one seller it has never onboarded who is offering a CAR that already belongs to Farmer A. Anyone can download a public CAR; only the onboarded supplier gets paid."
 
 **1:35 [Console]** Point at **Sales**: +5.00 USDT appeared by itself. → "The farmer was paid the second his data was used."
 
@@ -50,7 +50,7 @@ Open BEFORE walking up: (A) farmer console in the browser, (B) terminal with the
 1. **[Console]** "This is the farmer's agent. It runs on his machine. These red areas are PRODES, the official deforestation map from Brazil's space agency, INPE." Click property …4C8E → 26 ha in 2022. "This one does not pass. The system says exactly where and when." Point at the red overlap on the map.
 2. Click …9C62 → Deforestation-free. "This one passes." Click **Sign attestation & anchor on-chain** → hash + tx. "Only the hash went on-chain. The farm's map is still here, on his machine." Copy the proof URL.
 3. **[Terminal B]** Run the LLM buyer agent (command pre-typed, just press Enter):
-   `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021`
+   `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021 http://localhost:4022`
    Narrate while it runs (~70 s, so start it EARLY, right after step 2, and talk over it): "This is the trading company's agent. It got one sentence from the operator. It lists what the farmer sells, checks its own on-chain spending policy, and decides. Watch: it buys the two clean farms over HTTP 402, five USDT each, verifies signature and registry on its own, and refuses the one with 26 hectares. Nobody pressed a button. The farmer was paid the second his data was used." Point at the final summary and the compliance report path.
    **Fallback** if the API is slow or fails: `NETWORK=hsk-testnet pnpm buyer -- <proofUrl>` (deterministic, 5 s, same four steps).
 4. **[Explorer]** Show the attest tx and the payment tx on HSK. Done.
@@ -61,6 +61,7 @@ Fallback if HSK is down: run everything with `NETWORK=anvil` (identical, no expl
 
 - **"Why blockchain? This works with a database and a bank transfer."** Two reasons. First, the buyer is a program. It has no bank account and cannot make a transfer. A stablecoin is the only way one machine pays another. Second, the public registry lets any buyer, bank or auditor verify the proof without trusting me or a certifier.
 - **"PRODES is public. Why doesn't the trader just check it themselves?"** They don't have the farm polygon. What they are buying is the farmer's permission plus his signature saying "this is my area, verified on this date." The farmer stays the owner of the data and decides who gets access.
+- **"What stops anyone from taking a public CAR and selling a proof for someone else's farm?"** Nothing stops them from computing it; the check is public. What stops them from getting paid is the same thing that works today: the buyer only pays suppliers it has onboarded. The company allow-lists a supplier's address in its AgentWallet after contract and KYC. In the demo, Farmer C offers Farmer A's CAR with an unknown key: the agent marks it UNKNOWN and CAR-CONFLICT, refuses, and the wallet would reject the payment anyway. Next: a gov.br-signed binding "wallet X belongs to the CPF that holds CAR Y" anchored on-chain, or a zkTLS proof of the SICAR login.
 - **"Can't the farmer just draw the polygon around the deforested corner?"** Not for compliance. Compliance is judged on the **registered property** (CAR, Brazil's public rural registry), and the attestation of a registered property carries the CAR number and the hash of the *official* polygon. Any buyer can download the public CAR polygon, hash it, and see it matches `fieldId`: nothing was cut out. Hand-drawn fields are marked `registered: false`; the buyer agent skips them for compliance by default and only uses them for sub-field traceability. It did that on its own this morning: it flagged a drawn field as "no CAR reference".
 - **"What if the farmer lies in other ways?"** He can't change the INPE data, and he can't change the polygon without changing the hash. What he could do is sign with a key that isn't the property owner's. Binding the farmer key to the CAR owner (a KYC'd attestation from the registry or a bank) is the natural next step.
 - **"Is 5 USDT a real price?"** Illustrative. The mechanism is what we are showing. Today the trader pays, because the legal obligation is on the importer, per query. It could be the bank, or a subscription.

@@ -40,7 +40,7 @@ const tools = [
     run: async ({ farmerAgentUrls }) => {
       tool('list_lot', `${farmerAgentUrls.length} farmer agent(s)`);
       const { proofs, unreachable } = await listLot(farmerAgentUrls);
-      proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.farmerName} · ${p.registered ? 'CAR ' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
+      proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.knownSupplier ? 'known   ' : 'UNKNOWN '}${p.carConflict ? 'CAR-CONFLICT ' : ''}${p.farmerName} · ${p.registered ? 'CAR ' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
       unreachable.forEach((u) => console.log(pc.red(`      ✘ unreachable: ${u}`)));
       return JSON.stringify({ proofs: proofs.map((p) => ({ ...p, price: usdt(p.priceUnits) })), unreachable });
     },
@@ -111,6 +111,7 @@ Facts about your environment:
 - Proofs are sold over x402: an HTTP 402 with the price, paid in USDT, then the signed proof is delivered. buy_proof does the whole flow and verifies the proof cryptographically and on-chain. Trust its verification result, not the farmer's claims.
 - A proof marked NON-COMPLIANT is still a valid, verifiable proof. Whether to buy it depends on the operator's instruction (some operators want the evidence, most want to skip it).
 - Prices are what the farmer asks. You never negotiate; you decide buy or skip.
+- "knownSupplier: true" means the seller's address is allow-listed in the company's AgentWallet: the supplier was onboarded (contract, CNPJ, CAR ownership checked). The CAR registry is public, so anyone could compute a true-looking proof for someone else's farm and sign it with their own key. A seller with "knownSupplier: false" is an unknown counterparty: never buy from it (the wallet would refuse the payment anyway) and say so. "carConflict: true" means the same CAR is offered by two different keys: flag it as a likely impersonation attempt in the report.
 - A proof is "registered: true" when its polygon is the farmer's official CAR property (Brazil's rural environmental registry, public). Compliance for a lot is judged on registered properties. A proof with "registered: false" is a hand-drawn sub-field: it may be useful for traceability but does NOT clear a lot on its own. Default: skip unregistered proofs and say why, unless the operator explicitly asks for sub-field proofs.
 
 How to work:
