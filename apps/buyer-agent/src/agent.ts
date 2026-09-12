@@ -41,7 +41,8 @@ const tools = [
       tool('list_lot', `${farmerAgentUrls.length} farmer agent(s)`);
       let { proofs, unreachable } = await listLot(farmerAgentUrls);
       const only = (process.env.ONLY_PROOFS || '').split(',').map((x) => x.trim()).filter(Boolean);
-      if (only.length) proofs = proofs.filter((p) => only.includes(p.proofUrl));
+      // Selection is by property (fieldId), so re-signing a property during the demo never drops it from the run.
+      if (only.length) { const set = new Set(only.map((x) => x.toLowerCase())); proofs = proofs.filter((p) => set.has(p.fieldId) || set.has(p.proofUrl.toLowerCase())); }
       proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.knownSupplier ? 'known   ' : 'UNKNOWN '}${p.carConflict ? 'CAR-CONFLICT ' : ''}${p.farmerName} · ${p.registered ? '' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
       unreachable.forEach((u) => console.log(pc.red(`      ✘ unreachable: ${u}`)));
       return JSON.stringify({ proofs: proofs.map((p) => ({ ...p, price: usdt(p.priceUnits) })), unreachable });

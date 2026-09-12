@@ -117,12 +117,12 @@ const $=id=>document.getElementById(id);
 fetch('/config').then(r=>r.json()).then(async c=>{$('chip').textContent=c.network;window.__lot=c.lot;
  const items=await Promise.all(c.lot.map(async u=>{try{const i=await fetch(u+'/',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());const a=await fetch(u+'/attestations',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());return {u,name:i.name||u,farmer:i.farmer,props:a};}catch{return {u,name:u,off:true,props:[]};}}));
  $('lot').innerHTML=items.map(i=>'<div class="sup" data-u="'+i.u+'"><label class="sh"><input type="checkbox" class="supcb" '+(i.off?'':'checked')+'/> '+i.name+' <small>'+(i.farmer?i.farmer.slice(0,6)+'…'+i.farmer.slice(-4):'')+'</small>'+(i.off?' <span class="off">offline</span>':'')+'</label><div class="props">'+
-   (i.props.length?i.props.map(p=>'<label class="pr"><input type="checkbox" class="prcb" value="'+i.u+'/proof/'+p.hash+'" '+(i.off?'':'checked')+'/> '+(p.label||p.hash.slice(0,10))+(p.report&&p.report.areaHa?' <small>'+Math.round(p.report.areaHa).toLocaleString()+' ha</small>':'')+'</label>').join(''):'<span class="off">no proofs offered</span>')+'</div></div>').join('');
+   (i.props.length?i.props.map(p=>'<label class="pr"><input type="checkbox" class="prcb" value="'+((p.attestation&&p.attestation.fieldId)||p.hash)+'" '+(i.off?'':'checked')+'/> '+(p.label||p.hash.slice(0,10))+(p.report&&p.report.areaHa?' <small>'+Math.round(p.report.areaHa).toLocaleString()+' ha</small>':'')+'</label>').join(''):'<span class="off">no proofs offered</span>')+'</div></div>').join('');
  document.querySelectorAll('.supcb').forEach(cb=>cb.addEventListener('change',e=>{e.target.closest('.sup').querySelectorAll('.prcb').forEach(x=>x.checked=e.target.checked);}));
  document.querySelectorAll('.prcb').forEach(cb=>cb.addEventListener('change',e=>{const sup=e.target.closest('.sup');sup.querySelector('.supcb').checked=[...sup.querySelectorAll('.prcb')].some(x=>x.checked);}));
 });
 function selectedProofs(){return [...document.querySelectorAll('#lot .prcb:checked')].map(i=>i.value);}
-function selectedLot(){return [...new Set(selectedProofs().map(v=>v.split('/proof/')[0]))];}
+function selectedLot(){return [...document.querySelectorAll('#lot .sup')].filter(s=>s.querySelector('.prcb:checked')).map(s=>s.dataset.u);}
 function cls(l){if(/^\\s*⚙/.test(l))return 't';if(/✔/.test(l))return 'ok';if(/✘|NON-COMPLIANT|UNKNOWN/.test(l))return 'bad';if(/^\\s{4,}/.test(l))return 'dim';return 'say';}
 
 $('rawt').onclick=()=>{const h=$('log').hidden;$('log').hidden=!h;$('rawt').textContent=h?'Hide raw agent log':'Show raw agent log';};
