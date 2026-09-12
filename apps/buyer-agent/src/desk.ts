@@ -67,7 +67,7 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 .sup .sh{display:flex;align-items:center;gap:8px;font-weight:600}.sup .sh small{font-family:var(--mono);font-size:11px;color:var(--ink-3);font-weight:400}
 .sup .props{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding-left:2px}
 .sup .pr{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);cursor:pointer}
-.sup .pr input{margin:0;accent-color:var(--primary)}
+.sup .pr input{margin:0;accent-color:var(--primary)}.sup .pr small{color:var(--ink-3);font-size:11.5px}
 .sup .pill{font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:1px 6px;border-radius:999px}
 .sup .pill.ok{background:var(--ok-soft);color:var(--ok)}.sup .pill.bad{background:var(--bad-soft);color:var(--bad)}
 .sup .off{color:var(--bad);font-size:11px}
@@ -117,7 +117,7 @@ const $=id=>document.getElementById(id);
 fetch('/config').then(r=>r.json()).then(async c=>{$('chip').textContent=c.network;window.__lot=c.lot;
  const items=await Promise.all(c.lot.map(async u=>{try{const i=await fetch(u+'/',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());const a=await fetch(u+'/attestations',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());return {u,name:i.name||u,farmer:i.farmer,props:a};}catch{return {u,name:u,off:true,props:[]};}}));
  $('lot').innerHTML=items.map(i=>'<div class="sup" data-u="'+i.u+'"><label class="sh"><input type="checkbox" class="supcb" '+(i.off?'':'checked')+'/> '+i.name+' <small>'+(i.farmer?i.farmer.slice(0,6)+'…'+i.farmer.slice(-4):'')+'</small>'+(i.off?' <span class="off">offline</span>':'')+'</label><div class="props">'+
-   (i.props.length?i.props.map(p=>'<label class="pr"><input type="checkbox" class="prcb" value="'+i.u+'/proof/'+p.hash+'" '+(i.off?'':'checked')+'/> '+(p.label||p.hash.slice(0,10))+' <span class="pill '+(p.compliant?'ok':'bad')+'">'+(p.compliant?'clean':(p.report&&p.report.deforestedHa?p.report.deforestedHa.toFixed(0)+' ha cleared':'non-compliant'))+'</span></label>').join(''):'<span class="off">no proofs offered</span>')+'</div></div>').join('');
+   (i.props.length?i.props.map(p=>'<label class="pr"><input type="checkbox" class="prcb" value="'+i.u+'/proof/'+p.hash+'" '+(i.off?'':'checked')+'/> '+(p.label||p.hash.slice(0,10))+(p.report&&p.report.areaHa?' <small>'+Math.round(p.report.areaHa).toLocaleString()+' ha</small>':'')+'</label>').join(''):'<span class="off">no proofs offered</span>')+'</div></div>').join('');
  document.querySelectorAll('.supcb').forEach(cb=>cb.addEventListener('change',e=>{e.target.closest('.sup').querySelectorAll('.prcb').forEach(x=>x.checked=e.target.checked);}));
  document.querySelectorAll('.prcb').forEach(cb=>cb.addEventListener('change',e=>{const sup=e.target.closest('.sup');sup.querySelector('.supcb').checked=[...sup.querySelectorAll('.prcb')].some(x=>x.checked);}));
 });

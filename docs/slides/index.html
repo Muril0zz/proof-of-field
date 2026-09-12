@@ -61,6 +61,10 @@
   .cmp-c { font-size: 1.2vw; line-height: 1.4; color: var(--ink-2); padding: 1.1vw 1.2vw; border-radius: 0.6vw; }
   .cmp-c.bad { background: var(--bad-soft); } .cmp-c.ok { background: var(--ok-soft); }
   .cmp-c b { color: var(--ink); }
+  .qa { display: grid; grid-template-columns: 1fr 1fr; gap: 1vw 2.2vw; }
+  .qa > div { border-top: 1px solid var(--line); padding-top: 0.7vw; }
+  .qa b { display: block; font-size: 1.22vw; margin-bottom: 0.3vw; }
+  .qa p { font-size: 1.02vw; line-height: 1.4; }
   /* layers */
   .layers { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; flex: 1; }
   .layer { border-radius: 0.8vw; padding: 1.8vw 2vw; display: flex; flex-direction: column; gap: 1vw; }
@@ -225,6 +229,34 @@
   <p class="lead" style="margin-top:1.8vw;font-size:1.6vw">Built to scale: every farm runs its own agent, every buyer its own; one public registry; contracts and agents generic enough for any private dataset sold as a proof.</p>
   <p class="note">Pilot partners wanted: a cooperative, a bank, a trader · github.com/Muril0zz/proof-of-field</p>
   <span class="n">9</span>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <h2>Roadmap</h2>
+  <div class="markets">
+    <div class="mkt"><i>next 30 days</i><b>Identity</b><p>On-chain attestation "key ↔ CAR holder" issued by a co-op, a bank, or the farmer via gov.br. Buyer agents require it from issuers they trust. Then zkTLS proof of the SICAR login, no issuer at all.</p></div>
+    <div class="mkt"><i>next 60 days</i><b>Data &amp; payments</b><p>DETER real-time alerts and IBAMA embargoes in the check. Full x402: EIP-3009 gasless settlement and a facilitator. BRL stablecoin or automatic off-ramp so farms are paid in reais.</p></div>
+    <div class="mkt"><i>pilot</i><b>One co-op, one bank, one trader</b><p>Rondônia first: a cooperative hosting agents for its members, a bank using the same proofs for rural credit, a trader plugging a buyer agent into its compliance desk. Then Mato Grosso and Goiás, already covered.</p></div>
+  </div>
+  <p class="note">Later: ZK proof of "empty intersection" so even the hectares stay private · Sentinel-2 change detection on the farm's machine · cattle passports as a second asset class.</p>
+  <span class="n">10</span>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <h2>Questions we expect</h2>
+  <div class="qa">
+    <div><b>How do you know the key belongs to the CAR holder?</b><p>Today: the buyer's own onboarding, same as now (contract, CPF, CAR number; the key is registered like a bank account). Next: an on-chain identity attestation from the co-op, a bank or gov.br. The protocol doesn't change; identity is one more check.</p></div>
+    <div><b>Why blockchain and not a database?</b><p>The check is SQL and we run it locally. The trade isn't: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. That needs a ledger nobody owns, a currency machines can send, and a spending policy nobody can quietly edit.</p></div>
+    <div><b>The data is public. Why pay the farmer?</b><p>The data is public; the declaration of origin and the accountability are not. The farmer signs which property supplies this buyer and stands behind it. Signed once, reused by every buyer, paid per use.</p></div>
+    <div><b>Can't the farmer draw around the deforested corner?</b><p>No: the proof uses the official CAR polygon and carries the CAR number. Anyone can hash the public polygon and compare.</p></div>
+    <div><b>Is PRODES enough?</b><p>It's INPE's official annual map, minimum 6.25 ha. We add indigenous lands and conservation units today, DETER alerts and IBAMA embargoes next. Outside covered data we refuse to attest: absence of data is not absence of deforestation.</p></div>
+    <div><b>Will farmers run software? Do they want USDT?</b><p>Large farms yes; small ones through their cooperative, authorizing from a phone. USDT is the testnet stand-in; production is a BRL stablecoin or an automatic off-ramp. Not solved yet, and we say so.</p></div>
+    <div><b>Is this real x402?</b><p>402 body and accepts[] follow x402 v1; settlement is an on-chain transfer referenced by tx hash, replay-protected. EIP-3009 gasless settlement is next.</p></div>
+    <div><b>Who adopts first?</b><p>Cooperatives (one compliance desk for hundreds of members), then banks (need the proof to lend), traders last, once proofs already circulate among their suppliers.</p></div>
+  </div>
+  <span class="n">11</span>
 </section>
 
 </div>

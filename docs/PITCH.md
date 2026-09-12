@@ -38,8 +38,8 @@ While the log streams (~70 s), say only these, pointing at the lines as they app
 
 Do NOT open the explorer or the terminal unless asked. If asked for on-chain evidence, the report has the links.
 
-## Slides 7–9 are for Q&A only
-Jump to 8 for "how does it work", 9 for "adoption / what's next".
+## Slides 7–11 are for Q&A only
+Jump to 8 for "how does it work", 9 for adoption, 10 for the roadmap, 11 for the expected questions with answers (open it if a question you can't answer comes up).
 
 ## Demo script (90 s, in English — rehearse 3×)
 
