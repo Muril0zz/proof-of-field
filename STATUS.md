@@ -20,6 +20,12 @@ NETWORK=anvil pnpm buyer -- <proofUrl copiado do console>
 ```
 Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
+## FEITO 12/09 manhã
+- Devfolio: rascunho completo (`proof-of-field-a49c`), 3 trilhas, screenshots, repo, links HSK. Falta só PUBLICAR.
+- GitHub público: https://github.com/Muril0zz/proof-of-field
+- **HSK testnet ao vivo**: registry `0xe0e5…46dd`, attest tx `0xd1a3…6705`, pagamento `0x34d5…9c03`. Rodar: `NETWORK=hsk-testnet ./scripts/dev-up.sh`
+- Buyer com LLM (`pnpm buyer:ai`) escrito, precisa de ANTHROPIC_API_KEY pra testar.
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).

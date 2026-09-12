@@ -67,6 +67,9 @@ pnpm web                                              # terminal C · http://loc
 # 3. buyer side
 NETWORK=anvil pnpm buyer -- --list http://localhost:4020
 NETWORK=anvil pnpm buyer -- http://localhost:4020/proof/<attestationHash>
+
+# optional: LLM-driven buyer (needs ANTHROPIC_API_KEY in .env)
+NETWORK=anvil pnpm buyer:ai "Buy proofs for every farm in this lot, budget 30 USDT, reject any farm with deforestation."
 ```
 
 ### HSK Chain testnet (chainId 133)
@@ -80,6 +83,16 @@ NETWORK=hsk-testnet pnpm buyer -- <proofUrl>
 ```
 
 Explorer: https://testnet-explorer.hsk.xyz
+
+Live deployment (chainId 133):
+
+| Contract | Address |
+|---|---|
+| FieldAttestationRegistry | [`0xe0e5e881542266aac1b3457fdd33147c761b46dd`](https://testnet-explorer.hsk.xyz/address/0xe0e5e881542266aac1b3457fdd33147c761b46dd) |
+| MockUSDT | `0xc128d4550e859b75d2e84c736757cc39853bc7d7` |
+| AgentWallet | `0xdba07b2211e4bdc07a228da01a647a4a4c6b82b3` |
+
+Example: [attestation anchored](https://testnet-explorer.hsk.xyz/tx/0xd1a37a26ce852d537a1e83f62e1de51b85042373e0dcf66030a02893180c6705) · [agent-to-agent payment](https://testnet-explorer.hsk.xyz/tx/0x34d53225f578d91b5a15492ab3e26ee9f2a31b6358a287147bf934c363d89c03)
 
 ## Design notes
 
