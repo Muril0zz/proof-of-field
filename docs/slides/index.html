@@ -35,7 +35,8 @@
   .markets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; margin-top: 1vw; }
   .mkt { border: 1px solid var(--line); border-radius: 0.8vw; padding: 1.6vw 1.6vw; display: flex; flex-direction: column; gap: 0.6vw; min-height: 15vw; }
   .mkt i { font: 500 1vw 'JetBrains Mono', monospace; color: var(--primary); font-style: normal; }
-  .mkt b { font-size: 1.7vw; letter-spacing: -0.015em; }
+  .mkt > b { font-size: 1.7vw; letter-spacing: -0.015em; }
+  .mkt p b { font-size: inherit; color: var(--ink); }
   .mkt p { font-size: 1.25vw; }
   /* timeline */
   .tl { display: grid; grid-template-columns: 9vw 1fr; gap: 1.2vw 2vw; align-items: start; }
