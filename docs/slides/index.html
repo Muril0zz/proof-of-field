@@ -30,8 +30,8 @@
   .big { font-size: 8vw; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
   .note { margin-top: auto; font-size: 1.2vw; color: var(--ink-3); }
   code { font-family: 'JetBrains Mono', monospace; font-size: 0.92em; background: oklch(0.96 0.005 260); padding: 0.1em 0.4em; border-radius: 0.3em; color: var(--ink); }
-  .logos { display: flex; gap: 1.2vw; margin: 0.4vw 0 1.8vw; flex-wrap: wrap; }
-  .logo-mark { font-weight: 700; letter-spacing: 0.12em; font-size: 1.35vw; color: var(--ink-2); border: 1px solid var(--line); border-radius: 0.5vw; padding: 0.55vw 1.2vw; }
+  .logos { display: flex; gap: 2.2vw; margin: 0.6vw 0 2vw; flex-wrap: wrap; align-items: center; }
+  .logos img { height: 3.2vw; width: auto; max-width: 13vw; object-fit: contain; filter: grayscale(1) contrast(1.05); opacity: .85; }
   .markets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; margin-top: 1vw; }
   .mkt { border: 1px solid var(--line); border-radius: 0.8vw; padding: 1.6vw 1.6vw; display: flex; flex-direction: column; gap: 0.6vw; min-height: 15vw; }
   .mkt i { font: 500 1vw 'JetBrains Mono', monospace; color: var(--primary); font-style: normal; }
@@ -84,7 +84,7 @@
 <section class="slide">
   <h2>Six companies move most of Brazil's soy and beef. Each one clears thousands of farms per season.</h2>
   <div class="logos">
-    <span class="logo-mark">CARGILL</span><span class="logo-mark">BUNGE</span><span class="logo-mark">ADM</span><span class="logo-mark">COFCO</span><span class="logo-mark">LDC</span><span class="logo-mark">AMAGGI</span>
+    <img src="logos/cargill.png" alt="Cargill" /><img src="logos/bunge.png" alt="Bunge" /><img src="logos/adm.png" alt="ADM" /><img src="logos/cofco.png" alt="COFCO" /><img src="logos/ldc.png" alt="Louis Dreyfus Company" /><img src="logos/amaggi.png" alt="Amaggi" />
   </div>
   <div class="markets">
     <div class="mkt"><i>how a trader works</i><b>Originate → aggregate → export</b><p>Buys from thousands of farms, blends into lots at silos and ports, sells to importers worldwide. Margins are thin; volume is everything.</p></div>
