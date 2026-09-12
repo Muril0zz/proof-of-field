@@ -104,7 +104,7 @@ const tools = [
 ];
 
 const system = `You are the autonomous procurement compliance agent of a commodity trading company that buys soy and beef from farms in Brazil.
-Your job: obtain deforestation-free Proofs of Field from the farmer agents in a lot (a lot spans several farmers and properties) so the company can legally import what it buys.
+Your job: obtain Proofs of Field from the farmer agents of a supplier group BEFORE the company contracts volume from them (supplier onboarding and per-season re-verification). The same proofs are later reused in the export dossier. A group spans several farmers and properties.
 
 Facts about your environment:
 - You pay with the company's on-chain AgentWallet (${dep.agentWallet}) on ${chain.name}. The wallet enforces a daily limit, a per-payment limit and an allow-list of payees. Any payment outside the policy reverts; you cannot override it.
@@ -131,7 +131,7 @@ const runner = client.beta.messages.toolRunner({
   max_tokens: 16000,
   system,
   tools,
-  messages: [{ role: 'user', content: `Operator instruction: ${instruction}\n\nThe lot consists of these farmer agents:\n${lot.map((u) => `- ${u}`).join('\n')}` }],
+  messages: [{ role: 'user', content: `Operator instruction: ${instruction}\n\nThe suppliers under review run these farmer agents:\n${lot.map((u) => `- ${u}`).join('\n')}` }],
   max_iterations: 20,
 });
 

@@ -72,12 +72,12 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 @media(prefers-reduced-motion:reduce){.spin{animation:none}}
 </style></head><body>
 <div class="top"><div class="logo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12.5 6.5 3.5 14 12.5Z" fill="#fff"/></svg></div>
-<div class="brand">Proof of Field<small>Buyer desk · compliance for one shipment, one sentence</small></div><div class="chip" id="chip">…</div></div>
+<div class="brand">Proof of Field<small>Buyer desk · supplier compliance, one sentence</small></div><div class="chip" id="chip">…</div></div>
 <div class="wrap">
   <div class="card"><h2>Instruction to the buyer agent</h2>
-    <textarea id="q">Buy the proofs for every farm in this shipment. Budget 30 USDT. Reject any farm with deforestation after 2020 or overlapping protected areas.</textarea>
+    <textarea id="q">Before we sign purchase contracts with these suppliers for the coming harvest, verify each property. Budget 30 USDT. Reject any farm with deforestation after 2020 or on protected land.</textarea>
     <div class="lot" id="lot"></div>
-    <div class="row"><button class="btn" id="run">Run agent</button><span class="hint">The agent lists the shipment, reads its on-chain spending policy, buys over HTTP 402, verifies each proof, and writes the dossier. ~70 s.</span></div>
+    <div class="row"><button class="btn" id="run">Run agent</button><span class="hint">The agent lists the suppliers, reads its on-chain spending policy, buys each proof over HTTP 402, verifies it, and writes the dossier. ~70 s. The same proofs are reused at every season and in the export file.</span></div>
   </div>
   <div class="card" id="logcard" hidden><h2><span class="status" id="st"><span class="spin"></span>Agent working…</span></h2><div class="log" id="log"></div></div>
   <div class="card" id="repcard" hidden><h2>Compliance report</h2><div class="summary" id="sum"></div><div class="report" id="rep"></div></div>

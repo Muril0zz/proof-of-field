@@ -123,13 +123,13 @@
     <div class="chain">
       <div class="node ok"><i>farmer's machine</i><b>Farmer agent checks</b><p>Intersects the property with INPE/PRODES, indigenous lands and conservation units, in seconds. Map never leaves the farm.</p></div>
       <div class="node ok"><i>farmer's machine</i><b>Signs &amp; anchors</b><p>EIP-712 attestation. Only its hash goes on-chain. Proof is now for sale at a price the farmer sets.</p></div>
-      <div class="node ai"><i>trader's machine</i><b>AI buyer agent decides</b><p>One sentence from the operator. Lists proofs, checks its budget, buys what fits the rule, refuses what doesn't.</p></div>
-      <div class="node ai"><i>trader's machine</i><b>Pays, verifies, reports</b><p>HTTP 402 → USDT → proof. Verifies signature + registry itself. Writes the dossier.</p></div>
+      <div class="node ai"><i>trader's machine · before contracting</i><b>AI buyer agent decides</b><p>One sentence from compliance. Lists the suppliers' proofs, checks its budget, buys what fits the rule, refuses what doesn't.</p></div>
+      <div class="node ai"><i>trader's machine · reused each season &amp; at export</i><b>Pays, verifies, reports</b><p>HTTP 402 → USDT → proof. Verifies signature + registry itself. Writes the dossier; the export file reuses the same proofs.</p></div>
     </div>
   </div>
   <div class="stat ok">
     <div><b>signed once</b><span>verified by every buyer, bank and importer</span></div>
-    <div><b>~2 minutes</b><span>per shipment, unattended</span></div>
+    <div><b>~2 minutes</b><span>per supplier group, before contracting, unattended</span></div>
     <div><b>zero copies</b><span>of the farm map leave the farm; the farm is paid per use</span></div>
   </div>
   <p class="note">Same official data, same check. What changed: the proof is portable. One signature, any number of buyers, no repeated paperwork.</p>
@@ -172,7 +172,7 @@
       <h2 style="font-size:2.5vw">Farmer: draw, check, sign, anchor.<br/>Trader: one sentence.</h2>
       <ul>
         <li>Three sellers, four listings from the public CAR registry: one clean farm, two with post-2020 clearing, and one <b>impostor</b> offering someone else's CAR.</li>
-        <li>The buyer's agent works the whole shipment: buys the clean one, <b>refuses the other three</b>, and says why, per farm. Only onboarded suppliers get paid.</li>
+        <li>Before contracting the harvest, the buyer's agent reviews all suppliers: clears the clean one, <b>refuses the other three</b>, and says why. Only onboarded suppliers get paid.</li>
         <li>Every step is a transaction on <b>HSK Chain</b> you can open in the explorer.</li>
       </ul>
     </div>
@@ -206,7 +206,7 @@
   <div class="markets">
     <div class="mkt" style="background:var(--ok-soft);border-color:transparent"><i>1 · cooperatives</i><b>Hundreds of members, one compliance desk</b><p>A co-op answers for every member farm, to every buyer, every season. Today: spreadsheets and e-mail. One farmer agent per member, one proof per property, and the co-op's paperwork collapses.</p></div>
     <div class="mkt" style="background:var(--primary-soft);border-color:transparent"><i>2 · banks &amp; insurers</i><b>Need the proof to lend, have no field team</b><p>Rural credit requires deforestation-free evidence. Banks buy the same proof the trader buys, verify it on-chain, and stop paying per-farm vendors.</p></div>
-    <div class="mkt"><i>3 · traders</i><b>The final target</b><p>Once proofs already circulate among their suppliers, the trader's compliance desk plugs in a buyer agent and clears shipments in minutes instead of weeks.</p></div>
+    <div class="mkt"><i>3 · traders</i><b>The final target</b><p>Once proofs already circulate among their suppliers, the trader's compliance desk plugs in a buyer agent and clears its suppliers in minutes instead of weeks, before every contract and again each season.</p></div>
   </div>
   <p class="lead" style="margin-top:1.8vw;font-size:1.6vw">Built to scale: every farm runs its own agent, every buyer its own; one public registry; contracts and agents generic enough for any private dataset sold as a proof.</p>
   <p class="note">Pilot partners wanted: a cooperative, a bank, a trader · github.com/Muril0zz/proof-of-field</p>
