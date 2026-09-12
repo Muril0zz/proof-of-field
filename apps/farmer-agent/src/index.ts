@@ -13,7 +13,7 @@ import path from 'node:path';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
-import { createPublicClient, createWalletClient, http, parseEventLogs, type Address, type Hex } from 'viem';
+import { createPublicClient, createWalletClient, http, parseEventLogs, type Address, type Chain, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import {
   chains, type NetworkName, type Deployment, explorerTx,
@@ -30,7 +30,7 @@ const BASELINE_YEAR = Number(process.env.BASELINE_YEAR || 2020);
 const PUBLIC_URL = process.env.FARMER_PUBLIC_URL || `http://localhost:${PORT}`;
 
 const dep: Deployment = JSON.parse(fs.readFileSync(path.join(ROOT, 'deployments', `${NETWORK}.json`), 'utf8'));
-const chain = chains[NETWORK];
+const chain: Chain = chains[NETWORK] as Chain;
 const rpc = NETWORK === 'anvil' ? 'http://127.0.0.1:8545' : (process.env.HSK_TESTNET_RPC || chain.rpcUrls.default.http[0]);
 const account = privateKeyToAccount(process.env.FARMER_PRIVATE_KEY as Hex);
 const pub = createPublicClient({ chain, transport: http(rpc) });
@@ -157,7 +157,7 @@ app.get('/proof/:hash', async (c) => {
   if (usedPayments.has(tx)) return c.json({ error: 'payment already used' }, 402);
   const receipt = await pub.getTransactionReceipt({ hash: tx }).catch(() => null);
   if (!receipt || receipt.status !== 'success') return c.json({ error: 'payment tx not found/failed' }, 402);
-  const transfers = parseEventLogs({ abi: usdtAbi, logs: receipt.logs, eventName: 'Transfer' })
+  const transfers = (parseEventLogs({ abi: usdtAbi as any, logs: receipt.logs, eventName: 'Transfer' }) as any[])
     .filter((l) => l.address.toLowerCase() === dep.usdt.toLowerCase() && (l.args as any).to.toLowerCase() === account.address.toLowerCase());
   const paid = transfers.reduce((s, l) => s + BigInt((l.args as any).value), 0n);
   if (paid < PRICE) return c.json({ error: `insufficient payment: got ${paid}, need ${PRICE}` }, 402);

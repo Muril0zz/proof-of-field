@@ -11,7 +11,7 @@ import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
 import pc from 'picocolors';
-import { createPublicClient, createWalletClient, http, keccak256, toHex, type Hex } from 'viem';
+import { createPublicClient, createWalletClient, http, keccak256, toHex, type Chain, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import {
   chains, type NetworkName, type Deployment, explorerTx, agentWalletAbi, registryAbi,
@@ -21,7 +21,7 @@ import {
 const ROOT = path.resolve(import.meta.dirname, '../../..');
 const NETWORK = (process.env.NETWORK || 'anvil') as NetworkName;
 const dep: Deployment = JSON.parse(fs.readFileSync(path.join(ROOT, 'deployments', `${NETWORK}.json`), 'utf8'));
-const chain = chains[NETWORK];
+const chain: Chain = chains[NETWORK] as Chain;
 const rpc = NETWORK === 'anvil' ? 'http://127.0.0.1:8545' : (process.env.HSK_TESTNET_RPC || chain.rpcUrls.default.http[0]);
 const account = privateKeyToAccount(process.env.BUYER_PRIVATE_KEY as Hex);
 const pub = createPublicClient({ chain, transport: http(rpc) });
