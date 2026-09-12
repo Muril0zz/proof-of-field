@@ -8,37 +8,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root { --ink: oklch(0.2 0.02 260); --ink-2: oklch(0.45 0.02 260); --ink-3: oklch(0.6 0.015 260); --line: oklch(0.9 0.006 260);
-          --primary: oklch(0.38 0.14 262); --ok: oklch(0.52 0.15 150); --bad: oklch(0.55 0.19 27); --bg: #fff; }
+          --primary: oklch(0.38 0.14 262); --primary-soft: oklch(0.95 0.03 262); --ok: oklch(0.52 0.15 150); --ok-soft: oklch(0.95 0.05 150); --bad: oklch(0.55 0.19 27); --bad-soft: oklch(0.95 0.04 27); --bg: #fff; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #111; font-family: Inter, system-ui, sans-serif; color: var(--ink); }
   .deck { height: 100%; display: grid; place-items: center; }
-  .slide { display: none; width: min(100vw, 177.78vh); aspect-ratio: 16/9; background: var(--bg); padding: 5.5% 6.5%; position: relative; overflow: hidden; }
+  .slide { display: none; width: min(100vw, 177.78vh); aspect-ratio: 16/9; background: var(--bg); padding: 5% 6%; position: relative; overflow: hidden; }
   .slide.on { display: flex; flex-direction: column; }
   .slide .n { position: absolute; right: 4%; bottom: 4%; font: 500 0.9vw/1 'JetBrains Mono', monospace; color: var(--ink-3); }
   h1 { font-size: 5.2vw; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; margin: 0; text-wrap: balance; }
-  h2 { font-size: 3.2vw; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; margin: 0 0 2.2vw; text-wrap: balance; max-width: 30ch; }
-  p, li { font-size: 1.55vw; line-height: 1.45; color: var(--ink-2); margin: 0; }
-  ul { margin: 0; padding-left: 1.3em; display: grid; gap: 0.9vw; }
+  h2 { font-size: 3vw; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; margin: 0 0 1.8vw; text-wrap: balance; max-width: 32ch; }
+  p, li { font-size: 1.45vw; line-height: 1.45; color: var(--ink-2); margin: 0; }
+  ul { margin: 0; padding-left: 1.3em; display: grid; gap: 0.8vw; }
   li::marker { color: var(--primary); }
   b { color: var(--ink); font-weight: 600; }
-  .lead { font-size: 2.1vw; color: var(--ink); max-width: 34ch; }
+  .lead { font-size: 2vw; color: var(--ink); max-width: 34ch; }
   .sub { color: var(--ink-3); font-size: 1.4vw; margin-top: auto; }
-  .accent { color: var(--primary); }
+  .kicker { font-size: 1.2vw; color: var(--primary); font-weight: 600; margin-bottom: 1vw; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 4vw; align-items: center; flex: 1; }
+  .two.top { align-items: start; }
   .shot { width: 100%; border: 1px solid var(--line); border-radius: 0.6vw; display: block; box-shadow: 0 0.6vw 2vw rgba(20,22,60,.08); }
-  .big { font-size: 9vw; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
-  .big + p { margin-top: 1vw; }
-  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.4vw; margin-top: 1vw; }
-  .step { border: 1px solid var(--line); border-radius: 0.6vw; padding: 1.4vw; min-height: 14vw; display: flex; flex-direction: column; gap: 0.6vw; }
-  .step i { font: 500 0.95vw 'JetBrains Mono', monospace; color: var(--primary); }
-  .step b { font-size: 1.35vw; }
-  .step p { font-size: 1.1vw; }
-  .step.pay { background: oklch(0.95 0.03 262); border-color: transparent; }
-  .step.priv { background: oklch(0.95 0.05 150); border-color: transparent; }
-  .note { margin-top: auto; font-size: 1.25vw; color: var(--ink-3); }
+  .big { font-size: 8vw; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
+  .note { margin-top: auto; font-size: 1.2vw; color: var(--ink-3); }
   code { font-family: 'JetBrains Mono', monospace; font-size: 0.92em; background: oklch(0.96 0.005 260); padding: 0.1em 0.4em; border-radius: 0.3em; color: var(--ink); }
-  .kicker { font-size: 1.3vw; color: var(--primary); font-weight: 600; margin-bottom: 1.2vw; }
-  .roadmap { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; flex: 1; }
+  /* timeline */
+  .tl { display: grid; grid-template-columns: 9vw 1fr; gap: 1.2vw 2vw; align-items: start; }
+  .tl .lbl { font-weight: 700; font-size: 1.6vw; padding-top: 1.4vw; }
+  .tl .lbl.bad { color: var(--bad); } .tl .lbl.ok { color: var(--ok); }
+  .chain { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0.8vw; align-items: stretch; }
+  .node { border: 1px solid var(--line); border-radius: 0.8vw; padding: 1.6vw 1.5vw; display: flex; flex-direction: column; gap: 0.7vw; position: relative; min-height: 19vw; }
+  .node b { font-size: 1.55vw; letter-spacing: -0.01em; } .node p { font-size: 1.25vw; line-height: 1.4; }
+  .node i { font: 500 1vw 'JetBrains Mono', monospace; color: var(--ink-3); font-style: normal; }
+  .node.bad { background: var(--bad-soft); border-color: transparent; } .node.bad i { color: var(--bad); }
+  .node.ok { background: var(--ok-soft); border-color: transparent; } .node.ok i { color: var(--ok); }
+  .node.ai { background: var(--primary-soft); border-color: transparent; } .node.ai i { color: var(--primary); }
+  .stat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; margin-top: 2.4vw; }
+  .stat div { border-top: 2px solid var(--line); padding-top: 1vw; }
+  .stat b { display: block; font-size: 2.8vw; letter-spacing: -0.03em; } .stat.bad b { color: var(--bad); } .stat.ok b { color: var(--ok); }
+  .stat span { font-size: 1.3vw; color: var(--ink-3); }
+  /* layers */
+  .layers { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; flex: 1; }
+  .layer { border-radius: 0.8vw; padding: 1.8vw 2vw; display: flex; flex-direction: column; gap: 1vw; }
+  .layer.ai { background: var(--primary-soft); } .layer.chain { background: oklch(0.96 0.01 200); }
+  .layer h3 { margin: 0; font-size: 1.9vw; letter-spacing: -0.02em; } .layer.ai h3 { color: var(--primary); } .layer.chain h3 { color: oklch(0.4 0.1 200); }
+  .layer li { font-size: 1.5vw; }
+  .layer .why { margin-top: auto; font-size: 1.35vw; color: var(--ink-2); border-top: 1px solid rgba(0,0,0,.08); padding-top: 0.9vw; }
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2vw; margin-top: 0.6vw; }
+  .step { border: 1px solid var(--line); border-radius: 0.6vw; padding: 1.3vw; min-height: 13vw; display: flex; flex-direction: column; gap: 0.5vw; }
+  .step i { font: 500 0.9vw 'JetBrains Mono', monospace; color: var(--primary); font-style: normal; }
+  .step b { font-size: 1.3vw; } .step p { font-size: 1.05vw; }
+  .step.pay { background: var(--primary-soft); border-color: transparent; } .step.priv { background: var(--ok-soft); border-color: transparent; }
   .help { position: fixed; left: 1rem; bottom: 1rem; color: #777; font: 12px system-ui; }
   @media print { html, body { background: #fff; } .slide { display: flex !important; page-break-after: always; width: 100%; height: 100vh; } .help { display: none; } }
 </style>
@@ -46,115 +64,146 @@
 <body>
 <div class="deck">
 
+<!-- 1 -->
 <section class="slide on">
   <div class="kicker">EAG Global Buildathon · Floripa · 12 Sep 2026</div>
   <h1>Proof of Field</h1>
-  <p class="lead" style="margin-top:2vw">Farmer-owned deforestation proofs,<br/>sold agent-to-agent for stablecoins.</p>
-  <p class="sub">Murilo Leite · Nixar Solutions · farmer in Abunã, Rondônia<br/>Built on HSK Chain</p>
+  <p class="lead" style="margin-top:2vw">Farmer-owned deforestation proofs,<br/>bought by AI agents, settled on-chain.</p>
+  <p class="sub">Murilo Leite · Nixar Solutions · farmer in Abunã, Rondônia<br/>Live on HSK Chain testnet</p>
   <span class="n">1</span>
 </section>
 
-<section class="slide">
-  <h2>To sell soy to a trading company, Zé has to prove his 5,500 ha did not deforest since 2020.</h2>
-  <ul>
-    <li><b>Who asks:</b> importers (EUDR puts the legal burden on them), banks for credit, and now Chinese buyers.</li>
-    <li><b>How it works today:</b> hire a certifier, hand over the <b>entire farm map</b> and documents, wait weeks, pay again for every buyer.</li>
-    <li><b>What he loses:</b> time, money, and control of the most sensitive data he owns.</li>
-  </ul>
-  <p class="note">Slow. Expensive. And the farmer never owns the proof.</p>
-  <span class="n">2</span>
-</section>
-
+<!-- 2 -->
 <section class="slide">
   <div class="two">
     <div>
       <div class="big">#1</div>
       <p class="lead">China is the largest buyer of Brazilian soy and beef in the world.</p>
-      <p style="margin-top:1.4vw">Every shipment needs a deforestation-free proof for every farm it came from. Traders and banks already pay per farm for that check.</p>
+      <p style="margin-top:1.4vw">Every shipment needs proof that every farm in it did not deforest after 2020. EUDR makes the importer legally liable. Banks ask for it before lending. Chinese buyers are starting to ask.</p>
     </div>
     <div>
-      <p class="lead">The market is not "should farms be checked". It is <b>who does the check, who gets paid, and who keeps the data.</b></p>
+      <p class="lead">A trading company handles <b>hundreds of farms per lot</b>.<br/><br/>The check is mandatory, repetitive, and today it is done by people, by e-mail, per farm, per buyer.</p>
     </div>
   </div>
+  <span class="n">2</span>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <h2>How a trade clears today</h2>
+  <div class="tl">
+    <div class="lbl bad">Today</div>
+    <div class="chain">
+      <div class="node bad"><i>day 0</i><b>Trader asks</b><p>Compliance team e-mails each supplier for CAR, maps and documents.</p></div>
+      <div class="node bad"><i>day 1–5</i><b>Farmer sends everything</b><p>Full farm polygon, registry, deeds. To a stranger. Again for the next buyer.</p></div>
+      <div class="node bad"><i>day 5–20</i><b>Due-diligence vendor</b><p>Trader pays a provider per farm to cross-check against PRODES, embargoes, CAR.</p></div>
+      <div class="node bad"><i>day 20+</i><b>PDF report</b><p>A document nobody outside can verify. Bank asks again. Importer asks again.</p></div>
+    </div>
+  </div>
+  <div class="stat bad">
+    <div><b>weeks</b><span>per lot, blocking the sale</span></div>
+    <div><b>R$ per farm, per buyer</b><span>paid by the trader, farmer gets nothing</span></div>
+    <div><b>copies everywhere</b><span>of the farmer's most sensitive data</span></div>
+  </div>
+  <p class="note">The check itself is cheap. The coordination around it is what costs weeks.</p>
   <span class="n">3</span>
 </section>
 
+<!-- 4 -->
+<section class="slide">
+  <h2>How it clears with Proof of Field</h2>
+  <div class="tl">
+    <div class="lbl ok">Now</div>
+    <div class="chain">
+      <div class="node ok"><i>farmer's machine</i><b>Farmer agent checks</b><p>Intersects the field with INPE/PRODES, official data. ~100 ms. Map never leaves the farm.</p></div>
+      <div class="node ok"><i>farmer's machine</i><b>Signs &amp; anchors</b><p>EIP-712 attestation. Only its hash goes on-chain. Proof is now for sale at a price the farmer sets.</p></div>
+      <div class="node ai"><i>trader's machine</i><b>AI buyer agent decides</b><p>One sentence from the operator. Lists proofs, checks its budget, buys what fits the rule, refuses what doesn't.</p></div>
+      <div class="node ai"><i>trader's machine</i><b>Pays, verifies, reports</b><p>HTTP 402 → USDT → proof. Verifies signature + registry itself. Writes the dossier.</p></div>
+    </div>
+  </div>
+  <div class="stat ok">
+    <div><b>~2 minutes</b><span>per lot, unattended</span></div>
+    <div><b>farmer gets paid</b><span>the moment his data is used</span></div>
+    <div><b>zero copies</b><span>of the polygon leave the farm</span></div>
+  </div>
+  <p class="note">Same official data, same check. What changed: who runs it, who owns it, who gets paid, and that anyone can verify the result.</p>
+  <span class="n">4</span>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <h2>Where AI sits, where the chain sits</h2>
+  <div class="layers">
+    <div class="layer ai">
+      <h3>AI decides</h3>
+      <ul>
+        <li>The buyer agent is a <b>Claude model with five tools</b>: list proofs, read its own spending policy, buy over x402, skip with a reason, write the report.</li>
+        <li>Input is a sentence: <i>"buy the proofs for this lot, budget 30 USDT, reject any farm with deforestation."</i></li>
+        <li>It handles the messy part: hundreds of farms, edge cases, conflicting instructions, and explains every decision.</li>
+      </ul>
+      <p class="why">Why an agent and not a script: the rules change per buyer, per country, per lot. A script breaks; an agent reads the instruction.</p>
+    </div>
+    <div class="layer chain">
+      <h3>Chain enforces</h3>
+      <ul>
+        <li><b>Registry</b>: the attestation hash is anchored by the farmer's key. Any buyer, bank or auditor verifies it without trusting us.</li>
+        <li><b>Stablecoin</b>: machines don't have bank accounts. USDT is how one program pays another, instantly, to a farmer in Rondônia.</li>
+        <li><b>AgentWallet</b>: daily limit, per-payment limit, allow-listed payees. The AI holds a key that <b>cannot</b> exceed the policy, even if tricked.</li>
+      </ul>
+      <p class="why">Why a chain and not a database: the trader's agent and the farmer's agent don't trust each other, and neither should have to trust a middleman.</p>
+    </div>
+  </div>
+  <span class="n">5</span>
+</section>
+
+<!-- 6 -->
 <section class="slide">
   <div class="kicker">Live demo</div>
   <div class="two">
     <img class="shot" src="02-check-noncompliant.png" alt="Farmer console flagging 26 ha of deforestation" />
     <div>
-      <h2 style="font-size:2.6vw">Draw the field. Check it against INPE. Sign. Anchor. Sell.</h2>
+      <h2 style="font-size:2.5vw">Farmer: draw, check, sign, anchor.<br/>Trader: one sentence.</h2>
       <ul>
-        <li>Official <b>INPE / PRODES</b> deforestation polygons, intersected in ~100 ms.</li>
-        <li>Verdict signed by the farmer (<b>EIP-712</b>), hash anchored on <b>HSK Chain</b>.</li>
-        <li>The polygon <b>never leaves the farmer's machine</b>.</li>
+        <li>Real properties from the CAR registry in Porto Velho, RO. One clean, one with <b>26 ha cleared in 2022</b>.</li>
+        <li>The agent buys the clean one, <b>refuses the other</b>, and says why.</li>
+        <li>Every step is a transaction on <b>HSK Chain</b> you can open in the explorer.</li>
       </ul>
     </div>
-  </div>
-  <span class="n">4</span>
-</section>
-
-<section class="slide">
-  <h2>How it works</h2>
-  <div class="flow">
-    <div class="step priv"><i>farmer · private</i><b>Field ∩ PRODES</b><p>Pure geometry against INPE's public polygons. No ML, no cloud.</p></div>
-    <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed.</p></div>
-    <div class="step"><i>HSK Chain</i><b>Anchor</b><p><code>attest(hash, fieldId)</code> in the registry. Only commitments on-chain.</p></div>
-    <div class="step pay"><i>buyer agent · LLM</i><b>Decide, HTTP 402 → pay</b><p>Claude with tools reads one sentence from the operator, decides per farm, pays USDT through an <b>AgentWallet</b> with on-chain limits.</p></div>
-    <div class="step pay"><i>buyer agent · LLM</i><b>Verify &amp; report</b><p>Signature → same farmer anchored it → not revoked. Writes the compliance report.</p></div>
-  </div>
-  <p class="note">No human in the loop. The farmer is paid the second his data is used, and decides who gets it.</p>
-  <span class="n">5</span>
-</section>
-
-<section class="slide">
-  <div class="two">
-    <div>
-      <h2>Why Ethereum, why HSK</h2>
-      <ul>
-        <li><b>Machines don't have bank accounts.</b> A stablecoin is the only way one program pays another, automatically.</li>
-        <li><b>Public registry</b> → any buyer, bank or auditor verifies without trusting the farmer, a certifier, or us.</li>
-        <li><b>AgentWallet</b> → a company funds an agent once, sets daily and per-payment limits and allowed payees, and never hands over its keys. <b>The model decides, the contract enforces.</b></li>
-        <li><b>HSK Chain</b>: EVM, cheap, and where the Asian buyer side lives.</li>
-      </ul>
-    </div>
-    <img class="shot" src="09-llm-buyer-agent.png" alt="LLM buyer agent deciding, paying and verifying proofs" style="max-height:38vw;object-fit:cover;object-position:top" />
   </div>
   <span class="n">6</span>
 </section>
 
+<!-- 7 -->
 <section class="slide">
-  <h2>Open source, reusable, and where this goes</h2>
-  <div class="roadmap">
-    <div>
-      <p class="kicker">Reusable today</p>
-      <ul>
-        <li><code>FieldAttestationRegistry</code> — anchor any signed claim about private data.</li>
-        <li><code>AgentWallet</code> — policy-enforced spending for autonomous agents.</li>
-        <li>x402 seller server — turn any private dataset into a paid, verifiable proof.</li>
-      </ul>
-    </div>
-    <div>
-      <p class="kicker">Next</p>
-      <ul>
-        <li>EIP-3009 gasless settlement, x402 facilitator.</li>
-        <li>ZK proof that <i>field ∩ PRODES = ∅</i> — even the hectares stay private.</li>
-        <li>Sentinel-2 change detection between PRODES releases, on the farmer's machine.</li>
-        <li>Second asset: <b>cattle passports</b> for beef traceability.</li>
-      </ul>
-    </div>
+  <h2>Under the hood</h2>
+  <div class="flow">
+    <div class="step priv"><i>farmer · private</i><b>Field ∩ PRODES</b><p>Pure geometry against INPE's public polygons. No ML, no cloud, runs on a laptop.</p></div>
+    <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed by the farmer.</p></div>
+    <div class="step"><i>HSK Chain</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
+    <div class="step pay"><i>buyer · LLM</i><b>402 → AgentWallet.pay</b><p>x402 v1 shape. On-chain USDT transfer, replay-protected, policy-enforced.</p></div>
+    <div class="step pay"><i>buyer · LLM</i><b>Verify &amp; report</b><p>Signature → same farmer anchored it → not revoked. Markdown dossier with every tx.</p></div>
+  </div>
+  <div class="two top" style="margin-top:1.6vw; flex:0">
+    <img class="shot" src="09-llm-buyer-agent.png" alt="LLM buyer agent run" style="max-height:19vw;object-fit:cover;object-position:top" />
+    <ul style="padding-top:0.4vw">
+      <li><b>Honest limits today:</b> settlement by tx hash, not EIP-3009; attestations are self-signed, so this proves authenticity and integrity, not a field inspection.</li>
+      <li><b>Next:</b> EIP-3009 gasless settlement · ZK proof of empty intersection · Sentinel-2 change detection on the farmer's machine · IBAMA embargoes · cattle passports.</li>
+    </ul>
   </div>
   <span class="n">7</span>
 </section>
 
+<!-- 8 -->
 <section class="slide">
   <div class="two">
     <img class="shot" src="07-sale-received.png" alt="Farmer console showing a sale received" />
     <div>
-      <h2>We want this running on farms in Abunã this year.</h2>
-      <p class="lead">Buyers and banks who want to pilot: talk to me.</p>
-      <p style="margin-top:2vw">Murilo Leite<br/>murilo.leite2005@gmail.com<br/><span class="accent">github.com/Muril0zz/proof-of-field</span></p>
+      <h2>Open source. Reusable. Running on my farm this year.</h2>
+      <ul>
+        <li><code>FieldAttestationRegistry</code>, <code>AgentWallet</code> and the x402 seller are generic: any private dataset can become a paid, verifiable proof.</li>
+        <li>Pilot: Abunã, Rondônia, with neighbouring farms. Buyers and banks who want in: talk to me.</li>
+      </ul>
+      <p style="margin-top:2vw">Murilo Leite · murilo.leite2005@gmail.com<br/><span style="color:var(--primary)">github.com/Muril0zz/proof-of-field</span></p>
     </div>
   </div>
   <span class="n">8</span>

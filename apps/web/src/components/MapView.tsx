@@ -9,6 +9,7 @@ export interface MapViewProps {
   field: GeoJSON.Geometry | null;
   intersections: GeoJSON.FeatureCollection | null;
   drawing: boolean;
+  showProdes: boolean;
   onDrawn: (g: GeoJSON.Polygon) => void;
 }
 
@@ -25,7 +26,7 @@ const SATELLITE_STYLE: maplibregl.StyleSpecification = {
   layers: [{ id: 'esri', type: 'raster', source: 'esri' }],
 };
 
-export function MapView({ prodes, field, intersections, drawing, onDrawn }: MapViewProps) {
+export function MapView({ prodes, field, intersections, drawing, showProdes, onDrawn }: MapViewProps) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const draw = useRef<TerraDraw | null>(null);
@@ -38,8 +39,8 @@ export function MapView({ prodes, field, intersections, drawing, onDrawn }: MapV
     m.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
     m.on('load', () => {
       m.addSource('prodes', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      m.addLayer({ id: 'prodes-fill', type: 'fill', source: 'prodes', paint: { 'fill-color': ['case', ['>', ['get', 'year'], 2020], '#d6453a', '#8a8f9c'], 'fill-opacity': ['case', ['>', ['get', 'year'], 2020], 0.42, 0.28] } });
-      m.addLayer({ id: 'prodes-line', type: 'line', source: 'prodes', paint: { 'line-color': ['case', ['>', ['get', 'year'], 2020], '#b3261e', '#6b7080'], 'line-width': 0.6, 'line-opacity': 0.8 } });
+      m.addLayer({ id: 'prodes-fill', type: 'fill', source: 'prodes', layout: { visibility: 'none' }, paint: { 'fill-color': ['case', ['>', ['get', 'year'], 2020], '#d6453a', '#8a8f9c'], 'fill-opacity': ['case', ['>', ['get', 'year'], 2020], 0.42, 0.28] } });
+      m.addLayer({ id: 'prodes-line', type: 'line', source: 'prodes', layout: { visibility: 'none' }, paint: { 'line-color': ['case', ['>', ['get', 'year'], 2020], '#b3261e', '#6b7080'], 'line-width': 0.6, 'line-opacity': 0.8 } });
       m.addSource('field', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       m.addLayer({ id: 'field-fill', type: 'fill', source: 'field', paint: { 'fill-color': '#3b3fb6', 'fill-opacity': 0.12 } });
       m.addLayer({ id: 'field-line', type: 'line', source: 'field', paint: { 'line-color': '#ffffff', 'line-width': 2.2 } });
@@ -82,6 +83,7 @@ export function MapView({ prodes, field, intersections, drawing, onDrawn }: MapV
   }), [field]);
   useEffect(() => whenReady((m) => (m.getSource('hits') as maplibregl.GeoJSONSource).setData(intersections ?? { type: 'FeatureCollection', features: [] })), [intersections]);
   useEffect(() => { const d = draw.current; if (!d) return; d.setMode(drawing ? 'polygon' : 'select'); if (!drawing) d.clear(); }, [drawing]);
+  useEffect(() => whenReady((m) => { for (const id of ['prodes-fill', 'prodes-line']) m.setLayoutProperty(id, 'visibility', showProdes ? 'visible' : 'none'); }), [showProdes]);
 
   return <div ref={el} className="map" />;
 }

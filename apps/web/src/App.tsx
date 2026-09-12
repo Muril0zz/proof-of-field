@@ -16,6 +16,7 @@ export function App() {
   const [flash, setFlash] = useState<string | null>(null);
 
   const [drawing, setDrawing] = useState(false);
+  const [showProdes, setShowProdes] = useState(false);
   const [field, setField] = useState<GeoJSON.Geometry | null>(null);
   const [label, setLabel] = useState<string>('');
   const [report, setReport] = useState<Report | null>(null);
@@ -113,7 +114,7 @@ export function App() {
 
           {(phase !== 'idle') && (
             <section className="section">
-              <h2>Deforestation check <span className="count">INPE / PRODES · since 2020</span></h2>
+              <h2>Compliance check <span className="count">INPE / PRODES · baseline 2020</span></h2>
               {phase === 'checking' && <div className="steps"><div className="step doing"><span className="ic" />Intersecting with {prodes?.features.length.toLocaleString() ?? '…'} PRODES polygons</div></div>}
               {report && phase !== 'checking' && <Verdict report={report} label={label} />}
               {phase === 'checked' && (
@@ -180,14 +181,13 @@ export function App() {
       </aside>
 
       <main className="map-wrap">
-        <MapView prodes={prodes} field={field} intersections={intersections} drawing={drawing} onDrawn={onDrawn} />
+        <MapView prodes={prodes} field={field} intersections={intersections} drawing={drawing} showProdes={showProdes} onDrawn={onDrawn} />
         {drawing && <div className="map-ui tl"><div className="hint">Click to place vertices · click the first point to close · <kbd>Esc</kbd> cancels</div></div>}
         <div className="map-ui bl">
           <div className="legend">
-            <div><i style={{ background: 'rgba(214,69,58,.6)', border: '1px solid #b3261e' }} />PRODES deforestation after 2020</div>
-            <div><i style={{ background: 'rgba(138,143,156,.45)', border: '1px solid #6b7080' }} />PRODES 2020 (baseline year)</div>
             <div><i style={{ background: 'rgba(59,63,182,.2)', border: '1.5px solid #3b3fb6' }} />Your field (private)</div>
-            <div><i style={{ background: '#ff3b2f' }} />Overlap flagged in attestation</div>
+            <div><i style={{ background: '#ff3b2f' }} />Deforestation after 2020 inside your field</div>
+            <label className="toggle"><input type="checkbox" checked={showProdes} onChange={(e) => setShowProdes(e.target.checked)} /> Show full PRODES layer ({prodes?.features.length.toLocaleString() ?? '…'} polygons)</label>
           </div>
         </div>
       </main>
