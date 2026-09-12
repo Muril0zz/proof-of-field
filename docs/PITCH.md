@@ -17,7 +17,10 @@ Open BEFORE walking up: (A) farmer console in the browser, (B) terminal with the
 
 1. **[Console]** "This is the farmer's agent. It runs on his machine. These red areas are PRODES, the official deforestation map from Brazil's space agency, INPE." Click property …4C8E → 26 ha in 2022. "This one does not pass. The system says exactly where and when." Point at the red overlap on the map.
 2. Click …9C62 → Deforestation-free. "This one passes." Click **Sign attestation & anchor on-chain** → hash + tx. "Only the hash went on-chain. The farm's map is still here, on his machine." Copy the proof URL.
-3. **[Terminal B]** Paste the URL into the buyer agent. Narrate the four steps as they print: "402, payment required. It pays five USDT through a wallet with a spending policy. It gets the proof. It verifies the signature and the registry on its own. Nobody pressed a button. The farmer was paid the second his data was used."
+3. **[Terminal B]** Run the LLM buyer agent (command pre-typed, just press Enter):
+   `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020."`
+   Narrate while it runs (~70 s, so start it EARLY, right after step 2, and talk over it): "This is the trading company's agent. It got one sentence from the operator. It lists what the farmer sells, checks its own on-chain spending policy, and decides. Watch: it buys the two clean farms over HTTP 402, five USDT each, verifies signature and registry on its own, and refuses the one with 26 hectares. Nobody pressed a button. The farmer was paid the second his data was used." Point at the final summary and the compliance report path.
+   **Fallback** if the API is slow or fails: `NETWORK=hsk-testnet pnpm buyer -- <proofUrl>` (deterministic, 5 s, same four steps).
 4. **[Explorer]** Show the attest tx and the payment tx on HSK. Done.
 
 Fallback if HSK is down: run everything with `NETWORK=anvil` (identical, no explorer). Have the backup video ready.
@@ -32,6 +35,10 @@ Fallback if HSK is down: run everything with `NETWORK=anvil` (identical, no expl
 - **"Is this real x402?"** The 402 body and `accepts[]` follow x402 v1. Settlement today is an on-chain transfer referenced by tx hash. EIP-3009 gasless settlement is the next step.
 - **"Real privacy would be ZK."** Agreed. Today: commitment plus aggregates. A ZK proof of "empty intersection" is on the roadmap, and it is feasible because the geometry is simple.
 - **"Who is the team? Will you continue?"** I have a farm in Abunã and I already build a field-mapping platform for it. This becomes a feature of that platform. Pilot with neighbors this year.
+
+## Timing warning
+
+The LLM run takes ~70 s. Start it right after signing (step 2) and narrate over it. Total demo still fits in ~2:30 if you don't wait in silence.
 
 ## Opening line (memorize)
 

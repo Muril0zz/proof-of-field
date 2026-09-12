@@ -101,8 +101,8 @@
     <div class="step priv"><i>farmer · private</i><b>Field ∩ PRODES</b><p>Pure geometry against INPE's public polygons. No ML, no cloud.</p></div>
     <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed.</p></div>
     <div class="step"><i>HSK Chain</i><b>Anchor</b><p><code>attest(hash, fieldId)</code> in the registry. Only commitments on-chain.</p></div>
-    <div class="step pay"><i>buyer agent</i><b>HTTP 402 → pay</b><p>x402 flow. Pays USDT through an <b>AgentWallet</b> with spending policy.</p></div>
-    <div class="step pay"><i>buyer agent</i><b>Verify</b><p>Signature → same farmer anchored it → not revoked. No trust in us.</p></div>
+    <div class="step pay"><i>buyer agent · LLM</i><b>Decide, HTTP 402 → pay</b><p>Claude with tools reads one sentence from the operator, decides per farm, pays USDT through an <b>AgentWallet</b> with on-chain limits.</p></div>
+    <div class="step pay"><i>buyer agent · LLM</i><b>Verify &amp; report</b><p>Signature → same farmer anchored it → not revoked. Writes the compliance report.</p></div>
   </div>
   <p class="note">No human in the loop. The farmer is paid the second his data is used, and decides who gets it.</p>
   <span class="n">5</span>
@@ -115,11 +115,11 @@
       <ul>
         <li><b>Machines don't have bank accounts.</b> A stablecoin is the only way one program pays another, automatically.</li>
         <li><b>Public registry</b> → any buyer, bank or auditor verifies without trusting the farmer, a certifier, or us.</li>
-        <li><b>AgentWallet</b> → a company funds an agent once, sets daily and per-payment limits and allowed payees, and never hands over its keys.</li>
+        <li><b>AgentWallet</b> → a company funds an agent once, sets daily and per-payment limits and allowed payees, and never hands over its keys. <b>The model decides, the contract enforces.</b></li>
         <li><b>HSK Chain</b>: EVM, cheap, and where the Asian buyer side lives.</li>
       </ul>
     </div>
-    <img class="shot" src="08-buyer-agent-cli.png" alt="Buyer agent paying and verifying a proof" />
+    <img class="shot" src="09-llm-buyer-agent.png" alt="LLM buyer agent deciding, paying and verifying proofs" style="max-height:38vw;object-fit:cover;object-position:top" />
   </div>
   <span class="n">6</span>
 </section>
