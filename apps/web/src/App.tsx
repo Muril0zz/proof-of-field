@@ -92,24 +92,25 @@ export function App() {
 
         <div className="panel-body">
           <section className="section">
-            <h2>Field</h2>
-            <div className="btn-row">
-              <button className="btn btn-secondary" aria-pressed={drawing} onClick={() => { reset(); setDrawing((d) => !d); }}>
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 4.5 8 2l5 3-1.5 7L5 13.5z" /><circle cx="3" cy="4.5" r="1.2" fill="currentColor" /><circle cx="13" cy="5" r="1.2" fill="currentColor" /><circle cx="5" cy="13.5" r="1.2" fill="currentColor" /></svg>
-                {drawing ? 'Drawing… (Esc to cancel)' : 'Draw a field'}
-              </button>
-              {field && <button className="btn btn-secondary" onClick={reset}>Clear</button>}
-            </div>
+            <h2>Registered properties <span className="count">CAR · official polygons</span></h2>
             {samples.length > 0 && (
               <div className="samples">
                 {samples.map((s) => (
                   <button key={s.id} className="sample" onClick={() => runCheck(s.geometry, s.label)} title={s.car}>
-                    <div><div className="name">{s.label}</div><div className="meta">Registered property (CAR) · {s.car.slice(0, 10)}…</div></div>
+                    <div><div className="name">{s.label}</div><div className="meta">{s.car}</div></div>
                     <div className="ha">{fmtHa(s.areaHaCar)}</div>
                   </button>
                 ))}
               </div>
             )}
+            <div className="btn-row" style={{ marginTop: 10 }}>
+              <button className="btn btn-secondary" aria-pressed={drawing} onClick={() => { reset(); setDrawing((d) => !d); }}>
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 4.5 8 2l5 3-1.5 7L5 13.5z" /><circle cx="3" cy="4.5" r="1.2" fill="currentColor" /><circle cx="13" cy="5" r="1.2" fill="currentColor" /><circle cx="5" cy="13.5" r="1.2" fill="currentColor" /></svg>
+                {drawing ? 'Drawing… (Esc to cancel)' : 'Draw a sub-field'}
+              </button>
+              {field && <button className="btn btn-secondary" onClick={reset}>Clear</button>}
+            </div>
+            <div className="empty" style={{ marginTop: 6 }}>Compliance is attested on the registered property. Sub-fields are for lot traceability only and are marked unregistered.</div>
           </section>
 
           {(phase !== 'idle') && (

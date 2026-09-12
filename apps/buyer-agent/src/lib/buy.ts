@@ -33,11 +33,11 @@ export async function policyStatus(): Promise<PolicyStatus> {
   return { agentWallet: dep.agentWallet, remainingTodayUnits: remaining.toString(), perPaymentLimitUnits: per.toString(), dailyLimitUnits: daily.toString(), balanceUnits: bal.toString() };
 }
 
-export interface ProofListing { hash: string; label?: string; farmer: string; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
+export interface ProofListing { hash: string; label?: string; car: string | null; registered: boolean; farmer: string; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
 export async function listProofs(farmerBaseUrl: string): Promise<ProofListing[]> {
   const base = farmerBaseUrl.replace(/\/$/, '');
   const list = await fetch(`${base}/attestations`).then((r) => r.json()) as any[];
-  return list.map((a) => ({ hash: a.hash, label: a.label, farmer: a.farmer, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
+  return list.map((a) => ({ hash: a.hash, label: a.label, car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
 }
 
 export type Step = (n: number, s: string) => void;
@@ -48,7 +48,7 @@ export interface BuyResult {
   ok: true; proofUrl: string; paidUnits: string; payTx: string; payTxUrl: string;
   attestationHash: string; farmer: string; anchorTx?: string; anchorTxUrl?: string; anchoredAt: string;
   areaHa: number; deforestedHa: number; byYear: Record<string, number>; baselineYear: number; dataYear: number; source: string; issuedAt: string;
-  compliant: boolean; fieldId: string; checks: string[];
+  compliant: boolean; fieldId: string; checks: string[]; car: string | null; registered: boolean;
 }
 export class BuyError extends Error { constructor(public stage: string, msg: string) { super(msg); } }
 
@@ -103,6 +103,6 @@ export async function buyProof(url: string, log: Log = silentLog): Promise<BuyRe
     attestationHash: h, farmer: att.farmer, anchorTx: proof.anchorTx, anchorTxUrl: proof.anchorTxUrl, anchoredAt,
     areaHa: Number(att.areaHa100) / 100, deforestedHa: Number(att.deforestedHa100) / 100, byYear: report.byYear || {},
     baselineYear: Number(att.baselineYear), dataYear: Number(att.dataYear), source: att.source, issuedAt: new Date(Number(att.issuedAt) * 1000).toISOString(),
-    compliant: att.compliant, fieldId: att.fieldId, checks,
+    compliant: att.compliant, fieldId: att.fieldId, checks, car: proof.car ?? null, registered: !!proof.registered,
   };
 }

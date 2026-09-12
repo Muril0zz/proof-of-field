@@ -40,7 +40,7 @@ const tools = [
     run: async ({ farmerBaseUrl }) => {
       tool('list_proofs', farmerBaseUrl);
       const list = await listProofs(farmerBaseUrl);
-      list.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
+      list.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.registered ? 'CAR ' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
       return JSON.stringify(list.map((p) => ({ ...p, price: usdt(p.priceUnits) })));
     },
   }),
@@ -100,6 +100,7 @@ Facts about your environment:
 - Proofs are sold over x402: an HTTP 402 with the price, paid in USDT, then the signed proof is delivered. buy_proof does the whole flow and verifies the proof cryptographically and on-chain. Trust its verification result, not the farmer's claims.
 - A proof marked NON-COMPLIANT is still a valid, verifiable proof. Whether to buy it depends on the operator's instruction (some operators want the evidence, most want to skip it).
 - Prices are what the farmer asks. You never negotiate; you decide buy or skip.
+- A proof is "registered: true" when its polygon is the farmer's official CAR property (Brazil's rural environmental registry, public). Compliance for a lot is judged on registered properties. A proof with "registered: false" is a hand-drawn sub-field: it may be useful for traceability but does NOT clear a lot on its own. Default: skip unregistered proofs and say why, unless the operator explicitly asks for sub-field proofs.
 
 How to work:
 1. Read the operator instruction carefully. Extract: which farms/lot, budget, and the compliance rule.

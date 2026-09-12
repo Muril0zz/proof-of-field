@@ -49,6 +49,7 @@ interface Stored {
   geometry: any;      // PRIVATE — never served
   intersections: any; // PRIVATE — served only to the farmer's own UI
   label?: string;
+  car?: string;       // CAR receipt when the polygon is the registered property (public registry)
   createdAt: string;
 }
 const STORE = path.join(ROOT, 'data', `farmer-store.${NETWORK}.${dep.registry.slice(2, 10)}.json`);
@@ -71,6 +72,8 @@ app.get('/prodes', (c) => c.json(prodes));
 /** Farmer's own registered properties (CAR polygons). PRIVATE — local UI only. */
 const samples = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'samples.json'), 'utf8'));
 app.get('/samples', (c) => c.json(samples));
+/** fieldId → CAR receipt, so attestations of registered properties carry the registry reference. */
+const carByFieldId = new Map<string, string>(samples.map((s: any) => [fieldIdFromPolygon(s.geometry).toLowerCase(), s.car]));
 
 app.get('/attestations', (c) => c.json(Object.values(store).map(publicView)));
 
@@ -123,8 +126,9 @@ app.post('/attest', async (c) => {
     console.error('[farmer] anchor failed:', e.shortMessage || e.message);
   }
 
+  const car = carByFieldId.get(att.fieldId.toLowerCase());
   const stored: Stored = {
-    attestation: att, signature, hash, txHash,
+    attestation: att, signature, hash, txHash, car,
     report: { areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, dataYear: r.dataYear, ms: r.ms },
     geometry, intersections: r.intersections, label, createdAt: new Date().toISOString(),
   };
@@ -178,11 +182,13 @@ app.get('/proof/:hash', async (c) => {
       registry: dep.registry, chainId: chain.id,
     },
     report: s.report, // aggregate numbers only — no geometry
+    car: s.car ?? carByFieldId.get(s.attestation.fieldId.toLowerCase()) ?? null, registered: !!(s.car ?? carByFieldId.get(s.attestation.fieldId.toLowerCase())),
   });
 });
 
 function publicView(s: Stored) {
-  return { hash: s.hash, label: s.label, farmer: s.attestation.farmer, compliant: s.attestation.compliant, report: s.report,
+  const car = s.car ?? carByFieldId.get(s.attestation.fieldId.toLowerCase()) ?? null;
+  return { hash: s.hash, label: s.label, car, registered: !!car, farmer: s.attestation.farmer, compliant: s.attestation.compliant, report: s.report,
     attestation: serializeAttestation(s.attestation), signature: s.signature, txHash: s.txHash, txUrl: s.txHash ? explorerTx(NETWORK, s.txHash) : undefined, createdAt: s.createdAt, priceUnits: PRICE.toString() };
 }
 
