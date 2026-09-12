@@ -52,10 +52,10 @@ interface Stored {
   car?: string;       // CAR receipt when the polygon is the registered property (public registry)
   createdAt: string;
 }
-const STORE = path.join(ROOT, 'data', `farmer-store.${NETWORK}.${dep.registry.slice(2, 10)}.json`);
+const STORE = path.join(ROOT, 'data', `farmer-store.${NETWORK}.${dep.registry.slice(2, 10)}.${account.address.slice(2, 8).toLowerCase()}.json`);
 const store: Record<string, Stored> = fs.existsSync(STORE) ? JSON.parse(fs.readFileSync(STORE, 'utf8'), bigintReviver) : {};
 interface Payment { txHash: Hex; payer: Address; amount: string; attestationHash: Hex; label?: string; at: string; txUrl: string }
-const PAYMENTS = path.join(ROOT, 'data', `farmer-payments.${NETWORK}.${dep.registry.slice(2, 10)}.json`);
+const PAYMENTS = path.join(ROOT, 'data', `farmer-payments.${NETWORK}.${dep.registry.slice(2, 10)}.${account.address.slice(2, 8).toLowerCase()}.json`);
 const payments: Payment[] = fs.existsSync(PAYMENTS) ? JSON.parse(fs.readFileSync(PAYMENTS, 'utf8')) : [];
 const usedPayments = new Set<string>(payments.map((p) => p.txHash));
 const persistPayments = () => fs.writeFileSync(PAYMENTS, JSON.stringify(payments, null, 1));
@@ -65,12 +65,14 @@ function bigintReviver(_: string, v: any) { return typeof v === 'string' && /^\d
 const app = new Hono();
 app.use('*', cors());
 
-app.get('/', (c) => c.json({ agent: 'proof-of-field/farmer', farmer: account.address, network: NETWORK, chainId: chain.id, registry: dep.registry, usdt: dep.usdt, priceUnits: PRICE.toString(), attestations: Object.keys(store).length }));
+app.get('/', (c) => c.json({ agent: 'proof-of-field/farmer', name: process.env.FARMER_NAME || 'Farmer agent', farmer: account.address, network: NETWORK, chainId: chain.id, registry: dep.registry, usdt: dep.usdt, priceUnits: PRICE.toString(), attestations: Object.keys(store).length }));
 
 app.get('/prodes', (c) => c.json(prodes));
 
 /** Farmer's own registered properties (CAR polygons). PRIVATE — local UI only. */
-const samples = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'samples.json'), 'utf8'));
+const SAMPLE_IDS = (process.env.FARMER_SAMPLES || '').split(',').map((x) => x.trim()).filter(Boolean);
+const samples = (JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'samples.json'), 'utf8')) as any[])
+  .filter((s) => SAMPLE_IDS.length === 0 || SAMPLE_IDS.includes(s.id));
 app.get('/samples', (c) => c.json(samples));
 /** fieldId → CAR receipt, so attestations of registered properties carry the registry reference. */
 const carByFieldId = new Map<string, string>(samples.map((s: any) => [fieldIdFromPolygon(s.geometry).toLowerCase(), s.car]));

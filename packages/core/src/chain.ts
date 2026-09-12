@@ -44,4 +44,5 @@ export interface Deployment {
   usdt: `0x${string}`;
   agentWallet: `0x${string}`;
   deployedAt: string;
+  deployBlock?: number;
 }

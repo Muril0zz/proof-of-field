@@ -17,6 +17,7 @@ if [ "$NETWORK" = "anvil" ]; then
   DEV0=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
   cast send --rpc-url http://127.0.0.1:8545 --unlocked --from $DEV0 "$FARMER_ADDRESS" --value 10ether > /dev/null
   cast send --rpc-url http://127.0.0.1:8545 --unlocked --from $DEV0 "$BUYER_ADDRESS"  --value 10ether > /dev/null
+  [ -n "${FARMER2_ADDRESS:-}" ] && cast send --rpc-url http://127.0.0.1:8545 --unlocked --from $DEV0 "$FARMER2_ADDRESS" --value 10ether > /dev/null
   (cd contracts && forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast -q > /dev/null)
   node scripts/write-deployment.mjs anvil > /dev/null
   echo "✔ anvil up, contracts deployed → deployments/anvil.json"
@@ -24,14 +25,20 @@ else
   [ -f "deployments/$NETWORK.json" ] || { echo "missing deployments/$NETWORK.json — run: pnpm deploy:hsk"; exit 1; }
 fi
 
-kill_port 4020; kill_port 5173
-(cd apps/farmer-agent && nohup npx tsx src/index.ts > ../../.logs/farmer.log 2>&1 < /dev/null &)
+kill_port 4020; kill_port 4021; kill_port 5173
+# Farmer A (FARMER_* key) sells two CAR properties; Farmer B (FARMER2_* key, if set) sells the third.
+(cd apps/farmer-agent && FARMER_NAME="Fazenda A" FARMER_SAMPLES=9C62FD55,4C8EDDBB nohup npx tsx src/index.ts > ../../.logs/farmer.log 2>&1 < /dev/null &)
+if [ -n "${FARMER2_PRIVATE_KEY:-}" ]; then
+  (cd apps/farmer-agent && FARMER_NAME="Fazenda B" FARMER_PRIVATE_KEY=$FARMER2_PRIVATE_KEY FARMER_PORT=4021 FARMER_PUBLIC_URL=http://localhost:4021 FARMER_SAMPLES=0A28442F nohup npx tsx src/index.ts > ../../.logs/farmer2.log 2>&1 < /dev/null &)
+fi
 (cd apps/web && nohup npx vite --port 5173 > ../../.logs/web.log 2>&1 < /dev/null &)
 sleep 4
-echo "✔ farmer agent  http://localhost:4020   (log: .logs/farmer.log)"
+echo "✔ farmer agent A http://localhost:4020   (log: .logs/farmer.log)"
+[ -n "${FARMER2_PRIVATE_KEY:-}" ] && echo "✔ farmer agent B http://localhost:4021   (log: .logs/farmer2.log)"
 echo "✔ farmer console http://localhost:5173   (log: .logs/web.log)"
 echo
-echo "buyer:  NETWORK=$NETWORK pnpm buyer -- --list http://localhost:4020"
+echo "buyer:  NETWORK=$NETWORK pnpm buyer -- --list http://localhost:4020 http://localhost:4021"
 echo "        NETWORK=$NETWORK pnpm buyer -- <proofUrl>"
+echo "LLM:    NETWORK=$NETWORK pnpm buyer:ai \"Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020.\" http://localhost:4020 http://localhost:4021"
 disown -a 2>/dev/null || true
 exit 0

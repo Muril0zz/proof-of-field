@@ -6,16 +6,17 @@
  */
 import 'dotenv/config';
 import pc from 'picocolors';
-import { NETWORK, account, chain, dep, usdt, policyStatus, listProofs, buyProof, BuyError } from './lib/buy';
+import { NETWORK, account, chain, dep, usdt, policyStatus, listLot, buyProof, BuyError } from './lib/buy';
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const fail = (s: string) => { console.log(pc.red('  ✘ ') + s); process.exit(1); };
 
 if (args[0] === '--list') {
-  const base = args[1] || 'http://localhost:4020';
-  const list = await listProofs(base);
-  console.log(pc.bold(`\nProofs offered by farmer agent ${base}:`));
-  for (const a of list) console.log(`  ${a.compliant ? pc.green('COMPLIANT   ') : pc.red('NON-COMPLIANT')} ${a.hash}  ${a.label || ''}  ${a.areaHa.toFixed(0)} ha  ${usdt(a.priceUnits)}`);
+  const urls = args.length > 1 ? args.slice(1) : ['http://localhost:4020'];
+  const { proofs, unreachable } = await listLot(urls);
+  console.log(pc.bold(`\nProofs offered by ${urls.length} farmer agent(s):`));
+  for (const a of proofs) console.log(`  ${a.compliant ? pc.green('COMPLIANT   ') : pc.red('NON-COMPLIANT')} ${a.farmerName.padEnd(14)} ${a.hash}  ${a.label || ''}  ${a.areaHa.toFixed(0)} ha  ${usdt(a.priceUnits)}`);
+  for (const u of unreachable) console.log(pc.red(`  unreachable ${u}`));
   process.exit(0);
 }
 const url = args[0];

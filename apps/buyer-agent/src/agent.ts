@@ -14,12 +14,12 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodTool } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import pc from 'picocolors';
-import { NETWORK, account, chain, dep, usdt, policyStatus, listProofs, buyProof, BuyError, type BuyResult, type Log } from './lib/buy';
+import { NETWORK, account, chain, dep, usdt, policyStatus, listLot, registryStats, buyProof, BuyError, type BuyResult, type Log } from './lib/buy';
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const instruction = args[0];
-const farmerUrl = args[1] || process.env.FARMER_URL || 'http://localhost:4020';
-if (!instruction) { console.error('usage: buyer:ai "<instruction in natural language>" [farmerBaseUrl]'); process.exit(1); }
+const lot = (args.length > 1 ? args.slice(1) : (process.env.FARMER_URLS || 'http://localhost:4020').split(',')).map((u) => u.trim()).filter(Boolean);
+if (!instruction) { console.error('usage: buyer:ai "<instruction in natural language>" [farmerAgentUrl ...]'); process.exit(1); }
 
 const ROOT = path.resolve(import.meta.dirname, '../../..');
 const client = new Anthropic();
@@ -34,14 +34,25 @@ const rejections: { proofUrl: string; reason: string }[] = [];
 
 const tools = [
   betaZodTool({
-    name: 'list_proofs',
-    description: 'List the Proof of Field attestations a farmer agent is offering for sale: hash, label, area, hectares deforested after 2020, verdict, price, and the proof URL to buy it. Call this first.',
-    inputSchema: z.object({ farmerBaseUrl: z.string().describe('Base URL of the farmer agent, e.g. http://localhost:4020') }),
-    run: async ({ farmerBaseUrl }) => {
-      tool('list_proofs', farmerBaseUrl);
-      const list = await listProofs(farmerBaseUrl);
-      list.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.registered ? 'CAR ' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
-      return JSON.stringify(list.map((p) => ({ ...p, price: usdt(p.priceUnits) })));
+    name: 'list_lot',
+    description: 'List every Proof of Field attestation offered by the farmer agents in the lot (one call covers all farmers): farmer name and address, hash, label, CAR registry number, area, hectares deforested after 2020, verdict, price, and the proof URL to buy it. Call this first.',
+    inputSchema: z.object({ farmerAgentUrls: z.array(z.string()).describe('Base URLs of the farmer agents in the lot') }),
+    run: async ({ farmerAgentUrls }) => {
+      tool('list_lot', `${farmerAgentUrls.length} farmer agent(s)`);
+      const { proofs, unreachable } = await listLot(farmerAgentUrls);
+      proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.farmerName} · ${p.registered ? 'CAR ' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
+      unreachable.forEach((u) => console.log(pc.red(`      ✘ unreachable: ${u}`)));
+      return JSON.stringify({ proofs: proofs.map((p) => ({ ...p, price: usdt(p.priceUnits) })), unreachable });
+    },
+  }),
+  betaZodTool({
+    name: 'registry_stats',
+    description: 'Read the public on-chain registry: how many attestations exist in total, from how many distinct farmers, and how many are compliant. This is the global index every buyer shares; use it for context in the report.',
+    inputSchema: z.object({}),
+    run: async () => {
+      const s = await registryStats();
+      tool('registry_stats', `${s.totalAttestations} attestations · ${s.farmers} farmers · ${s.compliant} compliant / ${s.nonCompliant} non-compliant`);
+      return JSON.stringify(s);
     },
   }),
   betaZodTool({
@@ -93,7 +104,7 @@ const tools = [
 ];
 
 const system = `You are the autonomous procurement compliance agent of a commodity trading company that buys soy and beef from farms in Brazil.
-Your job: obtain deforestation-free Proofs of Field from farmer agents so the company can legally import the lots it buys.
+Your job: obtain deforestation-free Proofs of Field from the farmer agents in a lot (a lot spans several farmers and properties) so the company can legally import what it buys.
 
 Facts about your environment:
 - You pay with the company's on-chain AgentWallet (${dep.agentWallet}) on ${chain.name}. The wallet enforces a daily limit, a per-payment limit and an allow-list of payees. Any payment outside the policy reverts; you cannot override it.
@@ -104,21 +115,21 @@ Facts about your environment:
 
 How to work:
 1. Read the operator instruction carefully. Extract: which farms/lot, budget, and the compliance rule.
-2. Call list_proofs and policy_status.
+2. Call list_lot (all farmer agents at once), policy_status, and registry_stats.
 3. Decide per proof. Never exceed the operator's budget or the wallet policy. If the instruction is ambiguous about a proof, skip it and say why.
 4. Buy with buy_proof, one at a time. Skip with skip_proof. Every listed proof must end up in exactly one of the two.
 5. Call write_report once, then answer the operator in plain English: what you bought, what you skipped, total spent, and whether the lot is cleared for purchase. Be concise and specific; cite hashes and tx hashes in short form.`;
 
 console.log(pc.bold(`\n🤖 Buyer agent (${MODEL}) · ${account.address} · ${NETWORK}`));
 console.log(pc.dim(`   operator: "${instruction}"`));
-console.log(pc.dim(`   farmer agent: ${farmerUrl}\n`));
+console.log(pc.dim(`   lot: ${lot.length} farmer agent(s) · ${lot.join(', ')}\n`));
 
 const runner = client.beta.messages.toolRunner({
   model: MODEL,
   max_tokens: 16000,
   system,
   tools,
-  messages: [{ role: 'user', content: `Operator instruction: ${instruction}\n\nFarmer agent base URL: ${farmerUrl}` }],
+  messages: [{ role: 'user', content: `Operator instruction: ${instruction}\n\nThe lot consists of these farmer agents:\n${lot.map((u) => `- ${u}`).join('\n')}` }],
   max_iterations: 20,
 });
 
@@ -130,5 +141,5 @@ for await (const message of runner) {
 
 const spent = purchases.reduce((s, p) => s + BigInt(p.paidUnits), 0n);
 console.log(pc.bold(`\n📊 ${purchases.length} bought · ${rejections.length} skipped · ${usdt(spent)} spent`));
-for (const p of purchases) console.log(`   ${p.compliant ? pc.green('✔') : pc.red('!')} ${p.attestationHash.slice(0, 10)}… ${p.areaHa} ha · pay ${p.payTx.slice(0, 10)}… · ${p.compliant ? 'deforestation-free' : `${p.deforestedHa} ha deforested`}`);
+for (const p of purchases) console.log(`   ${p.compliant ? pc.green('✔') : pc.red('!')} ${p.car ? p.car.slice(0, 19) + '…' : 'unregistered'} · ${p.attestationHash.slice(0, 10)}… ${p.areaHa} ha · pay ${p.payTx.slice(0, 10)}… · ${p.compliant ? 'deforestation-free' : `${p.deforestedHa} ha deforested`}`);
 console.log();

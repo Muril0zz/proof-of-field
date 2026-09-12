@@ -4,5 +4,6 @@
   "registry": "0xe0e5e881542266aac1b3457fdd33147c761b46dd",
   "usdt": "0xc128d4550e859b75d2e84c736757cc39853bc7d7",
   "agentWallet": "0xdba07b2211e4bdc07a228da01a647a4a4c6b82b3",
-  "deployedAt": "2026-09-12T12:45:41.653Z"
+  "deployedAt": "2026-09-12T12:45:41.653Z",
+  "deployBlock": 33015242
 }

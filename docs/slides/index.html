@@ -30,8 +30,10 @@
   .big { font-size: 8vw; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
   .note { margin-top: auto; font-size: 1.2vw; color: var(--ink-3); }
   code { font-family: 'JetBrains Mono', monospace; font-size: 0.92em; background: oklch(0.96 0.005 260); padding: 0.1em 0.4em; border-radius: 0.3em; color: var(--ink); }
+  .logos { display: flex; gap: 1.2vw; margin: 0.4vw 0 1.8vw; flex-wrap: wrap; }
+  .logo-mark { font-weight: 700; letter-spacing: 0.12em; font-size: 1.35vw; color: var(--ink-2); border: 1px solid var(--line); border-radius: 0.5vw; padding: 0.55vw 1.2vw; }
   .markets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; margin-top: 1vw; }
-  .mkt { border: 1px solid var(--line); border-radius: 0.8vw; padding: 1.8vw 1.7vw; display: flex; flex-direction: column; gap: 0.7vw; min-height: 17vw; }
+  .mkt { border: 1px solid var(--line); border-radius: 0.8vw; padding: 1.6vw 1.6vw; display: flex; flex-direction: column; gap: 0.6vw; min-height: 15vw; }
   .mkt i { font: 500 1vw 'JetBrains Mono', monospace; color: var(--primary); font-style: normal; }
   .mkt b { font-size: 1.7vw; letter-spacing: -0.015em; }
   .mkt p { font-size: 1.25vw; }
@@ -74,19 +76,21 @@
   <div class="kicker">EAG Global Buildathon · Floripa · 12 Sep 2026</div>
   <h1>Proof of Field</h1>
   <p class="lead" style="margin-top:2vw">The paper that takes three weeks to clear a soy shipment, turned into a five-dollar API call that an AI agent buys straight from the farmer.</p>
-  <p class="sub">Murilo Leite · Nixar Solutions · farmer in Abunã, Rondônia<br/>Live on HSK Chain testnet</p>
+  <p class="sub">Built at the EAG Global Buildathon Floripa · Live on HSK Chain testnet</p>
   <span class="n">1</span>
 </section>
 
 <!-- 2 -->
 <section class="slide">
-  <h2>A trader sells to the whole world. The whole world is asking for the same proof.</h2>
-  <div class="markets">
-    <div class="mkt"><i>European Union</i><b>Required by law</b><p>EUDR: the importer must prove every farm in a shipment did not deforest after 2020, or the goods don't enter. Fines up to 4% of EU turnover.</p></div>
-    <div class="mkt"><i>Banks &amp; credit</i><b>Required for money</b><p>Lenders and insurers ask for the same deforestation-free evidence before financing a crop or a herd.</p></div>
-    <div class="mkt"><i>China</i><b>Largest buyer, now asking</b><p>#1 destination for Brazilian soy and beef. Major buyers and COFCO-type traders are moving to the same 2020 baseline.</p></div>
+  <h2>Six companies move most of Brazil's soy and beef. Each one clears thousands of farms per season.</h2>
+  <div class="logos">
+    <span class="logo-mark">CARGILL</span><span class="logo-mark">BUNGE</span><span class="logo-mark">ADM</span><span class="logo-mark">COFCO</span><span class="logo-mark">LDC</span><span class="logo-mark">AMAGGI</span>
   </div>
-  <p class="lead" style="margin-top:2.4vw">One farm, one lot, many buyers, and each buyer asks again. The trader's compliance team answers the same question by hand, per farm, per market.</p>
+  <div class="markets">
+    <div class="mkt"><i>how a trader works</i><b>Originate → aggregate → export</b><p>Buys from thousands of farms, blends into lots at silos and ports, sells to importers worldwide. Margins are thin; volume is everything.</p></div>
+    <div class="mkt"><i>what every market now asks</i><b>Proof per farm, not per lot</b><p>EU by law (EUDR: importer liable, fines up to 4% of turnover). Banks for credit. China, the largest buyer, moving to the same 2020 baseline.</p></div>
+    <div class="mkt"><i>the bottleneck</i><b>Compliance is done by hand</b><p>Teams e-mail suppliers, pay due-diligence vendors per farm, assemble PDFs. Every buyer asks again. The check is cheap; the coordination isn't.</p></div>
+  </div>
   <span class="n">2</span>
 </section>
 
@@ -149,7 +153,7 @@
       <h3>Chain enforces</h3>
       <ul>
         <li><b>Registry</b>: the attestation hash is anchored by the farmer's key. Any buyer, bank or auditor verifies it without trusting us.</li>
-        <li><b>Stablecoin</b>: machines don't have bank accounts. USDT is how one program pays another, instantly, to a farmer in Rondônia.</li>
+        <li><b>Stablecoin</b>: machines don't have bank accounts. USDT is how one program pays another, instantly, to any farmer anywhere.</li>
         <li><b>AgentWallet</b>: daily limit, per-payment limit, allow-listed payees. The AI holds a key that <b>cannot</b> exceed the policy, even if tricked.</li>
       </ul>
       <p class="why">Why a chain and not a database: the trader's agent and the farmer's agent don't trust each other, and neither should have to trust a middleman.</p>
@@ -167,8 +171,8 @@
     <div>
       <h2 style="font-size:2.5vw">Farmer: draw, check, sign, anchor.<br/>Trader: one sentence.</h2>
       <ul>
-        <li>Real properties from the CAR registry in Porto Velho, RO. One clean, one with <b>26 ha cleared in 2022</b>.</li>
-        <li>The agent buys the clean one, <b>refuses the other</b>, and says why.</li>
+        <li>Two farmers, three real properties from the CAR registry. One clean, two with post-2020 clearing.</li>
+        <li>The buyer's agent works the whole lot: buys the clean one, <b>refuses the other two</b>, and says why, per farm.</li>
         <li>Every step is a transaction on <b>HSK Chain</b> you can open in the explorer.</li>
       </ul>
     </div>
@@ -201,12 +205,13 @@
   <div class="two">
     <img class="shot" src="07-sale-received.png" alt="Farmer console showing a sale received" />
     <div>
-      <h2>Open source. Reusable. Running on my farm this year.</h2>
+      <h2>Built to scale: any farmer, any buyer, one registry.</h2>
       <ul>
+        <li>Each farmer runs their own agent with their own key. A lot spans many farmers; the buyer's agent works the whole lot from one instruction.</li>
+        <li>The registry is the global index: every proof, every farmer, verifiable by any bank, importer or auditor without a middleman.</li>
         <li><code>FieldAttestationRegistry</code>, <code>AgentWallet</code> and the x402 seller are generic: any private dataset can become a paid, verifiable proof.</li>
-        <li>Pilot: Abunã, Rondônia, with neighbouring farms. Buyers and banks who want in: talk to me.</li>
       </ul>
-      <p style="margin-top:2vw">Murilo Leite · murilo.leite2005@gmail.com<br/><span style="color:var(--primary)">github.com/Muril0zz/proof-of-field</span></p>
+      <p style="margin-top:2vw">Pilot partners wanted: a trader, a bank, a farmer cooperative.<br/><span style="color:var(--primary)">github.com/Muril0zz/proof-of-field</span></p>
     </div>
   </div>
   <span class="n">8</span>

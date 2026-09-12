@@ -33,11 +33,37 @@ export async function policyStatus(): Promise<PolicyStatus> {
   return { agentWallet: dep.agentWallet, remainingTodayUnits: remaining.toString(), perPaymentLimitUnits: per.toString(), dailyLimitUnits: daily.toString(), balanceUnits: bal.toString() };
 }
 
-export interface ProofListing { hash: string; label?: string; car: string | null; registered: boolean; farmer: string; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
+export interface ProofListing { hash: string; label?: string; car: string | null; registered: boolean; farmer: string; farmerName: string; farmerAgent: string; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
 export async function listProofs(farmerBaseUrl: string): Promise<ProofListing[]> {
   const base = farmerBaseUrl.replace(/\/$/, '');
-  const list = await fetch(`${base}/attestations`).then((r) => r.json()) as any[];
-  return list.map((a) => ({ hash: a.hash, label: a.label, car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
+  const [info, list] = await Promise.all([
+    fetch(`${base}/`).then((r) => r.json()).catch(() => ({})) as Promise<any>,
+    fetch(`${base}/attestations`).then((r) => r.json()) as Promise<any[]>,
+  ]);
+  return list.map((a) => ({ hash: a.hash, label: a.label, car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, farmerName: info.name || 'Farmer agent', farmerAgent: base, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
+}
+
+/** Lot = several farmer agents. Unreachable agents are reported, not fatal. */
+export async function listLot(farmerUrls: string[]): Promise<{ proofs: ProofListing[]; unreachable: string[] }> {
+  const proofs: ProofListing[] = []; const unreachable: string[] = [];
+  await Promise.all(farmerUrls.map(async (u) => { try { proofs.push(...(await listProofs(u))); } catch { unreachable.push(u); } }));
+  return { proofs, unreachable };
+}
+
+/** Global on-chain index: every attestation ever anchored in the registry, by any farmer. */
+export async function registryStats(): Promise<{ totalAttestations: string; farmers: number; compliant: number; nonCompliant: number; registry: string }> {
+  const total = await pub.readContract({ address: dep.registry, abi: registryAbi, functionName: 'totalAttestations' }) as bigint;
+  // Public RPCs cap eth_getLogs ranges, so scan in chunks from the deployment block.
+  const latest = await pub.getBlockNumber();
+  const logs: any[] = [];
+  const CHUNK = 2000n;
+  for (let from = BigInt(dep.deployBlock ?? 0); from <= latest; from += CHUNK) {
+    const to = from + CHUNK - 1n > latest ? latest : from + CHUNK - 1n;
+    try { logs.push(...(await pub.getContractEvents({ address: dep.registry, abi: registryAbi as any, eventName: 'Attested', fromBlock: from, toBlock: to }))); } catch { /* skip chunk */ }
+  }
+  const farmers = new Set<string>(); let compliant = 0, nonCompliant = 0;
+  for (const l of logs as any[]) { farmers.add(String(l.args.farmer).toLowerCase()); if (l.args.compliant) compliant++; else nonCompliant++; }
+  return { totalAttestations: total.toString(), farmers: farmers.size, compliant, nonCompliant, registry: dep.registry };
 }
 
 export type Step = (n: number, s: string) => void;
@@ -78,7 +104,7 @@ export async function buyProof(url: string, log: Log = silentLog): Promise<BuyRe
   log.step(3, 'Retrying with X-PAYMENT');
   const r2 = await fetch(url, { headers: { 'X-PAYMENT': encodePayment({ x402Version: 1, scheme: 'exact', network: NETWORK, payload: { txHash: payTx, payer: account.address } }) } });
   if (r2.status !== 200) throw new BuyError('delivery', `farmer refused: ${r2.status} ${await r2.text()}`);
-  const { proof, report } = await r2.json();
+  const { proof, report, car: carRef, registered: isRegistered } = await r2.json();
   log.ok('proof received');
 
   log.step(4, 'Verifying the proof independently');
@@ -103,6 +129,6 @@ export async function buyProof(url: string, log: Log = silentLog): Promise<BuyRe
     attestationHash: h, farmer: att.farmer, anchorTx: proof.anchorTx, anchorTxUrl: proof.anchorTxUrl, anchoredAt,
     areaHa: Number(att.areaHa100) / 100, deforestedHa: Number(att.deforestedHa100) / 100, byYear: report.byYear || {},
     baselineYear: Number(att.baselineYear), dataYear: Number(att.dataYear), source: att.source, issuedAt: new Date(Number(att.issuedAt) * 1000).toISOString(),
-    compliant: att.compliant, fieldId: att.fieldId, checks, car: proof.car ?? null, registered: !!proof.registered,
+    compliant: att.compliant, fieldId: att.fieldId, checks, car: carRef ?? null, registered: !!isRegistered,
   };
 }

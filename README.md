@@ -27,7 +27,7 @@ A soy or cattle buyer (trader, bank, importer) must prove the farm it buys from 
         └─────────────────────────────────────────────────────────────────────┘
 ```
 
-1. **Farmer draws a field** (or loads a registered CAR property) in the console.
+1. **Farmer selects a registered property** (CAR, the public rural registry; official polygon) in the console. Each farmer runs their own agent with their own key; a lot spans many farmers.
 2. **The farmer agent** intersects it with INPE/PRODES yearly deforestation polygons (public, official, pure geometry, ~100 ms) and signs an **EIP-712 attestation**: area, hectares deforested after the 2020 baseline, verdict, data source, timestamp.
 3. Only `keccak(polygon)` and the attestation hash are **anchored on-chain**. The geometry never leaves the farmer's machine.
 4. **The buyer agent** requests the proof, gets **HTTP 402** with x402 payment requirements, pays USDT through the company's **AgentWallet** (daily / per-payment limits, allow-listed payees), retries with `X-PAYMENT`, receives the proof, and **verifies it independently**: signature → signer == on-chain anchoring farmer → not revoked.
@@ -69,7 +69,7 @@ NETWORK=anvil pnpm buyer -- --list http://localhost:4020
 NETWORK=anvil pnpm buyer -- http://localhost:4020/proof/<attestationHash>
 
 # optional: LLM-driven buyer (needs ANTHROPIC_API_KEY in .env)
-NETWORK=anvil pnpm buyer:ai "Buy proofs for every farm in this lot, budget 30 USDT, reject any farm with deforestation."
+NETWORK=anvil pnpm buyer:ai "Buy proofs for every farm in this lot, budget 30 USDT, reject any farm with deforestation." http://localhost:4020 http://localhost:4021   # a lot = many farmer agents
 ```
 
 ### HSK Chain testnet (chainId 133)
@@ -111,4 +111,4 @@ Example: [attestation anchored](https://testnet-explorer.hsk.xyz/tx/0xd1a37a26ce
 
 ## Team
 
-Murilo Leite · Nixar Solutions · farmer in Abunã, Rondônia
+Murilo Leite · built at the EAG Global Buildathon Floripa, 12 Sep 2026
