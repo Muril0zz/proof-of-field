@@ -69,6 +69,21 @@
   .pain { background: var(--bad-soft); border-radius: 0.8vw; padding: 1.4vw 1.5vw; }
   .pain b { display: block; font-size: 2.8vw; letter-spacing: -0.04em; color: var(--bad); line-height: 1; }
   .pain span { display: block; margin-top: 0.5vw; font-size: 1.15vw; color: var(--ink-2); line-height: 1.35; }
+  .ai-chain { display: grid; grid-template-columns: 1fr 12vw 1fr; gap: 1.6vw; flex: 1; align-items: stretch; }
+  .col { border-radius: 1vw; padding: 1.8vw 2vw; display: flex; flex-direction: column; }
+  .col.ai { background: var(--primary-soft); } .col.chain { background: oklch(0.96 0.01 200); }
+  .col-h { font-size: 1.9vw; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.6vw; }
+  .col.ai .col-h { color: var(--primary); } .col.chain .col-h { color: oklch(0.4 0.1 200); }
+  .col-h .dot { width: 0.9vw; height: 0.9vw; border-radius: 50%; background: currentColor; }
+  .col-sub { font-size: 1.2vw; color: var(--ink-2); margin: 0.6vw 0 1vw; }
+  .tools { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7vw; }
+  .tools li { display: flex; align-items: center; gap: 0.9vw; background: rgba(255,255,255,.7); border-radius: 0.6vw; padding: 0.7vw 1vw; font-size: 1.25vw; color: var(--ink-2); }
+  .tools li i { font-style: normal; font-size: 1.5vw; width: 2vw; text-align: center; }
+  .tools li b { color: var(--ink); }
+  .col-foot { margin-top: auto; padding-top: 1vw; font-size: 1.15vw; color: var(--ink-2); border-top: 1px solid rgba(0,0,0,.08); }
+  .mid { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6vw; text-align: center; }
+  .mid-line { font-size: 1.5vw; color: var(--ink-2); line-height: 1.2; } .mid-line b { display: block; font-size: 2.4vw; color: var(--ink); letter-spacing: -0.03em; }
+  .mid-arrow { font-size: 2.4vw; color: var(--ink-3); }
   /* comparison */
   .cmp { display: grid; grid-template-columns: 15vw 1fr 1fr; gap: 0.6vw 1vw; margin-top: 0.4vw; }
   .cmp-h { font-weight: 700; font-size: 1.35vw; padding: 0.4vw 1vw; }
@@ -167,28 +182,37 @@
 
 <!-- 5 -->
 <section class="slide">
-  <h2>Where AI sits, where the chain sits</h2>
-  <div class="layers">
-    <div class="layer ai">
-      <h3>AI decides</h3>
-      <ul>
-        <li>The buyer agent is a <b>Claude model with five tools</b>: list proofs, read its own spending policy, buy over x402, skip with a reason, write the report.</li>
-        <li>Input is a sentence: <i>"buy the proofs for this lot, budget 30 USDT, reject any farm with deforestation."</i></li>
-        <li>It handles the messy part: hundreds of farms, edge cases, conflicting instructions, and explains every decision.</li>
+  <h2>Where the AI sits, where the chain sits</h2>
+  <div class="ai-chain">
+    <div class="col ai">
+      <div class="col-h"><span class="dot"></span>AI decides</div>
+      <p class="col-sub">A Claude agent gets one sentence from the compliance desk and works with five tools:</p>
+      <ul class="tools">
+        <li><i>📋</i><b>list</b> the suppliers' proofs</li>
+        <li><i>🔒</i><b>read</b> its own spending policy on-chain</li>
+        <li><i>🛒</i><b>buy</b> a proof over HTTP 402</li>
+        <li><i>✋</i><b>refuse</b>, with a written reason</li>
+        <li><i>📄</i><b>write</b> the compliance dossier</li>
       </ul>
-      <p class="why">Why an agent and not a script: the rules change per buyer, per country, per lot. A script breaks; an agent reads the instruction.</p>
+      <p class="col-foot">Handles the messy part: hundreds of farms, edge cases, conflicting instructions. Explains every decision.</p>
     </div>
-    <div class="layer chain">
-      <h3>Chain enforces</h3>
-      <ul>
-        <li><b>Registry</b>: the attestation hash is anchored by the farmer's key. Any buyer, bank or auditor verifies it without trusting us.</li>
-        <li><b>Stablecoin</b>: machines don't have bank accounts. USDT is how one program pays another, instantly, to any farmer anywhere.</li>
-        <li><b>AgentWallet</b>: daily limit, per-payment limit, <b>allow-listed suppliers</b>. The AI holds a key that cannot exceed the policy or pay a stranger, even if tricked. Public CAR data can't be sold by someone who isn't the onboarded supplier.</li>
+    <div class="mid">
+      <div class="mid-line">The model<br/><b>decides.</b></div>
+      <div class="mid-arrow">→</div>
+      <div class="mid-line">The contract<br/><b>enforces.</b></div>
+    </div>
+    <div class="col chain">
+      <div class="col-h"><span class="dot"></span>Chain enforces</div>
+      <p class="col-sub">HashKey Chain holds three things the AI cannot change:</p>
+      <ul class="tools">
+        <li><i>🔗</i><b>Registry</b> · every proof's hash and who anchored it. Anyone verifies.</li>
+        <li><i>💵</i><b>Stablecoin</b> · the only way one program pays another, anywhere.</li>
+        <li><i>🛡️</i><b>AgentWallet</b> · daily limit, per-payment limit, allow-listed suppliers.</li>
       </ul>
-      <p class="why">Why a chain and not a database: the trader's agent and the farmer's agent don't trust each other, and neither should have to trust a middleman.</p>
+      <p class="col-foot">Even if the model is tricked, the worst it can do is skip a purchase. It cannot pay a stranger or exceed the limit.</p>
     </div>
   </div>
-  <p class="note" style="font-size:1.35vw;color:var(--ink);margin-top:1.4vw">The check runs on the farm's own computer. The <b>trade</b> needs the chain: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse.</p>
+  <p class="note">The check runs on the farm's own computer. What needs the chain is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse.</p>
   <span class="n">5</span>
 </section>
 
