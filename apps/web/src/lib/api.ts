@@ -13,7 +13,7 @@ const j = async <T,>(r: Response): Promise<T> => { if (!r.ok) throw new Error(`$
 export const FARMERS: { name: string; url: string }[] = [
   { name: 'João Silva', url: 'http://localhost:4020' },
 ];
-let base = (() => { try { return localStorage.getItem('pof.farmer') || FARMERS[0].url; } catch { return FARMERS[0].url; } })();
+let base = (() => { try { const v = localStorage.getItem('pof.farmer'); return v && FARMERS.some((f) => f.url === v) ? v : FARMERS[0].url; } catch { return FARMERS[0].url; } })();
 export const getFarmerUrl = () => base;
 export const setFarmerUrl = (u: string) => { base = u; try { localStorage.setItem('pof.farmer', u); } catch {} };
 const u = (path: string) => `${base}${path}`;
