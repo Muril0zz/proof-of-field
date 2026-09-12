@@ -1,10 +1,10 @@
 # Proof of Field — 3-minute presentation (1 min pitch · 2 min demo) + 2 min Q&A
 
 ## Before walking up (checklist)
-- Console open at http://localhost:5173, PRODES layer OFF, no field selected. Farmer A (port 4020) lists …9C62 (clean) and …4C8E (26 ha); Farmer B (port 4021, different key) lists …0A28 (18.6 ha); Farmer C (port 4022) is an **impostor**: offers Farmer A's CAR …9C62 with a key the company never onboarded. The shipment = three sellers, four listings. Sales section empty (delete `data/farmer-payments.hsk-testnet.*.json` and restart the farmer agent if not).
-- Buyer desk open at http://localhost:4030 (instruction pre-filled, three suppliers listed). Backup: terminal with this typed, NOT executed: `cd ~/Documents/Projetos_Codigo/eag-buildathon && NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021 http://localhost:4022`
-- Explorer tab: https://testnet-explorer.hsk.xyz/address/0xe0e5e881542266aac1b3457fdd33147c761b46dd
-- Slides open on slide 1, fullscreen.
+- ONE browser tab, fullscreen: **http://localhost:4030/demo** (left = FARM, right = TRADER). Nothing else on screen.
+- Farm side: no property selected. Trader side: instruction pre-filled, three suppliers listed.
+- Sales ledger empty (STATUS.md has the command). Slides open in another window, fullscreen, on slide 1.
+- Backup only if the page breaks: terminal with `NETWORK=hsk-testnet pnpm buyer -- <proof URL>`.
 
 ## 1 minute pitch (slides 1 → 5, ~12 s each)
 
@@ -18,27 +18,23 @@
 
 **Slide 5 (0:50).** "The check is SQL, we run it locally. What isn't SQL is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. Let me show you."
 
-## 2 minute demo (happy path only)
+## 2 minute demo: one screen, two clicks
 
-**0:00 [Console]** Click **…9C62**. Green verdict appears. → "This is a real 5,500-hectare property from Brazil's rural registry, checked against INPE's deforestation map, indigenous lands and conservation units. Clean."
+Say this before the first click: **"Left is a farm. Right is a trading company. Two clicks."**
 
-**0:10 [Console]** Click **Sign attestation & anchor on-chain**. Wait for the hash and tx (~5 s). → "Signed by the farmer's key. Only the hash goes to HashKey Chain. The proof is now for sale."
+**Click 1 · FARM (0:00).** Click the clean property (…9C62). Green verdict. → "The farm picks its registered property. The agent checks it against INPE, indigenous lands, conservation units. Clean."
+Click **Sign once & put the proof up for sale**. Blue banner appears. → "The farm signs once. Only the hash goes to HashKey Chain. The proof is now for sale to any buyer."
 
-**0:20 [Buyer desk, http://localhost:4030]** Click **Run agent** (instruction is pre-filled). → "This is the trader's compliance desk, before signing contracts for the harvest. One sentence: verify these suppliers, budget 30, reject deforestation or protected land."  *(It runs ~70 s. Talk over it, don't wait in silence.)*
+**Click 2 · TRADER (0:25).** Click **Run agent**. → "The trader types one sentence: verify these suppliers before we contract, reject deforestation. That's all a human does."
+While the log streams (~70 s), say only these, pointing at the lines as they appear:
+- "It lists what the suppliers sell, and reads its own spending limit on-chain."
+- "It buys the clean one: 402, pays five USDT, verifies the signature and the registry itself."
+- "It refuses two farms with clearing after 2020, and a third seller it never onboarded who is offering someone else's farm."
+- (point LEFT) "And the farm just got paid. Nobody e-mailed anyone."
 
-**0:30** as `list_proofs` / `policy_status` print → "It lists what the farmer sells and reads its own on-chain spending policy."
+**Close (1:50).** Scroll the report on the right. → "The dossier writes itself. Same proof next season, same proof in the export file. That's Proof of Field."
 
-**0:45** as the first `buy_proof` prints → "HTTP 402, payment required. It pays five USDT through a wallet with hard limits. Gets the proof. Verifies the signature and the registry itself, without trusting the farmer or us."
-
-**1:15** as `skip_proof` prints → "It refuses three: two farms with clearing after 2020, and one seller it has never onboarded who is offering a CAR that already belongs to Farmer A. Anyone can download a public CAR; only the onboarded supplier gets paid."
-
-**1:35 [Console]** Point at **Sales**: +5.00 USDT appeared by itself. → "The farmer was paid the second his data was used."
-
-**1:45 [Explorer]** Click the payment tx. → "Every step is a public transaction on HashKey Chain."
-
-**1:55** "Farmer paid. Trader cleared. Nobody e-mailed anyone. That's Proof of Field."
-
-**Fallback** if the API stalls (>90 s): Ctrl-C, run `NETWORK=hsk-testnet pnpm buyer -- <proof URL from console>` (5 s, same four steps, no LLM). Say: "same flow, without the model deciding."
+Do NOT open the explorer or the terminal unless asked. If asked for on-chain evidence, the report has the links.
 
 ## Slides 6–8 are for Q&A only
 Jump to 7 for "how does it work", 8 for "what's next / who are you".

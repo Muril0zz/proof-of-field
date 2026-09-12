@@ -20,6 +20,7 @@ const REPORTS = path.join(ROOT, 'docs', 'reports');
 
 const app = new Hono();
 app.get('/', (c) => c.html(PAGE));
+app.get('/demo', (c) => c.html(DEMO));
 app.get('/config', (c) => c.json({ network: NETWORK, lot: DEFAULT_LOT }));
 app.get('/reports/latest', (c) => {
   if (!fs.existsSync(REPORTS)) return c.text('', 404);
@@ -75,9 +76,9 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 <div class="brand">Proof of Field<small>Buyer desk · supplier compliance, one sentence</small></div><div class="chip" id="chip">…</div></div>
 <div class="wrap">
   <div class="card"><h2>Instruction to the buyer agent</h2>
-    <textarea id="q">Before we sign purchase contracts with these suppliers for the coming harvest, verify each property. Budget 30 USDT. Reject any farm with deforestation after 2020 or on protected land.</textarea>
+    <textarea id="q">Verify these suppliers before we contract the harvest. Budget 30 USDT. Reject deforestation after 2020 or protected land.</textarea>
     <div class="lot" id="lot"></div>
-    <div class="row"><button class="btn" id="run">Run agent</button><span class="hint">The agent lists the suppliers, reads its on-chain spending policy, buys each proof over HTTP 402, verifies it, and writes the dossier. ~70 s. The same proofs are reused at every season and in the export file.</span></div>
+    <div class="row"><button class="btn" id="run">Run agent</button><span class="hint">Lists the suppliers, checks its own spending policy, buys and verifies each proof, writes the dossier. ~70 s.</span></div>
   </div>
   <div class="card" id="logcard" hidden><h2><span class="status" id="st"><span class="spin"></span>Agent working…</span></h2><div class="log" id="log"></div></div>
   <div class="card" id="repcard" hidden><h2>Compliance report</h2><div class="summary" id="sum"></div><div class="report" id="rep"></div></div>
@@ -97,5 +98,26 @@ $('run').onclick=()=>{const q=$('q').value.trim();if(!q)return;$('run').disabled
  es.onerror=()=>{es.close();$('run').disabled=false;$('st').textContent='Connection closed';};
 };
 </script></body></html>`;
+
+const DEMO = `<!doctype html><html lang="en"><head><meta charset="utf-8"/><title>Proof of Field · Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:oklch(0.2 0.02 260);--line:oklch(0.88 0.006 260);--primary:oklch(0.38 0.14 262);--ok:oklch(0.52 0.15 150)}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,sans-serif;background:#0d0f14}
+.stage{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;height:100%;gap:0}
+.hdr{display:flex;align-items:center;gap:12px;padding:10px 18px;color:#fff;font-weight:600;font-size:15px;border-bottom:1px solid #2a2f3a}
+.hdr .tag{font-size:11px;letter-spacing:.12em;padding:3px 8px;border-radius:999px;font-weight:700}
+.hdr.farm .tag{background:var(--ok);color:#fff}.hdr.trader .tag{background:var(--primary);color:#fff}
+.hdr small{color:#9aa0a6;font-weight:500}
+.hdr.farm{border-right:1px solid #2a2f3a}
+iframe{border:0;width:100%;height:100%;background:#fff}
+.pane{position:relative;min-height:0}.pane.farm{border-right:1px solid #2a2f3a}
+.step{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:6px 12px;border-radius:999px;opacity:.92;pointer-events:none}
+</style></head><body><div class="stage">
+<div class="hdr farm"><span class="tag">FARM</span>Fazenda A · Rondônia <small>· picks the property, signs once</small></div>
+<div class="hdr trader"><span class="tag">TRADER</span>Compliance desk <small>· one sentence, the agent does the rest</small></div>
+<div class="pane farm"><iframe src="http://localhost:5173" title="Farmer console"></iframe></div>
+<div class="pane"><iframe src="http://localhost:4030" title="Buyer desk"></iframe></div>
+</div></body></html>`;
 
 serve({ fetch: app.fetch, port: PORT }, () => console.log(`[desk] buyer desk on http://localhost:${PORT} · network ${NETWORK} · lot ${DEFAULT_LOT.join(', ')}`));
