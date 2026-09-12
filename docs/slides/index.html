@@ -30,6 +30,11 @@
   .big { font-size: 8vw; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
   .note { margin-top: auto; font-size: 1.2vw; color: var(--ink-3); }
   code { font-family: 'JetBrains Mono', monospace; font-size: 0.92em; background: oklch(0.96 0.005 260); padding: 0.1em 0.4em; border-radius: 0.3em; color: var(--ink); }
+  .markets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; margin-top: 1vw; }
+  .mkt { border: 1px solid var(--line); border-radius: 0.8vw; padding: 1.8vw 1.7vw; display: flex; flex-direction: column; gap: 0.7vw; min-height: 17vw; }
+  .mkt i { font: 500 1vw 'JetBrains Mono', monospace; color: var(--primary); font-style: normal; }
+  .mkt b { font-size: 1.7vw; letter-spacing: -0.015em; }
+  .mkt p { font-size: 1.25vw; }
   /* timeline */
   .tl { display: grid; grid-template-columns: 9vw 1fr; gap: 1.2vw 2vw; align-items: start; }
   .tl .lbl { font-weight: 700; font-size: 1.6vw; padding-top: 1.4vw; }
@@ -75,16 +80,13 @@
 
 <!-- 2 -->
 <section class="slide">
-  <div class="two">
-    <div>
-      <div class="big">#1</div>
-      <p class="lead">China is the largest buyer of Brazilian soy and beef in the world.</p>
-      <p style="margin-top:1.4vw">Every shipment needs proof that every farm in it did not deforest after 2020. EUDR makes the importer legally liable. Banks ask for it before lending. Chinese buyers are starting to ask.</p>
-    </div>
-    <div>
-      <p class="lead">A trading company handles <b>hundreds of farms per lot</b>.<br/><br/>The check is mandatory, repetitive, and today it is done by people, by e-mail, per farm, per buyer.</p>
-    </div>
+  <h2>A trader sells to the whole world. The whole world is asking for the same proof.</h2>
+  <div class="markets">
+    <div class="mkt"><i>European Union</i><b>Required by law</b><p>EUDR: the importer must prove every farm in a shipment did not deforest after 2020, or the goods don't enter. Fines up to 4% of EU turnover.</p></div>
+    <div class="mkt"><i>Banks &amp; credit</i><b>Required for money</b><p>Lenders and insurers ask for the same deforestation-free evidence before financing a crop or a herd.</p></div>
+    <div class="mkt"><i>China</i><b>Largest buyer, now asking</b><p>#1 destination for Brazilian soy and beef. Major buyers and COFCO-type traders are moving to the same 2020 baseline.</p></div>
   </div>
+  <p class="lead" style="margin-top:2.4vw">One farm, one lot, many buyers, and each buyer asks again. The trader's compliance team answers the same question by hand, per farm, per market.</p>
   <span class="n">2</span>
 </section>
 

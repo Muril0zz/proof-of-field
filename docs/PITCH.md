@@ -4,7 +4,7 @@
 
 1. **Title.** Proof of Field. "Farmer-owned deforestation proofs, sold agent-to-agent." Murilo Leite · Abunã, Rondônia. Foto real da fazenda se tiver.
 2. **The problem, in one farmer.** Zé, 5.500 ha de soja em Rondônia. Pra vender pra uma trading, precisa provar área livre de desmatamento desde 2020 (EUDR / bancos / compradores chineses). Hoje: certificadora, entrega o mapa inteiro, semanas, pago por comprador, perde o dado.
-3. **Who pays today.** Tradings e bancos já pagam due-diligence por fazenda (Agrotools, Serasa Agro). Brasil → China: maior fluxo de soja e carne do mundo. Cada lote precisa de prova. *(1 número só, grande.)*
+3. **Who asks.** A trading sells to the world and every main market asks the same thing: EU by law (EUDR, importer liable), banks for credit, China (largest buyer) now moving to the same 2020 baseline. Trader answers per farm, per market, by hand.
 4. **Demo.** (sai do slide, vai pro app — 90 segundos)
 5. **How it works.** Diagrama do README: farmer agent (privado) ∩ PRODES → EIP-712 → hash on HSK Chain → buyer agent → 402 → AgentWallet pay → proof → verify. Destaque: *o polígono nunca sai da máquina do produtor.*
 6. **Why Ethereum / HSK.** Robô não tem conta em banco: stablecoin é a única forma de programa pagar programa. Registry público = qualquer comprador verifica sem confiar em ninguém. AgentWallet com política = empresa dá dinheiro pro agente sem dar a chave.
@@ -43,4 +43,4 @@ The LLM run takes ~70 s. Start it right after signing (step 2) and narrate over 
 
 ## Opening line (memorize)
 
-"Hi, I'm Murilo. I have a farm in the Amazon, and last month I learned that to sell my soy I have to hand my entire farm map to a stranger and wait three weeks. So I built the version where my computer proves it, keeps the map, and gets paid."
+"Hi, I'm Murilo. I have a farm in the Amazon. To sell my soy to Europe, to a bank, or increasingly to China, I have to hand my entire farm map to a stranger and wait three weeks. So I built the version where my computer proves it, keeps the map, and gets paid."
