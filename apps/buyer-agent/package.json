@@ -1,0 +1,14 @@
+{
+  "name": "buyer-agent",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "buyer-agent": "src/index.ts" },
+  "scripts": { "start": "tsx src/index.ts" },
+  "dependencies": {
+    "@pof/core": "workspace:*",
+    "dotenv": "^16.4.5",
+    "picocolors": "^1.1.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": { "tsx": "^4.19.0", "typescript": "^5.6.0", "@types/node": "^22.0.0" }
+}

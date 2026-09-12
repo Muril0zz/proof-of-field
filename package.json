@@ -1,0 +1,17 @@
+{
+  "name": "proof-of-field",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Proof of Field — farmer-owned deforestation-free attestations, sold agent-to-agent for stablecoins on HSK Chain",
+  "scripts": {
+    "abis": "node scripts/copy-abis.mjs",
+    "anvil": "anvil --chain-id 31337 --block-time 1",
+    "deploy:anvil": "cd contracts && forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast -q && node ../scripts/write-deployment.mjs anvil",
+    "deploy:hsk": "cd contracts && forge script script/Deploy.s.sol --rpc-url $HSK_TESTNET_RPC --broadcast -q && node ../scripts/write-deployment.mjs hsk-testnet",
+    "farmer": "pnpm --filter farmer-agent dev",
+    "buyer": "pnpm --filter buyer-agent start",
+    "web": "pnpm --filter web dev",
+    "test:contracts": "cd contracts && forge test"
+  },
+  "packageManager": "pnpm@10.4.1"
+}
