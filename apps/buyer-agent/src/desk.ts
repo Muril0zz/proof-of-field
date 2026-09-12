@@ -30,9 +30,10 @@ app.get('/reports/latest', (c) => {
 app.get('/run', (c) => {
   const instruction = c.req.query('q') || '';
   const lot = (c.req.query('lot') || DEFAULT_LOT.join(',')).split(',').map((s) => s.trim()).filter(Boolean);
+  const only = (c.req.query('only') || '').split(',').map((s) => s.trim()).filter(Boolean);
   const before = fs.existsSync(REPORTS) ? new Set(fs.readdirSync(REPORTS)) : new Set<string>();
   return streamSSE(c, async (stream) => {
-    const child = spawn('npx', ['tsx', 'src/agent.ts', instruction, ...lot], { cwd: path.join(ROOT, 'apps', 'buyer-agent'), env: { ...process.env, NETWORK, FORCE_COLOR: '0' } });
+    const child = spawn('npx', ['tsx', 'src/agent.ts', instruction, ...lot], { cwd: path.join(ROOT, 'apps', 'buyer-agent'), env: { ...process.env, NETWORK, FORCE_COLOR: '0', ONLY_PROOFS: only.join(',') } });
     const send = (line: string) => stream.writeSSE({ event: 'log', data: JSON.stringify(strip(line)) });
     let buf = '';
     const onData = (d: Buffer) => { buf += d.toString(); const lines = buf.split('\n'); buf = lines.pop() || ''; lines.forEach((l) => send(l)); };
@@ -62,6 +63,14 @@ textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--line-
 textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
 .lot{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lot label{display:inline-flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;font-size:13.5px}.lot label b{font-weight:600}.lot label small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}.lot input{margin:0;accent-color:var(--primary)}.lot .off{color:var(--bad);font-size:11px}
 .lot-h{font-size:12.5px;color:var(--ink-3);margin-top:12px}
+.sup{border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:260px;flex:1}
+.sup .sh{display:flex;align-items:center;gap:8px;font-weight:600}.sup .sh small{font-family:var(--mono);font-size:11px;color:var(--ink-3);font-weight:400}
+.sup .props{display:flex;flex-direction:column;gap:5px;margin-top:8px;padding-left:2px}
+.sup .pr{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);cursor:pointer}
+.sup .pr input{margin:0;accent-color:var(--primary)}
+.sup .pill{font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:1px 6px;border-radius:999px}
+.sup .pill.ok{background:var(--ok-soft);color:var(--ok)}.sup .pill.bad{background:var(--bad-soft);color:var(--bad)}
+.sup .off{color:var(--bad);font-size:11px}
 .row{display:flex;gap:10px;align-items:center;margin-top:12px}
 .btn{height:38px;padding:0 16px;border-radius:6px;border:1px solid transparent;background:var(--primary);color:#fff;font:500 14px Inter,system-ui,sans-serif;cursor:pointer}.btn:hover{background:var(--primary-hover)}.btn:disabled{opacity:.5;cursor:not-allowed}
 .hint{color:var(--ink-3);font-size:12.5px}
@@ -93,7 +102,7 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 <div class="wrap">
   <div class="card"><h2>Instruction to the buyer agent</h2>
     <textarea id="q">Verify these suppliers before we contract the harvest. Budget 30 USDT. Reject deforestation after 2020 or protected land.</textarea>
-    <div class="lot-h">Suppliers to verify (onboarded agents; tick who you want checked this run):</div>
+    <div class="lot-h">Suppliers and their properties (tick exactly what you want verified this run):</div>
     <div class="lot" id="lot"></div>
     <div class="row"><button class="btn" id="run">Run agent</button><span class="hint">Lists the suppliers, checks its own spending policy, buys and verifies each proof, writes the dossier. ~70 s.</span></div>
   </div>
@@ -106,9 +115,14 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 <script>
 const $=id=>document.getElementById(id);
 fetch('/config').then(r=>r.json()).then(async c=>{$('chip').textContent=c.network;window.__lot=c.lot;
- const items=await Promise.all(c.lot.map(async u=>{try{const i=await fetch(u+'/',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());return {u,name:i.name||u,farmer:i.farmer,n:i.attestations};}catch{return {u,name:u,off:true};}}));
- $('lot').innerHTML=items.map(i=>'<label><input type="checkbox" value="'+i.u+'" '+(i.off?'':'checked')+'/> <b>'+i.name+'</b> <small>'+(i.farmer?i.farmer.slice(0,6)+'…'+i.farmer.slice(-4):i.u)+'</small>'+(i.off?' <span class="off">offline</span>':'')+'</label>').join('');});
-function selectedLot(){return [...document.querySelectorAll('#lot input:checked')].map(i=>i.value);}
+ const items=await Promise.all(c.lot.map(async u=>{try{const i=await fetch(u+'/',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());const a=await fetch(u+'/attestations',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());return {u,name:i.name||u,farmer:i.farmer,props:a};}catch{return {u,name:u,off:true,props:[]};}}));
+ $('lot').innerHTML=items.map(i=>'<div class="sup" data-u="'+i.u+'"><label class="sh"><input type="checkbox" class="supcb" '+(i.off?'':'checked')+'/> '+i.name+' <small>'+(i.farmer?i.farmer.slice(0,6)+'…'+i.farmer.slice(-4):'')+'</small>'+(i.off?' <span class="off">offline</span>':'')+'</label><div class="props">'+
+   (i.props.length?i.props.map(p=>'<label class="pr"><input type="checkbox" class="prcb" value="'+i.u+'/proof/'+p.hash+'" '+(i.off?'':'checked')+'/> '+(p.label||p.hash.slice(0,10))+' <span class="pill '+(p.compliant?'ok':'bad')+'">'+(p.compliant?'clean':(p.report&&p.report.deforestedHa?p.report.deforestedHa.toFixed(0)+' ha cleared':'non-compliant'))+'</span></label>').join(''):'<span class="off">no proofs offered</span>')+'</div></div>').join('');
+ document.querySelectorAll('.supcb').forEach(cb=>cb.addEventListener('change',e=>{e.target.closest('.sup').querySelectorAll('.prcb').forEach(x=>x.checked=e.target.checked);}));
+ document.querySelectorAll('.prcb').forEach(cb=>cb.addEventListener('change',e=>{const sup=e.target.closest('.sup');sup.querySelector('.supcb').checked=[...sup.querySelectorAll('.prcb')].some(x=>x.checked);}));
+});
+function selectedProofs(){return [...document.querySelectorAll('#lot .prcb:checked')].map(i=>i.value);}
+function selectedLot(){return [...new Set(selectedProofs().map(v=>v.split('/proof/')[0]))];}
 function cls(l){if(/^\\s*⚙/.test(l))return 't';if(/✔/.test(l))return 'ok';if(/✘|NON-COMPLIANT|UNKNOWN/.test(l))return 'bad';if(/^\\s{4,}/.test(l))return 'dim';return 'say';}
 
 $('rawt').onclick=()=>{const h=$('log').hidden;$('log').hidden=!h;$('rawt').textContent=h?'Hide raw agent log':'Show raw agent log';};
@@ -142,8 +156,8 @@ function handle(l){
   if(/^\\*\\*|^-\\s|^\\d\\.\\s|^#|^📊|^✔/.test(t)) return;
   const d=document.createElement('div');d.className='say';d.textContent=t;$('tl').appendChild(d);cur=null;
 }
-$('run').onclick=()=>{const q=$('q').value.trim();if(!q)return;const lot=selectedLot();if(!lot.length){alert('Tick at least one supplier');return;}$('run').disabled=true;$('logcard').hidden=false;$('repcard').hidden=true;$('log').textContent='';$('tl').innerHTML='';cur=null;$('st').innerHTML='<span class="spin"></span>Agent working…';
- const es=new EventSource('/run?q='+encodeURIComponent(q)+'&lot='+encodeURIComponent(lot.join(',')));
+$('run').onclick=()=>{const q=$('q').value.trim();if(!q)return;const lot=selectedLot();if(!lot.length){alert('Tick at least one property');return;}$('run').disabled=true;$('logcard').hidden=false;$('repcard').hidden=true;$('log').textContent='';$('tl').innerHTML='';cur=null;$('st').innerHTML='<span class="spin"></span>Agent working…';
+ const es=new EventSource('/run?q='+encodeURIComponent(q)+'&lot='+encodeURIComponent(lot.join(','))+'&only='+encodeURIComponent(selectedProofs().join(',')));
  es.addEventListener('log',e=>{const l=JSON.parse(e.data);if(!l.trim())return;const d=document.createElement('div');d.className=cls(l);d.textContent=l;$('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight;try{handle(l);}catch(err){}});
  es.addEventListener('done',e=>{es.close();$('run').disabled=false;$('st').textContent='Done';const {report}=JSON.parse(e.data);
    const txt=$('log').textContent;const m=txt.match(/(\\d+) bought · (\\d+) skipped · ([\\d.]+) USDT spent/);
@@ -181,7 +195,7 @@ iframe{border:0;width:100%;height:100%;background:#fff}
 <div class="top"><div class="logo"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 12.5 6.5 3.5 14 12.5Z" fill="#fff"/></svg></div>
 <div class="name">Proof of Field<small>Deforestation-free proofs, signed once by the farm, bought and verified by the buyer's agent</small></div>
 <div class="steps"><span class="st ok"><i>1</i>Farm signs once</span><span class="arrow">→</span><span class="st"><i>2</i>Trader's agent verifies &amp; pays</span><span class="arrow">→</span><span class="st ok"><i>3</i>Farm is paid</span><span class="net"><b></b>HashKey Chain testnet</span></div></div>
-<div class="hdr farm"><span class="tag">FARM</span>João Silva · 3 registered properties <small>· picks the property, signs once</small></div>
+<div class="hdr farm"><span class="tag">FARM</span>Farmer console <small>· picks the property, signs once · dropdown switches farmer</small></div>
 <div class="hdr trader"><span class="tag">TRADER</span>Compliance desk <small>· one sentence, the agent does the rest</small></div>
 <div class="pane farm"><iframe src="http://localhost:5173" title="Farmer console"></iframe></div>
 <div class="pane"><iframe src="http://localhost:4030" title="Buyer desk"></iframe></div>

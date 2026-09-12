@@ -31,9 +31,9 @@ kill_port 4020; kill_port 4021; kill_port 4022; kill_port 4030; kill_port 5173
 if [ -n "${FARMER2_PRIVATE_KEY:-}" ] && [ -n "${FARMER2_SAMPLES:-}" ]; then
   (cd apps/farmer-agent && FARMER_NAME="Maria Souza" FARMER_PRIVATE_KEY=$FARMER2_PRIVATE_KEY FARMER_PORT=4021 FARMER_PUBLIC_URL=http://localhost:4021 FARMER_SAMPLES=$FARMER2_SAMPLES nohup npx tsx src/index.ts > ../../.logs/farmer2.log 2>&1 < /dev/null &)
 fi
-# Pedro Lima (FARMER3_* key): an IMPOSTOR for the demo — offers João's CAR with a key the company never onboarded. Not allow-listed, not funded.
+# Pedro Lima (FARMER3_* key): has his own (simulated) property AND offers João's CAR — a key the company never onboarded. Not allow-listed.
 if [ -n "${FARMER3_PRIVATE_KEY:-}" ]; then
-  (cd apps/farmer-agent && FARMER_NAME="Pedro Lima" FARMER_PRIVATE_KEY=$FARMER3_PRIVATE_KEY FARMER_PORT=4022 FARMER_PUBLIC_URL=http://localhost:4022 FARMER_SAMPLES=9C62FD55 nohup npx tsx src/index.ts > ../../.logs/farmer3.log 2>&1 < /dev/null &)
+  (cd apps/farmer-agent && FARMER_NAME="Pedro Lima" FARMER_PRIVATE_KEY=$FARMER3_PRIVATE_KEY FARMER_PORT=4022 FARMER_PUBLIC_URL=http://localhost:4022 FARMER_SAMPLES=PEDRO3F7A,9C62FD55 nohup npx tsx src/index.ts > ../../.logs/farmer3.log 2>&1 < /dev/null &)
 fi
 (cd apps/web && nohup npx vite --port 5173 > ../../.logs/web.log 2>&1 < /dev/null &)
 (cd apps/buyer-agent && nohup npx tsx src/desk.ts > ../../.logs/desk.log 2>&1 < /dev/null &)

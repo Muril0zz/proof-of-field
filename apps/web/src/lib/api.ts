@@ -12,6 +12,7 @@ const j = async <T,>(r: Response): Promise<T> => { if (!r.ok) throw new Error(`$
 /** Which farmer agent this console talks to. Each farm (or its co-op) runs its own agent with its own key. */
 export const FARMERS: { name: string; url: string }[] = [
   { name: 'João Silva', url: 'http://localhost:4020' },
+  { name: 'Pedro Lima', url: 'http://localhost:4022' },
 ];
 let base = (() => { try { const v = localStorage.getItem('pof.farmer'); return v && FARMERS.some((f) => f.url === v) ? v : FARMERS[0].url; } catch { return FARMERS[0].url; } })();
 export const getFarmerUrl = () => base;

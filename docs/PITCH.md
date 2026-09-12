@@ -2,7 +2,7 @@
 
 ## Before walking up (checklist)
 - ONE browser tab, fullscreen: **http://localhost:4030/demo** (left = FARM, right = TRADER). Nothing else on screen.
-- Farm side: **João Silva**, three registered properties, none selected. Trader side: instruction pre-filled, two suppliers ticked by name (João Silva, Pedro Lima).
+- Farm side: dropdown on **João Silva** (three registered properties), none selected. Pedro Lima is the other option (one property of his own, plus João's CAR copied). Trader side: instruction pre-filled; under each supplier, every property ticked with its verdict pill. The trader can untick any property.
 - Sales ledger empty (STATUS.md has the command). Slides open in another window, fullscreen, on slide 1.
 - Backup only if the page breaks: terminal with `NETWORK=hsk-testnet pnpm buyer -- <proof URL>`.
 
@@ -27,7 +27,7 @@ Say this before the first click: **"Left is a farm. Right is a trading company. 
 **Click 1 · FARM (0:00).** Click the clean property (…9C62). Green verdict. → "The farm picks its registered property. The agent checks it against INPE, indigenous lands, conservation units. Clean."
 Click **Sign once & put the proof up for sale**. Blue banner appears. → "The farm signs once. Only the hash goes to HashKey Chain. The proof is now for sale to any buyer."
 
-**Click 2 · TRADER (0:25).** Point at the two ticked suppliers. → "These are the suppliers the trader already has contracts with; it ticks who to verify. One sentence: verify them before we contract, reject deforestation. That's all a human does." Click **Run agent**.
+**Click 2 · TRADER (0:25).** Point at the suppliers and their ticked properties. → "These are the suppliers the trader already has contracts with; it ticks who to verify. One sentence: verify them before we contract, reject deforestation. That's all a human does." Click **Run agent**.
 While the log streams (~70 s), say only these, pointing at the lines as they appear:
 - "It lists what the suppliers sell, and reads its own spending limit on-chain."
 - "It buys the clean one: 402, pays five USDT, verifies the signature and the registry itself."

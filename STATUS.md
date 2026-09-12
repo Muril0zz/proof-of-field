@@ -36,7 +36,7 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
 - **PRODES ampliado**: RO, MT, GO (Amazônia + Cerrado), 103k polígonos, `./scripts/fetch-prodes.sh` (150 MB, fora do git). Cobertura por estado×bioma; fora → recusa.
 
-- **Impostor na demo**: Pedro Lima (porta 4022, chave FARMER3, sem gás, não cadastrado) vende o CAR do João. Agente marca UNKNOWN + CAR-CONFLICT e recusa. Comando da demo tem 2 URLs (4020 João, 4022 Pedro).
+- **Impostor na demo**: Pedro Lima (porta 4022, chave FARMER3, com gás, NÃO cadastrado) tem propriedade própria …3F7A (polígono simulado em Rolim de Moura, marcado simulated:true no samples.json) e também vende o CAR do João. Agente marca UNKNOWN + CAR-CONFLICT e recusa. Comando da demo tem 2 URLs (4020 João, 4022 Pedro).
 
 - **Áreas protegidas**: terras indígenas (FUNAI) e unidades de conservação (ICMBio/MMA) dos dois biomas entram na checagem (1.101 polígonos). TI e proteção integral reprovam; APA só alerta. Atestado ganhou `protectedHa100` (esquema novo; tudo re-atestado na HSK).
 - **Pitch**: manchete "portable proof"; slide 8 = caminho de adoção (cooperativas → bancos → tradings).
@@ -48,7 +48,7 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 ## PUBLICADO no Devfolio às 12:20 — continua editável até 15:00
 - https://devfolio.co/projects/proof-of-field-a49c · time no Devfolio: você + Afonso Fagundes.
 - Slide 4 = "onde vai o trabalho do intermediário" (coletar / checar / confiar / repetir). Slide 5 = "quem fala com quem, não há marketplace".
-- Demo: http://localhost:4030/demo (dois cliques). Lado FARM: João Silva com 3 propriedades; lado TRADER lista fornecedores por nome com checkbox. Ledger de vendas zerado.
+- Demo: http://localhost:4030/demo (dois cliques). Lado FARM: dropdown João Silva (3 propriedades) / Pedro Lima (1 própria + cópia). Lado TRADER: checkbox por propriedade dentro de cada fornecedor; lado TRADER lista fornecedores por nome com checkbox. Ledger de vendas zerado.
 
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.

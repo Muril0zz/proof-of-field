@@ -94,7 +94,13 @@ app.get('/samples', (c) => c.json(samples));
 /** fieldId → CAR receipt, so attestations of registered properties carry the registry reference. */
 const carByFieldId = new Map<string, string>(samples.map((s: any) => [fieldIdFromPolygon(s.geometry).toLowerCase(), s.car]));
 
-app.get('/attestations', (c) => c.json(Object.values(store).map(publicView)));
+/** Public listing: the latest attestation per property. Signing the same property again supersedes the previous listing. */
+function latestPerField() {
+  const byField = new Map<string, Stored>();
+  for (const s of Object.values(store)) { const k = s.attestation.fieldId.toLowerCase(); const cur = byField.get(k); if (!cur || s.createdAt > cur.createdAt) byField.set(k, s); }
+  return [...byField.values()].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+}
+app.get('/attestations', (c) => c.json(latestPerField().map(publicView)));
 
 /** Sales ledger: payments received for proofs (farmer's own view). */
 app.get('/payments', (c) => c.json({ payments, totalUnits: payments.reduce((t, p) => t + BigInt(p.amount), 0n).toString() }));

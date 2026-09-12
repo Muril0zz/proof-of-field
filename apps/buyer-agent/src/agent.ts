@@ -39,7 +39,9 @@ const tools = [
     inputSchema: z.object({ farmerAgentUrls: z.array(z.string()).describe('Base URLs of the farmer agents in the lot') }),
     run: async ({ farmerAgentUrls }) => {
       tool('list_lot', `${farmerAgentUrls.length} farmer agent(s)`);
-      const { proofs, unreachable } = await listLot(farmerAgentUrls);
+      let { proofs, unreachable } = await listLot(farmerAgentUrls);
+      const only = (process.env.ONLY_PROOFS || '').split(',').map((x) => x.trim()).filter(Boolean);
+      if (only.length) proofs = proofs.filter((p) => only.includes(p.proofUrl));
       proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.knownSupplier ? 'known   ' : 'UNKNOWN '}${p.carConflict ? 'CAR-CONFLICT ' : ''}${p.farmerName} · ${p.registered ? '' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
       unreachable.forEach((u) => console.log(pc.red(`      ✘ unreachable: ${u}`)));
       return JSON.stringify({ proofs: proofs.map((p) => ({ ...p, price: usdt(p.priceUnits) })), unreachable });
@@ -131,7 +133,7 @@ const runner = client.beta.messages.toolRunner({
   max_tokens: 16000,
   system,
   tools,
-  messages: [{ role: 'user', content: `Operator instruction: ${instruction}\n\nThe suppliers under review run these farmer agents:\n${lot.map((u) => `- ${u}`).join('\n')}` }],
+  messages: [{ role: 'user', content: `Operator instruction: ${instruction}\n\nThe suppliers under review run these farmer agents:\n${lot.map((u) => `- ${u}`).join('\n')}${process.env.ONLY_PROOFS ? `\n\nThe operator pre-selected specific properties; list_lot returns only those. Do not look for others.` : ''}` }],
   max_iterations: 20,
 });
 
