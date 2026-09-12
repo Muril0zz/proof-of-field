@@ -2,7 +2,7 @@
   "name": "proof-of-field",
   "private": true,
   "version": "0.1.0",
-  "description": "Proof of Field — farmer-owned deforestation-free attestations, sold agent-to-agent for stablecoins on HSK Chain",
+  "description": "Proof of Field \u2014 farmer-owned deforestation-free attestations, sold agent-to-agent for stablecoins on HSK Chain",
   "scripts": {
     "abis": "node scripts/copy-abis.mjs",
     "anvil": "anvil --chain-id 31337 --block-time 1",
@@ -11,7 +11,8 @@
     "farmer": "pnpm --filter farmer-agent dev",
     "buyer": "pnpm --filter buyer-agent start",
     "web": "pnpm --filter web dev",
-    "test:contracts": "cd contracts && forge test"
+    "test:contracts": "cd contracts && forge test",
+    "buyer:ai": "pnpm --filter buyer-agent ai"
   },
   "packageManager": "pnpm@10.4.1"
 }

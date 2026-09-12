@@ -10,3 +10,4 @@ deployments/anvil.json
 .logs/
 data/farmer-payments.*.json
 docs/video/
+docs/reports/
