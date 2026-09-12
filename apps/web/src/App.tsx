@@ -93,7 +93,7 @@ export function App() {
       <aside className="panel">
         <header className="panel-head">
           <div className="logo" aria-hidden><svg viewBox="0 0 16 16" fill="none"><path d="M2 12.5 6.5 3.5 14 12.5Z" fill="#fff" /></svg></div>
-          <div className="brand">Proof of Field<small>Farmer console · data stays on this machine</small></div>
+          <div className="brand">Proof of Field<small>Farmer console · runs on the farm or hosted by your cooperative</small></div>
           <div className={`chip ${offline ? 'off' : ''}`} title={info ? `${info.farmer}\nregistry ${info.registry}` : 'farmer agent offline'}>
             <span className="dot" />{offline ? 'agent offline' : info ? `${info.network} · ${short(info.farmer, 4)}` : '…'}
           </div>
@@ -112,14 +112,7 @@ export function App() {
                 ))}
               </div>
             )}
-            <div className="btn-row" style={{ marginTop: 10 }}>
-              <button className="btn btn-secondary" aria-pressed={drawing} onClick={() => { reset(); setDrawing((d) => !d); }}>
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 4.5 8 2l5 3-1.5 7L5 13.5z" /><circle cx="3" cy="4.5" r="1.2" fill="currentColor" /><circle cx="13" cy="5" r="1.2" fill="currentColor" /><circle cx="5" cy="13.5" r="1.2" fill="currentColor" /></svg>
-                {drawing ? 'Drawing… (Esc to cancel)' : 'Draw a sub-field'}
-              </button>
-              {field && <button className="btn btn-secondary" onClick={reset}>Clear</button>}
-            </div>
-            <div className="empty" style={{ marginTop: 6 }}>Compliance is attested on the registered property. Sub-fields are for lot traceability only and are marked unregistered.</div>
+            <div className="empty" style={{ marginTop: 8 }}>Properties come from your CAR registration (imported once). Pick the one that supplies this buyer. {field && <button className="linkbtn" onClick={reset}>Clear selection</button>}</div>
           </section>
 
           {(phase !== 'idle') && (
@@ -129,7 +122,7 @@ export function App() {
               {report && phase !== 'checking' && <Verdict report={report} label={label} />}
               {phase === 'checked' && report?.coverage?.covered !== false && (
                 <>
-                  <button className="btn btn-primary btn-block" style={{ marginTop: 14 }} onClick={attest}>{report && (report.compliant ?? report.deforestedHa <= 0) ? 'Sign once & put the proof up for sale' : 'Sign attestation anyway (non-compliant)'}</button>
+                  <button className="btn btn-primary btn-block" style={{ marginTop: 14 }} onClick={attest}>{report && (report.compliant ?? report.deforestedHa <= 0) ? 'Sign once & put the proof up for sale' : 'Sign & publish anyway (buyers will see the non-compliance)'}</button>
                   <div className="note">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5" /><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" /></svg>
                     <span>Only a hash of this polygon and the verdict go on-chain. The geometry never leaves the farmer agent.</span>
@@ -146,7 +139,7 @@ export function App() {
                 <>
                   <div className="forsale">
                     <div className="forsale-title">Proof is for sale · {usdt(result.priceUnits)} per buyer</div>
-                    <div className="forsale-sub">Signed once. Any buyer, bank or importer can fetch it, verify it on-chain, and pay you per use.</div>
+                    <div className="forsale-sub">Signed once. Every buyer, bank or importer that checks you this season fetches this same proof, verifies it on-chain, and pays you per use. No more e-mails, no more maps sent around.</div>
                   </div>
                   <dl className="kv" style={{ marginTop: 12 }}>
                     <dt>Attestation</dt><dd className="mono" title={result.hash}>{short(result.hash, 10)}</dd>
