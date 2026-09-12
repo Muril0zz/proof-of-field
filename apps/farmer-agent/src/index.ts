@@ -53,7 +53,11 @@ interface Stored {
 }
 const STORE = path.join(ROOT, 'data', `farmer-store.${NETWORK}.${dep.registry.slice(2, 10)}.json`);
 const store: Record<string, Stored> = fs.existsSync(STORE) ? JSON.parse(fs.readFileSync(STORE, 'utf8'), bigintReviver) : {};
-const usedPayments = new Set<string>();
+interface Payment { txHash: Hex; payer: Address; amount: string; attestationHash: Hex; label?: string; at: string; txUrl: string }
+const PAYMENTS = path.join(ROOT, 'data', `farmer-payments.${NETWORK}.${dep.registry.slice(2, 10)}.json`);
+const payments: Payment[] = fs.existsSync(PAYMENTS) ? JSON.parse(fs.readFileSync(PAYMENTS, 'utf8')) : [];
+const usedPayments = new Set<string>(payments.map((p) => p.txHash));
+const persistPayments = () => fs.writeFileSync(PAYMENTS, JSON.stringify(payments, null, 1));
 const persist = () => fs.writeFileSync(STORE, JSON.stringify(store, (_, v) => (typeof v === 'bigint' ? `${v}n` : v), 1));
 function bigintReviver(_: string, v: any) { return typeof v === 'string' && /^\d+n$/.test(v) ? BigInt(v.slice(0, -1)) : v; }
 
@@ -69,6 +73,9 @@ const samples = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'samples.json
 app.get('/samples', (c) => c.json(samples));
 
 app.get('/attestations', (c) => c.json(Object.values(store).map(publicView)));
+
+/** Sales ledger: payments received for proofs (farmer's own view). */
+app.get('/payments', (c) => c.json({ payments, totalUnits: payments.reduce((t, p) => t + BigInt(p.amount), 0n).toString() }));
 
 /** Farmer's own UI needs the private detail (geometry + overlaps). Local only. */
 app.get('/attestations/:hash/private', (c) => {
@@ -155,6 +162,8 @@ app.get('/proof/:hash', async (c) => {
   const paid = transfers.reduce((s, l) => s + BigInt((l.args as any).value), 0n);
   if (paid < PRICE) return c.json({ error: `insufficient payment: got ${paid}, need ${PRICE}` }, 402);
   usedPayments.add(tx);
+  payments.unshift({ txHash: tx, payer: payment.payload.payer as Address, amount: paid.toString(), attestationHash: hash, label: s.label, at: new Date().toISOString(), txUrl: explorerTx(NETWORK, tx) });
+  persistPayments();
   console.log(`[farmer] 💰 paid ${Number(paid) / 1e6} USDT by ${payment.payload.payer} in ${tx} → releasing proof ${hash.slice(0, 10)}…`);
 
   c.header('X-PAYMENT-RESPONSE', Buffer.from(JSON.stringify({ success: true, txHash: tx, network: NETWORK })).toString('base64'));

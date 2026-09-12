@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MapView } from './components/MapView';
-import { api, fmtHa, short, usdt, type AgentInfo, type Attestation, type Report } from './lib/api';
+import { api, fmtHa, short, usdt, type AgentInfo, type Attestation, type Payment, type Report } from './lib/api';
 
 interface Sample { id: string; label: string; car: string; areaHaCar: number; geometry: GeoJSON.Geometry }
 type Phase = 'idle' | 'checking' | 'checked' | 'attesting' | 'attested';
@@ -12,6 +12,8 @@ export function App() {
   const [samples, setSamples] = useState<Sample[]>([]);
   const [list, setList] = useState<Attestation[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [sales, setSales] = useState<{ payments: Payment[]; totalUnits: string }>({ payments: [], totalUnits: '0' });
+  const [flash, setFlash] = useState<string | null>(null);
 
   const [drawing, setDrawing] = useState(false);
   const [field, setField] = useState<GeoJSON.Geometry | null>(null);
@@ -23,6 +25,20 @@ export function App() {
 
   const say = (m: string) => { setToast(m); setTimeout(() => setToast(null), 2200); };
   const refresh = useCallback(() => api.list().then(setList).catch(() => {}), []);
+
+  // poll the sales ledger so a buyer agent paying shows up live during the demo
+  useEffect(() => {
+    let known = -1;
+    const tick = async () => {
+      try {
+        const s = await api.payments();
+        setSales(s);
+        if (known >= 0 && s.payments.length > known) { const p = s.payments[0]; setFlash(p.txHash); say(`Paid ${usdt(p.amount)} by ${short(p.payer, 4)} for ${p.label || short(p.attestationHash, 6)}`); setTimeout(() => setFlash(null), 4000); }
+        known = s.payments.length;
+      } catch {}
+    };
+    tick(); const id = setInterval(tick, 2500); return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     api.info().then((i) => { setInfo(i); setOffline(false); }).catch(() => setOffline(true));
@@ -136,6 +152,18 @@ export function App() {
               )}
             </section>
           )}
+
+          <section className="section">
+            <h2>Sales <span className="count">{sales.payments.length ? `${usdt(sales.totalUnits)} received` : 'no payments yet'}</span></h2>
+            {sales.payments.length === 0 && <div className="empty">When a buyer agent pays for a proof, it appears here within seconds.</div>}
+            {sales.payments.slice(0, 6).map((p) => (
+              <div key={p.txHash} className={`sale ${flash === p.txHash ? 'flash' : ''}`}>
+                <div className="amt">+{usdt(p.amount)}</div>
+                <div><div className="l1">{p.label || short(p.attestationHash, 8)}</div><div className="l2">from {short(p.payer, 5)} · {new Date(p.at).toLocaleTimeString()}</div></div>
+                {p.txUrl && !p.txUrl.startsWith('0x') ? <a className="l2" href={p.txUrl} target="_blank" rel="noreferrer">tx ↗</a> : <span className="l2 mono">{short(p.txHash, 4)}</span>}
+              </div>
+            ))}
+          </section>
 
           <section className="section">
             <h2>Attestations <span className="count">{list.length}</span></h2>

@@ -8,3 +8,5 @@ contracts/broadcast/
 data/farmer-store.*.json
 deployments/anvil.json
 .logs/
+data/farmer-payments.*.json
+docs/video/
