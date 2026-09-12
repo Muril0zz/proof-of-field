@@ -25,7 +25,7 @@ else
   [ -f "deployments/$NETWORK.json" ] || { echo "missing deployments/$NETWORK.json — run: pnpm deploy:hsk"; exit 1; }
 fi
 
-kill_port 4020; kill_port 4021; kill_port 4022; kill_port 5173
+kill_port 4020; kill_port 4021; kill_port 4022; kill_port 4030; kill_port 5173
 # Farmer A (FARMER_* key) sells two CAR properties; Farmer B (FARMER2_* key, if set) sells the third.
 (cd apps/farmer-agent && FARMER_NAME="Fazenda A" FARMER_SAMPLES=9C62FD55,4C8EDDBB nohup npx tsx src/index.ts > ../../.logs/farmer.log 2>&1 < /dev/null &)
 if [ -n "${FARMER2_PRIVATE_KEY:-}" ]; then
@@ -36,11 +36,13 @@ if [ -n "${FARMER3_PRIVATE_KEY:-}" ]; then
   (cd apps/farmer-agent && FARMER_NAME="Fazenda C" FARMER_PRIVATE_KEY=$FARMER3_PRIVATE_KEY FARMER_PORT=4022 FARMER_PUBLIC_URL=http://localhost:4022 FARMER_SAMPLES=9C62FD55 nohup npx tsx src/index.ts > ../../.logs/farmer3.log 2>&1 < /dev/null &)
 fi
 (cd apps/web && nohup npx vite --port 5173 > ../../.logs/web.log 2>&1 < /dev/null &)
+(cd apps/buyer-agent && nohup npx tsx src/desk.ts > ../../.logs/desk.log 2>&1 < /dev/null &)
 sleep 4
 echo "✔ farmer agent A http://localhost:4020   (log: .logs/farmer.log)"
 [ -n "${FARMER2_PRIVATE_KEY:-}" ] && echo "✔ farmer agent B http://localhost:4021   (log: .logs/farmer2.log)"
 [ -n "${FARMER3_PRIVATE_KEY:-}" ] && echo "✔ farmer agent C http://localhost:4022   (impostor · log: .logs/farmer3.log)"
 echo "✔ farmer console http://localhost:5173   (log: .logs/web.log)"
+echo "✔ buyer desk     http://localhost:4030   (log: .logs/desk.log)"
 echo
 echo "buyer:  NETWORK=$NETWORK pnpm buyer -- --list http://localhost:4020 http://localhost:4021 http://localhost:4022"
 echo "        NETWORK=$NETWORK pnpm buyer -- <proofUrl>"

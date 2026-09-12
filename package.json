@@ -12,7 +12,8 @@
     "buyer": "pnpm --filter buyer-agent start",
     "web": "pnpm --filter web dev",
     "test:contracts": "cd contracts && forge test",
-    "buyer:ai": "pnpm --filter buyer-agent ai"
+    "buyer:ai": "pnpm --filter buyer-agent ai",
+    "desk": "pnpm --filter buyer-agent desk"
   },
   "packageManager": "pnpm@10.4.1"
 }

@@ -41,6 +41,8 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 - **Áreas protegidas**: terras indígenas (FUNAI) e unidades de conservação (ICMBio/MMA) dos dois biomas entram na checagem (1.101 polígonos). TI e proteção integral reprovam; APA só alerta. Atestado ganhou `protectedHa100` (esquema novo; tudo re-atestado na HSK).
 - **Pitch**: manchete "portable proof"; slide 8 = caminho de adoção (cooperativas → bancos → tradings).
 
+- **Buyer desk** (interface do comprador): http://localhost:4030, caixa de texto + log ao vivo + relatório. `./scripts/dev-up.sh` sobe junto. Testado ponta a ponta.
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).

@@ -2,7 +2,7 @@
 
 ## Before walking up (checklist)
 - Console open at http://localhost:5173, PRODES layer OFF, no field selected. Farmer A (port 4020) lists …9C62 (clean) and …4C8E (26 ha); Farmer B (port 4021, different key) lists …0A28 (18.6 ha); Farmer C (port 4022) is an **impostor**: offers Farmer A's CAR …9C62 with a key the company never onboarded. The shipment = three sellers, four listings. Sales section empty (delete `data/farmer-payments.hsk-testnet.*.json` and restart the farmer agent if not).
-- Terminal with this typed, NOT executed: `cd ~/Documents/Projetos_Codigo/eag-buildathon && NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021 http://localhost:4022`
+- Buyer desk open at http://localhost:4030 (instruction pre-filled, three suppliers listed). Backup: terminal with this typed, NOT executed: `cd ~/Documents/Projetos_Codigo/eag-buildathon && NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021 http://localhost:4022`
 - Explorer tab: https://testnet-explorer.hsk.xyz/address/0xe0e5e881542266aac1b3457fdd33147c761b46dd
 - Slides open on slide 1, fullscreen.
 
@@ -24,7 +24,7 @@
 
 **0:10 [Console]** Click **Sign attestation & anchor on-chain**. Wait for the hash and tx (~5 s). → "Signed by the farmer's key. Only the hash goes to HashKey Chain. The proof is now for sale."
 
-**0:20 [Terminal]** Press **Enter**. → "This is the trading company's agent. It got one sentence from the operator: buy this lot, budget 30, reject deforestation. The lot is two different farmers, three properties." *(It runs ~70 s. Talk over it, don't wait in silence.)*
+**0:20 [Buyer desk, http://localhost:4030]** Click **Run agent** (instruction is pre-filled). Alternative: the terminal command below, same agent. → "This is the trading company's agent. It got one sentence from the operator: buy this lot, budget 30, reject deforestation. The lot is two different farmers, three properties." *(It runs ~70 s. Talk over it, don't wait in silence.)*
 
 **0:30** as `list_proofs` / `policy_status` print → "It lists what the farmer sells and reads its own on-chain spending policy."
 
@@ -65,6 +65,7 @@ Fallback if HSK is down: run everything with `NETWORK=anvil` (identical, no expl
 - **"Can't the farmer just draw the polygon around the deforested corner?"** Not for compliance. Compliance is judged on the **registered property** (CAR, Brazil's public rural registry), and the attestation of a registered property carries the CAR number and the hash of the *official* polygon. Any buyer can download the public CAR polygon, hash it, and see it matches `fieldId`: nothing was cut out. Hand-drawn fields are marked `registered: false`; the buyer agent skips them for compliance by default and only uses them for sub-field traceability. It did that on its own this morning: it flagged a drawn field as "no CAR reference".
 - **"What if the farmer lies in other ways?"** He can't change the INPE data, and he can't change the polygon without changing the hash. What he could do is sign with a key that isn't the property owner's. Binding the farmer key to the CAR owner (a KYC'd attestation from the registry or a bank) is the natural next step.
 - **"Is 5 USDT a real price? Will traders really pay farmers?"** Today traders pay a due-diligence vendor per farm and the farmer works for free. We are not selling "traders pay farmers" as the reason to adopt; the reason is a portable proof that clears a shipment in minutes and that banks and importers accept without redoing. The payment is the mechanism that lets two programs transact; who pays and how much is a business decision. Some traders already pay premiums for verified origin, so it is not alien to the sector.
+- **"What does the buyer side look like?"** One text box. The compliance desk types the instruction, watches the agent's decisions stream in, and gets the dossier rendered underneath. That's the buyer desk you saw; in production it lives inside the tool they already use.
 - **"Who adopts first?"** Cooperatives: one compliance desk answering for hundreds of member farms to every buyer, every season. Then banks and insurers, who need the proof to lend and have no field team. Traders last, once proofs already circulate among their suppliers.
 - **"Only deforestation?"** No: the attestation is a claim against official layers. Today: PRODES deforestation, FUNAI indigenous lands, ICMBio/MMA conservation units (strict-protection blocks, sustainable-use flags). Next: DETER real-time alerts, IBAMA embargoes; then non-geographic lists (soy moratorium, slave-labour list) once the wallet is bound to a CPF/CNPJ.
 - **"Why HSK Chain?"** EVM, cheap, a sponsor, and the target buyer side is in Asia. The contracts are chain-agnostic.

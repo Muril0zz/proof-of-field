@@ -40,7 +40,7 @@ No human in the loop. The farmer is paid at the moment their data is used, and d
 contracts/            Foundry · FieldAttestationRegistry, MockUSDT, AgentWallet · 7 tests
 packages/core/        PRODES intersection (turf), EIP-712 schema, x402 types, HSK chain config, ABIs
 apps/farmer-agent/    Hono API · /check /attest /proof/:hash (x402) /attestations
-apps/buyer-agent/     CLI · 402 → pay → verify
+apps/buyer-agent/     CLI (402 → pay → verify), LLM agent (agent.ts), Buyer Desk web UI (desk.ts, port 4030)
 apps/web/             Farmer console · Vite + React + MapLibre + terra-draw · satellite + PRODES overlay
 data/                 PRODES (bbox Abunã/RO, 2020+), 3 real CAR properties from Porto Velho/RO
 deployments/          contract addresses per network
@@ -69,7 +69,10 @@ pnpm web                                              # terminal C · http://loc
 NETWORK=anvil pnpm buyer -- --list http://localhost:4020
 NETWORK=anvil pnpm buyer -- http://localhost:4020/proof/<attestationHash>
 
-# optional: LLM-driven buyer (needs ANTHROPIC_API_KEY in .env)
+# buyer desk (web UI for the compliance team, wraps the LLM agent): http://localhost:4030
+NETWORK=anvil pnpm desk
+
+# LLM-driven buyer from the terminal (needs ANTHROPIC_API_KEY in .env)
 NETWORK=anvil pnpm buyer:ai "Buy proofs for every farm in this lot, budget 30 USDT, reject any farm with deforestation." http://localhost:4020 http://localhost:4021   # a lot = many farmer agents
 ```
 
