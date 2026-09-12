@@ -39,6 +39,7 @@ const p = r!;
 console.log(pc.bold('\n📄 Proof of Field'));
 console.log(`   field commitment  ${p.fieldId}`);
 console.log(`   area              ${p.areaHa.toFixed(2)} ha`);
+console.log(`   protected overlap ${p.protectedHa.toFixed(2)} ha${p.protectedHits.length ? '  ' + p.protectedHits.map((h: any) => h.name).join(', ') : ''}`);
 console.log(`   deforested >${p.baselineYear}  ${p.deforestedHa.toFixed(2)} ha  ${Object.keys(p.byYear).length ? JSON.stringify(Object.fromEntries(Object.entries(p.byYear).map(([y, v]: any) => [y, +v.toFixed(2)]))) : ''}`);
 console.log(`   data              ${p.source} (through ${p.dataYear})`);
 console.log(`   issued            ${p.issuedAt}`);

@@ -42,8 +42,10 @@ const extractFiles = fs.existsSync(PRODES_DIR) ? fs.readdirSync(PRODES_DIR).filt
 const collections = (extractFiles.length ? extractFiles : [path.join(ROOT, 'data', 'prodes_abuna_2020plus.json')]).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
 const regionFiles = fs.existsSync(PRODES_DIR) ? fs.readdirSync(PRODES_DIR).filter((f) => /^regions_.*\.json$/.test(f)).map((f) => path.join(PRODES_DIR, f)) : [];
 const regions = regionFiles.length ? { type: 'FeatureCollection', features: regionFiles.flatMap((f) => JSON.parse(fs.readFileSync(f, 'utf8')).features) } as any : null;
-const prodes = buildProdesIndex(collections, regions);
-console.log(`[farmer] ${account.address} on ${NETWORK} (chain ${chain.id}) · registry ${dep.registry} · PRODES ${prodes.features.length.toLocaleString()} polygons from ${collections.length} extract(s)${regions ? ` · coverage: ${prodes.regionNames.join(', ')}` : ''}`);
+const protectedFiles = fs.existsSync(PRODES_DIR) ? fs.readdirSync(PRODES_DIR).filter((f) => /^protected_.*\.json$/.test(f)) : [];
+const protectedLayers = protectedFiles.map((f) => ({ kind: (f.startsWith('protected_indigenous') ? 'indigenous' : 'conservation') as 'indigenous' | 'conservation', collection: JSON.parse(fs.readFileSync(path.join(PRODES_DIR, f), 'utf8')) }));
+const prodes = buildProdesIndex(collections, regions, protectedLayers);
+console.log(`[farmer] ${account.address} on ${NETWORK} (chain ${chain.id}) · registry ${dep.registry} · PRODES ${prodes.features.length.toLocaleString()} polygons from ${collections.length} extract(s) · ${prodes.protected.length} protected areas${regions ? ` · coverage: ${prodes.regionNames.join(', ')}` : ''}`);
 
 // --- private store (stays on the farmer's machine) ---
 interface Stored {
@@ -51,7 +53,7 @@ interface Stored {
   signature: Hex;
   hash: Hex;
   txHash?: Hex;
-  report: { areaHa: number; deforestedHa: number; byYear: Record<string, number>; hits: number; dataYear: number; ms: number };
+  report: { areaHa: number; deforestedHa: number; byYear: Record<string, number>; hits: number; dataYear: number; ms: number; protectedHits?: any[]; protectedBlockingHa?: number; protectedWarningHa?: number };
   geometry: any;      // PRIVATE — never served
   intersections: any; // PRIVATE — served only to the farmer's own UI
   label?: string;
@@ -108,7 +110,7 @@ app.post('/check', async (c) => {
   const { geometry } = await c.req.json();
   const feature = { type: 'Feature', properties: {}, geometry } as any;
   const r = checkDeforestation(feature, prodes, BASELINE_YEAR);
-  return c.json({ areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, compliant: r.compliant, dataYear: r.dataYear, ms: r.ms, intersections: r.intersections, coverage: r.coverage });
+  return c.json({ areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, compliant: r.compliant, dataYear: r.dataYear, ms: r.ms, intersections: r.intersections, coverage: r.coverage, protectedHits: r.protectedHits, protectedBlockingHa: r.protectedBlockingHa, protectedWarningHa: r.protectedWarningHa });
 });
 
 app.post('/attest', async (c) => {
@@ -126,9 +128,10 @@ app.post('/attest', async (c) => {
     farmer: account.address,
     areaHa100: BigInt(Math.round(r.areaHa * 100)),
     deforestedHa100: BigInt(Math.round(r.deforestedHa * 100)),
+    protectedHa100: BigInt(Math.round(r.protectedBlockingHa * 100)),
     baselineYear: BigInt(BASELINE_YEAR),
     dataYear: BigInt(r.dataYear),
-    source: 'INPE/PRODES yearly_deforestation_biome (terrabrasilis WFS)',
+    source: 'INPE/PRODES yearly deforestation + FUNAI indigenous lands + ICMBio/MMA conservation units (TerraBrasilis WFS)',
     issuedAt: BigInt(Math.floor(Date.now() / 1000)),
     compliant: r.compliant,
   };
@@ -146,7 +149,7 @@ app.post('/attest', async (c) => {
   const car = carByFieldId.get(att.fieldId.toLowerCase());
   const stored: Stored = {
     attestation: att, signature, hash, txHash, car,
-    report: { areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, dataYear: r.dataYear, ms: r.ms },
+    report: { areaHa: r.areaHa, deforestedHa: r.deforestedHa, byYear: r.byYear, hits: r.hits.length, dataYear: r.dataYear, ms: r.ms, protectedHits: r.protectedHits, protectedBlockingHa: r.protectedBlockingHa, protectedWarningHa: r.protectedWarningHa },
     geometry, intersections: r.intersections, label, createdAt: new Date().toISOString(),
   };
   store[hash.toLowerCase()] = stored; persist();

@@ -209,6 +209,8 @@ export function App() {
 
 function Verdict({ report, label }: { report: Report; label: string }) {
   const ok = report.compliant ?? report.deforestedHa <= 0;
+  const blocking = (report.protectedHits || []).filter((h) => h.blocking);
+  const warning = (report.protectedHits || []).filter((h) => !h.blocking);
   if (report.coverage && !report.coverage.covered) {
     return (
       <div className="verdict bad">
@@ -230,8 +232,10 @@ function Verdict({ report, label }: { report: Report; label: string }) {
               : <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2"><path d="M8 3v6M8 12v.5" /></svg>}
         </div>
         <div>
-          <div className="title">{ok ? 'Deforestation-free since 2020' : `${report.deforestedHa.toFixed(2)} ha deforested since 2020`}</div>
-          <div className="sub">{label} · {fmtHa(report.areaHa)} · {report.hits} PRODES polygon{report.hits === 1 ? '' : 's'} intersected · {report.ms} ms</div>
+          <div className="title">{ok ? 'Compliant: no deforestation since 2020, no protected-area overlap' : report.deforestedHa > 0 ? `${report.deforestedHa.toFixed(2)} ha deforested since 2020${blocking.length ? ' + protected-area overlap' : ''}` : `Overlaps protected area (${blocking.reduce((s, h) => s + h.areaHa, 0).toFixed(1)} ha)`}</div>
+          <div className="sub">{label} · {fmtHa(report.areaHa)} · {report.hits} PRODES polygon{report.hits === 1 ? '' : 's'} · {(report.protectedHits || []).length} protected area{(report.protectedHits || []).length === 1 ? '' : 's'} checked · {report.ms} ms</div>
+          {blocking.map((h) => <div key={h.name} className="sub" style={{ color: 'var(--bad)' }}>✕ {h.name}: {h.areaHa.toFixed(1)} ha inside</div>)}
+          {warning.map((h) => <div key={h.name} className="sub" style={{ color: 'var(--warn)' }}>△ {h.name} (sustainable use): {h.areaHa.toFixed(1)} ha, allowed, flagged</div>)}
         </div>
       </div>
       <div className="years" aria-label="Deforestation by year">

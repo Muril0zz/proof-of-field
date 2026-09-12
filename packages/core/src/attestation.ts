@@ -7,6 +7,7 @@ export const ATTESTATION_TYPES = {
     { name: 'farmer', type: 'address' },
     { name: 'areaHa100', type: 'uint256' },
     { name: 'deforestedHa100', type: 'uint256' },
+    { name: 'protectedHa100', type: 'uint256' },
     { name: 'baselineYear', type: 'uint256' },
     { name: 'dataYear', type: 'uint256' },
     { name: 'source', type: 'string' },
@@ -16,7 +17,7 @@ export const ATTESTATION_TYPES = {
 } as const;
 
 export const SCHEMA_STRING =
-  'FieldAttestation(bytes32 fieldId,address farmer,uint256 areaHa100,uint256 deforestedHa100,uint256 baselineYear,uint256 dataYear,string source,uint256 issuedAt,bool compliant)';
+  'FieldAttestation(bytes32 fieldId,address farmer,uint256 areaHa100,uint256 deforestedHa100,uint256 protectedHa100,uint256 baselineYear,uint256 dataYear,string source,uint256 issuedAt,bool compliant)';
 export const SCHEMA_ID: Hex = keccak256(stringToHex(SCHEMA_STRING));
 
 export interface FieldAttestation {
@@ -24,6 +25,7 @@ export interface FieldAttestation {
   farmer: Address;
   areaHa100: bigint;
   deforestedHa100: bigint;
+  protectedHa100: bigint;   // ha inside indigenous land / strict conservation units
   baselineYear: bigint;
   dataYear: bigint;
   source: string;
@@ -60,8 +62,8 @@ function roundCoords(c: any): any {
 
 /** JSON-safe form (bigint → string) for transport. */
 export function serializeAttestation(a: FieldAttestation) {
-  return { ...a, areaHa100: a.areaHa100.toString(), deforestedHa100: a.deforestedHa100.toString(), baselineYear: a.baselineYear.toString(), dataYear: a.dataYear.toString(), issuedAt: a.issuedAt.toString() };
+  return { ...a, areaHa100: a.areaHa100.toString(), deforestedHa100: a.deforestedHa100.toString(), protectedHa100: a.protectedHa100.toString(), baselineYear: a.baselineYear.toString(), dataYear: a.dataYear.toString(), issuedAt: a.issuedAt.toString() };
 }
 export function deserializeAttestation(j: any): FieldAttestation {
-  return { ...j, areaHa100: BigInt(j.areaHa100), deforestedHa100: BigInt(j.deforestedHa100), baselineYear: BigInt(j.baselineYear), dataYear: BigInt(j.dataYear), issuedAt: BigInt(j.issuedAt) };
+  return { ...j, areaHa100: BigInt(j.areaHa100), deforestedHa100: BigInt(j.deforestedHa100), protectedHa100: BigInt(j.protectedHa100 ?? 0), baselineYear: BigInt(j.baselineYear), dataYear: BigInt(j.dataYear), issuedAt: BigInt(j.issuedAt) };
 }

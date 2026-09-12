@@ -1,4 +1,5 @@
-export interface Report { coverage?: { bbox: number[]; covered: boolean }; areaHa: number; deforestedHa: number; byYear: Record<string, number>; hits: number; dataYear: number; ms: number; compliant?: boolean; intersections?: GeoJSON.FeatureCollection }
+export interface ProtectedHit { kind: string; name: string; areaHa: number; blocking: boolean }
+export interface Report { coverage?: { bbox: number[]; covered: boolean }; protectedHits?: ProtectedHit[]; protectedBlockingHa?: number; protectedWarningHa?: number; areaHa: number; deforestedHa: number; byYear: Record<string, number>; hits: number; dataYear: number; ms: number; compliant?: boolean; intersections?: GeoJSON.FeatureCollection }
 export interface Attestation {
   hash: string; label?: string; farmer: string; compliant: boolean; report: Report;
   attestation: Record<string, string | boolean>; signature: string; txHash?: string; txUrl?: string; createdAt: string; priceUnits: string;

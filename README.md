@@ -28,7 +28,7 @@ A soy or cattle buyer (trader, bank, importer) must prove the farm it buys from 
 ```
 
 1. **Farmer selects a registered property** (CAR, the public rural registry; official polygon) in the console. Each farmer runs their own agent with their own key; a lot spans many farmers.
-2. **The farmer agent** intersects it with INPE/PRODES yearly deforestation polygons (public, official, pure geometry, under a second across ~103k polygons) and signs an **EIP-712 attestation**: area, hectares deforested after the 2020 baseline, verdict, data source, timestamp.
+2. **The farmer agent** intersects it with INPE/PRODES yearly deforestation polygons, FUNAI indigenous lands and ICMBio/MMA conservation units (public, official, pure geometry, under a second across ~103k polygons) and signs an **EIP-712 attestation**: area, hectares deforested after the 2020 baseline, hectares inside blocking protected areas, verdict, data source, timestamp. Strict-protection units and indigenous lands block; sustainable-use units (APA) are flagged.
 3. Only `keccak(polygon)` and the attestation hash are **anchored on-chain**. The geometry never leaves the farmer's machine.
 4. **The buyer agent** requests the proof, gets **HTTP 402** with x402 payment requirements, pays USDT through the company's **AgentWallet** (daily / per-payment limits, allow-listed payees), retries with `X-PAYMENT`, receives the proof, and **verifies it independently**: signature → signer == on-chain anchoring farmer → not revoked.
 

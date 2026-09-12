@@ -33,14 +33,14 @@ export async function policyStatus(): Promise<PolicyStatus> {
   return { agentWallet: dep.agentWallet, remainingTodayUnits: remaining.toString(), perPaymentLimitUnits: per.toString(), dailyLimitUnits: daily.toString(), balanceUnits: bal.toString() };
 }
 
-export interface ProofListing { hash: string; label?: string; car: string | null; registered: boolean; farmer: string; farmerName: string; farmerAgent: string; knownSupplier: boolean; carConflict: boolean; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
+export interface ProofListing { hash: string; label?: string; protectedHa: number; car: string | null; registered: boolean; farmer: string; farmerName: string; farmerAgent: string; knownSupplier: boolean; carConflict: boolean; compliant: boolean; areaHa: number; deforestedHa: number; byYear: Record<string, number>; priceUnits: string; proofUrl: string; anchored: boolean }
 export async function listProofs(farmerBaseUrl: string): Promise<ProofListing[]> {
   const base = farmerBaseUrl.replace(/\/$/, '');
   const [info, list] = await Promise.all([
     fetch(`${base}/`).then((r) => r.json()).catch(() => ({})) as Promise<any>,
     fetch(`${base}/attestations`).then((r) => r.json()) as Promise<any[]>,
   ]);
-  return list.map((a) => ({ hash: a.hash, label: a.label, car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, farmerName: info.name || 'Farmer agent', farmerAgent: base, knownSupplier: false, carConflict: false, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
+  return list.map((a) => ({ hash: a.hash, label: a.label, protectedHa: +(a.report.protectedBlockingHa ?? 0).toFixed(2), car: a.car ?? null, registered: !!a.registered, farmer: a.farmer, farmerName: info.name || 'Farmer agent', farmerAgent: base, knownSupplier: false, carConflict: false, compliant: a.compliant, areaHa: +a.report.areaHa.toFixed(2), deforestedHa: +a.report.deforestedHa.toFixed(2), byYear: a.report.byYear, priceUnits: a.priceUnits, proofUrl: `${base}/proof/${a.hash}`, anchored: !!a.txHash }));
 }
 
 /** Lot = several farmer agents. Unreachable agents are reported, not fatal. */
@@ -82,7 +82,7 @@ export const silentLog: Log = { step: () => {}, ok: () => {}, info: () => {} };
 export interface BuyResult {
   ok: true; proofUrl: string; paidUnits: string; payTx: string; payTxUrl: string;
   attestationHash: string; farmer: string; anchorTx?: string; anchorTxUrl?: string; anchoredAt: string;
-  areaHa: number; deforestedHa: number; byYear: Record<string, number>; baselineYear: number; dataYear: number; source: string; issuedAt: string;
+  areaHa: number; deforestedHa: number; protectedHa: number; protectedHits: any[]; byYear: Record<string, number>; baselineYear: number; dataYear: number; source: string; issuedAt: string;
   compliant: boolean; fieldId: string; checks: string[]; car: string | null; registered: boolean;
 }
 export class BuyError extends Error { constructor(public stage: string, msg: string) { super(msg); } }
@@ -144,7 +144,7 @@ export async function buyProof(url: string, log: Log = silentLog): Promise<BuyRe
   return {
     ok: true, proofUrl: url, paidUnits: offer.maxAmountRequired, payTx, payTxUrl: explorerTx(NETWORK, payTx),
     attestationHash: h, farmer: att.farmer, anchorTx: proof.anchorTx, anchorTxUrl: proof.anchorTxUrl, anchoredAt,
-    areaHa: Number(att.areaHa100) / 100, deforestedHa: Number(att.deforestedHa100) / 100, byYear: report.byYear || {},
+    areaHa: Number(att.areaHa100) / 100, deforestedHa: Number(att.deforestedHa100) / 100, protectedHa: Number(att.protectedHa100) / 100, protectedHits: report.protectedHits || [], byYear: report.byYear || {},
     baselineYear: Number(att.baselineYear), dataYear: Number(att.dataYear), source: att.source, issuedAt: new Date(Number(att.issuedAt) * 1000).toISOString(),
     compliant: att.compliant, fieldId: att.fieldId, checks, car: carRef ?? null, registered: !!isRegistered,
   };

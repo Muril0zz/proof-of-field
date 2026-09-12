@@ -75,7 +75,7 @@
 <section class="slide on">
   <div class="kicker">EAG Global Buildathon · Floripa · 12 Sep 2026</div>
   <h1>Proof of Field</h1>
-  <p class="lead" style="margin-top:2vw">The paper that takes three weeks to clear a soy shipment, turned into a five-dollar API call that an AI agent buys straight from the farmer.</p>
+  <p class="lead" style="margin-top:2vw">The compliance paper behind every soy and beef shipment, turned into a portable proof: signed once by the farm, verified by anyone, bought by AI agents.</p>
   <p class="sub">Built at the EAG Global Buildathon Floripa · Live on HSK Chain testnet</p>
   <span class="n">1</span>
 </section>
@@ -121,18 +121,18 @@
   <div class="tl">
     <div class="lbl ok">Now</div>
     <div class="chain">
-      <div class="node ok"><i>farmer's machine</i><b>Farmer agent checks</b><p>Intersects the field with INPE/PRODES, official data, in seconds. Map never leaves the farm.</p></div>
+      <div class="node ok"><i>farmer's machine</i><b>Farmer agent checks</b><p>Intersects the property with INPE/PRODES, indigenous lands and conservation units, in seconds. Map never leaves the farm.</p></div>
       <div class="node ok"><i>farmer's machine</i><b>Signs &amp; anchors</b><p>EIP-712 attestation. Only its hash goes on-chain. Proof is now for sale at a price the farmer sets.</p></div>
       <div class="node ai"><i>trader's machine</i><b>AI buyer agent decides</b><p>One sentence from the operator. Lists proofs, checks its budget, buys what fits the rule, refuses what doesn't.</p></div>
       <div class="node ai"><i>trader's machine</i><b>Pays, verifies, reports</b><p>HTTP 402 → USDT → proof. Verifies signature + registry itself. Writes the dossier.</p></div>
     </div>
   </div>
   <div class="stat ok">
-    <div><b>~2 minutes</b><span>per lot, unattended</span></div>
-    <div><b>farmer gets paid</b><span>the moment his data is used</span></div>
-    <div><b>zero copies</b><span>of the polygon leave the farm</span></div>
+    <div><b>signed once</b><span>verified by every buyer, bank and importer</span></div>
+    <div><b>~2 minutes</b><span>per shipment, unattended</span></div>
+    <div><b>zero copies</b><span>of the farm map leave the farm; the farm is paid per use</span></div>
   </div>
-  <p class="note">Same official data, same check. What changed: who runs it, who owns it, who gets paid, and that anyone can verify the result.</p>
+  <p class="note">Same official data, same check. What changed: the proof is portable. One signature, any number of buyers, no repeated paperwork.</p>
   <span class="n">4</span>
 </section>
 
@@ -184,7 +184,7 @@
 <section class="slide">
   <h2>Under the hood</h2>
   <div class="flow">
-    <div class="step priv"><i>farmer · private</i><b>Field ∩ PRODES</b><p>Pure geometry against INPE PRODES for Rondônia, Mato Grosso and Goiás (Amazon + Cerrado, ~103k polygons). Under a second on a laptop.</p></div>
+    <div class="step priv"><i>farmer · private</i><b>Property ∩ official layers</b><p>PRODES deforestation (RO, MT, GO, Amazon + Cerrado, ~103k polygons) + indigenous lands + conservation units. Under a second on a laptop. Next: DETER alerts, IBAMA embargoes.</p></div>
     <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed by the farmer.</p></div>
     <div class="step"><i>HSK Chain · RPC by Chainstack</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
     <div class="step pay"><i>buyer · LLM</i><b>402 → AgentWallet.pay</b><p>x402 v1 shape. On-chain USDT transfer, replay-protected, policy-enforced.</p></div>
@@ -202,18 +202,14 @@
 
 <!-- 8 -->
 <section class="slide">
-  <div class="two">
-    <img class="shot" src="07-sale-received.png" alt="Farmer console showing a sale received" />
-    <div>
-      <h2>Built to scale: any farmer, any buyer, one registry.</h2>
-      <ul>
-        <li>Each farmer runs their own agent with their own key. A lot spans many farmers; the buyer's agent works the whole lot from one instruction.</li>
-        <li>The registry is the global index: every proof, every farmer, verifiable by any bank, importer or auditor without a middleman.</li>
-        <li><code>FieldAttestationRegistry</code>, <code>AgentWallet</code> and the x402 seller are generic: any private dataset can become a paid, verifiable proof.</li>
-      </ul>
-      <p style="margin-top:2vw">Pilot partners wanted: a trader, a bank, a farmer cooperative.<br/><span style="color:var(--primary)">github.com/Muril0zz/proof-of-field</span></p>
-    </div>
+  <h2>Adoption path: where the pain is sharpest first, traders last.</h2>
+  <div class="markets">
+    <div class="mkt" style="background:var(--ok-soft);border-color:transparent"><i>1 · cooperatives</i><b>Hundreds of members, one compliance desk</b><p>A co-op answers for every member farm, to every buyer, every season. Today: spreadsheets and e-mail. One farmer agent per member, one proof per property, and the co-op's paperwork collapses.</p></div>
+    <div class="mkt" style="background:var(--primary-soft);border-color:transparent"><i>2 · banks &amp; insurers</i><b>Need the proof to lend, have no field team</b><p>Rural credit requires deforestation-free evidence. Banks buy the same proof the trader buys, verify it on-chain, and stop paying per-farm vendors.</p></div>
+    <div class="mkt"><i>3 · traders</i><b>The final target</b><p>Once proofs already circulate among their suppliers, the trader's compliance desk plugs in a buyer agent and clears shipments in minutes instead of weeks.</p></div>
   </div>
+  <p class="lead" style="margin-top:1.8vw;font-size:1.6vw">Built to scale: every farm runs its own agent, every buyer its own; one public registry; contracts and agents generic enough for any private dataset sold as a proof.</p>
+  <p class="note">Pilot partners wanted: a cooperative, a bank, a trader · github.com/Muril0zz/proof-of-field</p>
   <span class="n">8</span>
 </section>
 
