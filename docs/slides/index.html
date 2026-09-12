@@ -138,6 +138,18 @@
 
 <!-- 5 -->
 <section class="slide">
+  <h2>Who talks to whom. There is no marketplace.</h2>
+  <div class="markets">
+    <div class="mkt" style="background:var(--ok-soft);border-color:transparent"><i>farm side</i><b>The key is the login</b><p>No account, no password. The farmer agent holds the farm's key, like a wallet. Properties are imported <b>once from SICAR</b>, the farmer's own CAR export by CPF. Production: gov.br sign-in, automatic import. Small farms: the <b>cooperative hosts the agent</b>; the farmer authorizes from a phone.</p></div>
+    <div class="mkt" style="background:var(--primary-soft);border-color:transparent"><i>buyer side</i><b>It asks its own suppliers</b><p>A trader, bank or co-op already has contracts with its suppliers. At onboarding it registers each supplier's <b>agent address</b>, like a bank account, and allow-lists the key. Its agent asks those suppliers, nobody else. An unknown key offering someone's farm is <b>refused</b>, even with a valid-looking proof.</p></div>
+    <div class="mkt"><i>on-chain</i><b>One registry, no owner</b><p>The hash of every attestation, who anchored it, revocations. Payments in stablecoin through the buyer's <b>AgentWallet</b>, with limits. Anyone verifies; nobody controls it. The same proof serves every buyer that asks this season.</p></div>
+  </div>
+  <p class="note">Banks, importers and cooperatives work the same way: they talk to the suppliers they already know, and the proof they get is the same one.</p>
+  <span class="n">5</span>
+</section>
+
+<!-- 6 -->
+<section class="slide">
   <h2>Where AI sits, where the chain sits</h2>
   <div class="layers">
     <div class="layer ai">
@@ -160,10 +172,10 @@
     </div>
   </div>
   <p class="note" style="font-size:1.35vw;color:var(--ink);margin-top:1.4vw">The check is SQL, and we run it locally. The <b>trade</b> is not: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse.</p>
-  <span class="n">5</span>
+  <span class="n">6</span>
 </section>
 
-<!-- 6 -->
+<!-- 7 -->
 <section class="slide">
   <div class="kicker">Live demo</div>
   <div class="two">
@@ -177,10 +189,10 @@
       </ul>
     </div>
   </div>
-  <span class="n">6</span>
+  <span class="n">7</span>
 </section>
 
-<!-- 7 -->
+<!-- 8 -->
 <section class="slide">
   <h2>Under the hood</h2>
   <div class="flow">
@@ -197,10 +209,10 @@
       <li><b>Next:</b> EIP-3009 gasless settlement · ZK proof of empty intersection · Sentinel-2 change detection on the farmer's machine · IBAMA embargoes · cattle passports.</li>
     </ul>
   </div>
-  <span class="n">7</span>
+  <span class="n">8</span>
 </section>
 
-<!-- 8 -->
+<!-- 9 -->
 <section class="slide">
   <h2>Adoption path: where the pain is sharpest first, traders last.</h2>
   <div class="markets">
@@ -210,7 +222,7 @@
   </div>
   <p class="lead" style="margin-top:1.8vw;font-size:1.6vw">Built to scale: every farm runs its own agent, every buyer its own; one public registry; contracts and agents generic enough for any private dataset sold as a proof.</p>
   <p class="note">Pilot partners wanted: a cooperative, a bank, a trader · github.com/Muril0zz/proof-of-field</p>
-  <span class="n">8</span>
+  <span class="n">9</span>
 </section>
 
 </div>

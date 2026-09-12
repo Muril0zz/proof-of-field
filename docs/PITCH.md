@@ -6,7 +6,7 @@
 - Sales ledger empty (STATUS.md has the command). Slides open in another window, fullscreen, on slide 1.
 - Backup only if the page breaks: terminal with `NETWORK=hsk-testnet pnpm buyer -- <proof URL>`.
 
-## 1 minute pitch (slides 1 → 5, ~12 s each)
+## 1 minute pitch (slides 1 → 6, ~10 s each)
 
 **Slide 1 (0:00).** "This is Proof of Field. It turns the compliance paperwork behind every soy and beef shipment into something machines buy and sell."
 
@@ -16,7 +16,9 @@
 
 **Slide 4 (0:37).** "We make the proof portable. Each farm's computer runs the official checks, deforestation, indigenous lands, conservation units, signs the result once, and puts it up for sale. Before contracting, the buyer's AI agent picks it up, verifies it on-chain, and pays the farm per use. Same proof again next season, and again in the export file. Minutes, no humans, and no farm map ever leaves a farm."
 
-**Slide 5 (0:50).** "The check is SQL, we run it locally. What isn't SQL is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. Let me show you."
+**Slide 5 (0:48).** "No marketplace. The farm's key is its login and its properties come from SICAR. The trader asks only the suppliers it already has contracts with; their agent address is registered at onboarding like a bank account. Unknown keys are refused."
+
+**Slide 6 (0:56).** "The check is SQL, we run it locally. What isn't SQL is the trade: two companies that don't trust each other, two programs paying each other, and an AI holding money it cannot misuse. Let me show you."
 
 ## 2 minute demo: one screen, two clicks
 
@@ -36,8 +38,8 @@ While the log streams (~70 s), say only these, pointing at the lines as they app
 
 Do NOT open the explorer or the terminal unless asked. If asked for on-chain evidence, the report has the links.
 
-## Slides 6–8 are for Q&A only
-Jump to 7 for "how does it work", 8 for "what's next / who are you".
+## Slides 7–9 are for Q&A only
+Jump to 8 for "how does it work", 9 for "adoption / what's next".
 
 ## Demo script (90 s, in English — rehearse 3×)
 
