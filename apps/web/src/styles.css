@@ -147,3 +147,8 @@ code, .mono { font-family: var(--mono); font-size: 12px; }
 .legend .toggle input { margin: 0; accent-color: var(--primary); }
 
 .legend .cov { color: var(--ink-3); font-size: 11px; max-width: 320px; }
+
+/* ---------- for sale ---------- */
+.forsale { margin-top: 14px; padding: 12px 14px; border-radius: var(--r-md); background: var(--primary); color: #fff; }
+.forsale-title { font-weight: 600; }
+.forsale-sub { font-size: 12.5px; opacity: .85; margin-top: 3px; }

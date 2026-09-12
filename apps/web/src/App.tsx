@@ -129,7 +129,7 @@ export function App() {
               {report && phase !== 'checking' && <Verdict report={report} label={label} />}
               {phase === 'checked' && report?.coverage?.covered !== false && (
                 <>
-                  <button className="btn btn-primary btn-block" style={{ marginTop: 14 }} onClick={attest}>Sign attestation &amp; anchor on-chain</button>
+                  <button className="btn btn-primary btn-block" style={{ marginTop: 14 }} onClick={attest}>{report && (report.compliant ?? report.deforestedHa <= 0) ? 'Sign once & put the proof up for sale' : 'Sign attestation anyway (non-compliant)'}</button>
                   <div className="note">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5" /><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" /></svg>
                     <span>Only a hash of this polygon and the verdict go on-chain. The geometry never leaves the farmer agent.</span>
@@ -144,11 +144,14 @@ export function App() {
               )}
               {phase === 'attested' && result && (
                 <>
-                  <dl className="kv" style={{ marginTop: 14 }}>
+                  <div className="forsale">
+                    <div className="forsale-title">Proof is for sale · {usdt(result.priceUnits)} per buyer</div>
+                    <div className="forsale-sub">Signed once. Any buyer, bank or importer can fetch it, verify it on-chain, and pay you per use.</div>
+                  </div>
+                  <dl className="kv" style={{ marginTop: 12 }}>
                     <dt>Attestation</dt><dd className="mono" title={result.hash}>{short(result.hash, 10)}</dd>
                     <dt>Signer</dt><dd className="mono">{short(result.farmer, 6)}</dd>
                     <dt>Anchor tx</dt><dd className="mono">{result.txHash ? (result.txUrl && !result.txUrl.startsWith('0x') ? <a href={result.txUrl} target="_blank" rel="noreferrer">{short(result.txHash, 8)} ↗</a> : short(result.txHash, 8)) : <span style={{ color: 'var(--bad)' }}>not anchored</span>}</dd>
-                    <dt>Price</dt><dd>{usdt(result.priceUnits)}</dd>
                   </dl>
                   {proofUrl && (
                     <>
