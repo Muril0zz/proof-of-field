@@ -28,7 +28,7 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 - Chave da Anthropic está no .env (fora do git). **Rotacionar depois do evento**, ela passou pelo chat.
 
 ## FEITO 12/09 ~11:00
-- **Lote com vários produtores**: Fazenda A (porta 4020, imóveis …9C62 e …4C8E) e Fazenda B (porta 4021, chave FARMER2, imóvel …0A28). `./scripts/dev-up.sh` sobe os dois. Buyer LLM recebe a lista de agentes.
+- **Lote com vários produtores**: João Silva (porta 4020, imóveis …9C62 e …4C8E) e Maria Souza (porta 4021, chave FARMER2, imóvel …0A28). `./scripts/dev-up.sh` sobe os dois. Buyer LLM recebe a lista de agentes.
 - Atestados carregam o **número do CAR** (polígono oficial); comprador pula "unregistered" por padrão. Fora da cobertura PRODES → recusa (422).
 - `registry_stats`: lê o registro on-chain (4 atestados, 2 produtores). Corrida de recibo entre RPCs corrigida (retry dos dois lados).
 - Deck depersonalizado: sem Nixar/Abunã/nome; slide 2 com as grandes tradings; slide 8 "built to scale".
@@ -36,7 +36,7 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
 - **PRODES ampliado**: RO, MT, GO (Amazônia + Cerrado), 103k polígonos, `./scripts/fetch-prodes.sh` (150 MB, fora do git). Cobertura por estado×bioma; fora → recusa.
 
-- **Impostor na demo**: Fazenda C (porta 4022, chave FARMER3, sem gás, não cadastrada) vende o CAR da Fazenda A. Agente marca UNKNOWN + CAR-CONFLICT e recusa. Comando da demo agora tem 3 URLs.
+- **Impostor na demo**: Pedro Lima (porta 4022, chave FARMER3, sem gás, não cadastrado) vende o CAR do João. Agente marca UNKNOWN + CAR-CONFLICT e recusa. Comando da demo agora tem 3 URLs.
 
 - **Áreas protegidas**: terras indígenas (FUNAI) e unidades de conservação (ICMBio/MMA) dos dois biomas entram na checagem (1.101 polígonos). TI e proteção integral reprovam; APA só alerta. Atestado ganhou `protectedHa100` (esquema novo; tudo re-atestado na HSK).
 - **Pitch**: manchete "portable proof"; slide 8 = caminho de adoção (cooperativas → bancos → tradings).
@@ -48,7 +48,7 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 ## PUBLICADO no Devfolio às 12:20 — continua editável até 15:00
 - https://devfolio.co/projects/proof-of-field-a49c · time no Devfolio: você + Afonso Fagundes.
 - Slide 4 = "onde vai o trabalho do intermediário" (coletar / checar / confiar / repetir). Slide 5 = "quem fala com quem, não há marketplace".
-- Demo: http://localhost:4030/demo (dois cliques). Lado FARM tem dropdown Fazenda A / Fazenda B; lado TRADER lista fornecedores por nome com checkbox. Ledger de vendas zerado.
+- Demo: http://localhost:4030/demo (dois cliques). Lado FARM tem dropdown João Silva / Maria Souza; lado TRADER lista fornecedores por nome com checkbox. Ledger de vendas zerado.
 
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.

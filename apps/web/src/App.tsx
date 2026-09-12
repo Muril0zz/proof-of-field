@@ -96,7 +96,7 @@ export function App() {
         <header className="panel-head">
           <div className="logo" aria-hidden><svg viewBox="0 0 16 16" fill="none"><path d="M2 12.5 6.5 3.5 14 12.5Z" fill="#fff" /></svg></div>
           <div className="brand">
-            <select className="farmer-select" value={farmerUrl} onChange={(e) => { setFarmerUrl(e.target.value); setFarmerUrlState(e.target.value); }} aria-label="Which farm's agent">
+            <select className="farmer-select" value={farmerUrl} onChange={(e) => { setFarmerUrl(e.target.value); setFarmerUrlState(e.target.value); }} aria-label="Which farmer">
               {FARMERS.map((f) => <option key={f.url} value={f.url}>{info && farmerUrl === f.url && info.name ? info.name : f.name}</option>)}
             </select>
             <small>Farmer console · runs on the farm or hosted by your cooperative</small>
