@@ -53,6 +53,14 @@
   .stat div { border-top: 2px solid var(--line); padding-top: 1vw; }
   .stat b { display: block; font-size: 2.8vw; letter-spacing: -0.03em; } .stat.bad b { color: var(--bad); } .stat.ok b { color: var(--ok); }
   .stat span { font-size: 1.3vw; color: var(--ink-3); }
+  /* comparison */
+  .cmp { display: grid; grid-template-columns: 15vw 1fr 1fr; gap: 0.6vw 1vw; margin-top: 0.4vw; }
+  .cmp-h { font-weight: 700; font-size: 1.35vw; padding: 0.4vw 1vw; }
+  .cmp-h.bad { color: var(--bad); } .cmp-h.ok { color: var(--ok); }
+  .cmp-l { font-weight: 600; font-size: 1.3vw; color: var(--ink); padding: 1.1vw 0; display: flex; align-items: center; }
+  .cmp-c { font-size: 1.2vw; line-height: 1.4; color: var(--ink-2); padding: 1.1vw 1.2vw; border-radius: 0.6vw; }
+  .cmp-c.bad { background: var(--bad-soft); } .cmp-c.ok { background: var(--ok-soft); }
+  .cmp-c b { color: var(--ink); }
   /* layers */
   .layers { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; flex: 1; }
   .layer { border-radius: 0.8vw; padding: 1.8vw 2vw; display: flex; flex-direction: column; gap: 1vw; }
@@ -118,22 +126,15 @@
 
 <!-- 4 -->
 <section class="slide">
-  <h2>How it clears with Proof of Field</h2>
-  <div class="tl">
-    <div class="lbl ok">Now</div>
-    <div class="chain">
-      <div class="node ok"><i>farm, or its cooperative</i><b>Farmer picks the property</b><p>From their CAR registration. The agent checks it against INPE/PRODES, indigenous lands and conservation units, in seconds. Map never leaves the farm.</p></div>
-      <div class="node ok"><i>farm, or its cooperative</i><b>Signs once</b><p>A declaration of origin with the evidence attached (EIP-712). Only its hash goes on-chain. The proof is now for sale to every buyer, this season.</p></div>
-      <div class="node ai"><i>trader's machine · before contracting</i><b>AI buyer agent decides</b><p>One sentence from compliance. Lists the suppliers' proofs, checks its budget, buys what fits the rule, refuses what doesn't.</p></div>
-      <div class="node ai"><i>trader's machine · reused each season &amp; at export</i><b>Pays, verifies, reports</b><p>HTTP 402 → USDT → proof. Verifies signature + registry itself. Writes the dossier; the export file reuses the same proofs.</p></div>
-    </div>
+  <h2>Where the middleman's work goes</h2>
+  <div class="cmp">
+    <div class="cmp-h"></div><div class="cmp-h bad">Today · a paid checker in the middle</div><div class="cmp-h ok">With Proof of Field</div>
+    <div class="cmp-l">Collecting the farm's papers</div><div class="cmp-c bad">E-mails, WhatsApp, PDFs. The farm sends its entire map to a stranger.</div><div class="cmp-c ok">The buyer's agent fetches the proof by itself. The map never leaves the farm.</div>
+    <div class="cmp-l">Running the check</div><div class="cmp-c bad">A vendor crosses the farm map with government data and charges per farm.</div><div class="cmp-c ok">Open-source software on the farm's side crosses the <b>official</b> map with the <b>same public</b> government data, in seconds.</div>
+    <div class="cmp-l">Trusting the result</div><div class="cmp-c bad">You trust the vendor's PDF. Nobody outside can check it.</div><div class="cmp-c ok">Nobody has to be trusted. The inputs are public and the stamp is on a public registry: <b>anyone can recompute and verify it</b>.</div>
+    <div class="cmp-l">Doing it again for the next buyer</div><div class="cmp-c bad">Every buyer, bank and importer asks again. Every season. Paid every time.</div><div class="cmp-c ok"><b>Signed once.</b> Every buyer this season picks up the same proof. The farm is paid per use, the checker is not.</div>
   </div>
-  <div class="stat ok">
-    <div><b>signed once</b><span>verified by every buyer, bank and importer</span></div>
-    <div><b>~2 minutes</b><span>per supplier group, before contracting, unattended</span></div>
-    <div><b>zero copies</b><span>of the farm map leave the farm; the farm is paid per use</span></div>
-  </div>
-  <p class="note">Same official data, same check. What changed: the proof is portable. One signature, any number of buyers, no repeated paperwork.</p>
+  <p class="note">Like a passport instead of a fresh notary letter for every trip. What remains is thin and replaceable: someone vouches that the key belongs to the farm (the co-op, a bank, the government).</p>
   <span class="n">4</span>
 </section>
 
