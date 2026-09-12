@@ -20,7 +20,7 @@
 
 ## 2 minute demo (happy path only)
 
-**0:00 [Console]** Click **…9C62**. Green verdict appears. → "This is a real 5,500-hectare property from Brazil's rural registry, checked against INPE's official deforestation map. Clean."
+**0:00 [Console]** Click **…9C62**. Green verdict appears. → "This is a real 5,500-hectare property from Brazil's rural registry, checked against INPE's official deforestation map for Rondônia, Mato Grosso and Goiás. Clean."
 
 **0:10 [Console]** Click **Sign attestation & anchor on-chain**. Wait for the hash and tx (~5 s). → "Signed by the farmer's key. Only the hash goes to HashKey Chain. The proof is now for sale."
 

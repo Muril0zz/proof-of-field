@@ -32,6 +32,8 @@ export function coverageOf(field: Feature<Polygon | MultiPolygon>, idx: ProdesIn
     const r = idx.regions[i];
     const rb = turf.bbox(r as any);
     if (rb[0] > bbox[2] || rb[2] < bbox[0] || rb[1] > bbox[3] || rb[3] < bbox[1]) continue;
+    // Fast path: the whole field sits inside this region → covered, done.
+    try { if (turf.booleanWithin(remaining as any, r as any)) { hits.push(idx.regionNames[i]); remaining = null; break; } } catch { /* fall through */ }
     let inter: Feature | null = null;
     try { inter = turf.intersect(turf.featureCollection([remaining as any, r as any])); } catch { continue; }
     if (!inter) continue;
