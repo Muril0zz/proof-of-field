@@ -156,3 +156,6 @@ code, .mono { font-family: var(--mono); font-size: 12px; }
 
 .linkbtn { background: none; border: 0; padding: 0; color: var(--primary); cursor: pointer; font-size: 12.5px; }
 .linkbtn:hover { text-decoration: underline; }
+
+.farmer-select { font: 600 14px/1.2 var(--sans); color: var(--ink); background: var(--bg); border: 1px solid var(--line-strong); border-radius: 6px; padding: 4px 26px 4px 8px; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23444' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; cursor: pointer; }
+.farmer-select:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }

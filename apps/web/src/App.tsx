@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as turf from '@turf/turf';
 import { MapView } from './components/MapView';
-import { api, fmtHa, short, usdt, type AgentInfo, type Attestation, type Payment, type Report } from './lib/api';
+import { api, fmtHa, short, usdt, FARMERS, getFarmerUrl, setFarmerUrl, type AgentInfo, type Attestation, type Payment, type Report } from './lib/api';
 
 interface Sample { id: string; label: string; car: string; areaHaCar: number; geometry: GeoJSON.Geometry }
 type Phase = 'idle' | 'checking' | 'checked' | 'attesting' | 'attested';
 
 export function App() {
+  const [farmerUrl, setFarmerUrlState] = useState(getFarmerUrl());
   const [info, setInfo] = useState<AgentInfo | null>(null);
   const [offline, setOffline] = useState(false);
   const [prodes, setProdes] = useState<GeoJSON.FeatureCollection | null>(null);
@@ -41,14 +42,15 @@ export function App() {
       } catch {}
     };
     tick(); const id = setInterval(tick, 2500); return () => clearInterval(id);
-  }, []);
+  }, [farmerUrl]);
 
   useEffect(() => {
+    setInfo(null); setSamples([]); setList([]); setField(null); setReport(null); setResult(null); setPhase('idle'); setSelected(null); setProdes(null);
     api.info().then((i) => { setInfo(i); setOffline(false); }).catch(() => setOffline(true));
     api.coverage().then(setCoverage).catch(() => {});
-    fetch('/api/samples').then((r) => r.json()).then(setSamples).catch(() => {});
+    api.samples().then(setSamples).catch(() => {});
     refresh();
-  }, [refresh]);
+  }, [refresh, farmerUrl]);
 
   const loadProdesAround = useCallback((g: GeoJSON.Geometry) => {
     const b = turf.bbox({ type: 'Feature', properties: {}, geometry: g } as any);
@@ -93,7 +95,12 @@ export function App() {
       <aside className="panel">
         <header className="panel-head">
           <div className="logo" aria-hidden><svg viewBox="0 0 16 16" fill="none"><path d="M2 12.5 6.5 3.5 14 12.5Z" fill="#fff" /></svg></div>
-          <div className="brand">Proof of Field<small>Farmer console · runs on the farm or hosted by your cooperative</small></div>
+          <div className="brand">
+            <select className="farmer-select" value={farmerUrl} onChange={(e) => { setFarmerUrl(e.target.value); setFarmerUrlState(e.target.value); }} aria-label="Which farm's agent">
+              {FARMERS.map((f) => <option key={f.url} value={f.url}>{info && farmerUrl === f.url && info.name ? info.name : f.name}</option>)}
+            </select>
+            <small>Farmer console · runs on the farm or hosted by your cooperative</small>
+          </div>
           <div className={`chip ${offline ? 'off' : ''}`} title={info ? `${info.farmer}\nregistry ${info.registry}` : 'farmer agent offline'}>
             <span className="dot" />{offline ? 'agent offline' : info ? `${info.network} · ${short(info.farmer, 4)}` : '…'}
           </div>

@@ -60,7 +60,8 @@ const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta 
 h2{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink-2)}
 textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--line-strong);border-radius:6px;padding:10px 12px;font:15px/1.45 Inter,system-ui,sans-serif;color:var(--ink)}
 textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
-.lot{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.lot span{font-family:var(--mono);font-size:11.5px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--ink-2)}
+.lot{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lot label{display:inline-flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;font-size:13.5px}.lot label b{font-weight:600}.lot label small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}.lot input{margin:0;accent-color:var(--primary)}.lot .off{color:var(--bad);font-size:11px}
+.lot-h{font-size:12.5px;color:var(--ink-3);margin-top:12px}
 .row{display:flex;gap:10px;align-items:center;margin-top:12px}
 .btn{height:38px;padding:0 16px;border-radius:6px;border:1px solid transparent;background:var(--primary);color:#fff;font:500 14px Inter,system-ui,sans-serif;cursor:pointer}.btn:hover{background:var(--primary-hover)}.btn:disabled{opacity:.5;cursor:not-allowed}
 .hint{color:var(--ink-3);font-size:12.5px}
@@ -77,6 +78,7 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 <div class="wrap">
   <div class="card"><h2>Instruction to the buyer agent</h2>
     <textarea id="q">Verify these suppliers before we contract the harvest. Budget 30 USDT. Reject deforestation after 2020 or protected land.</textarea>
+    <div class="lot-h">Suppliers to verify (onboarded agents; tick who you want checked this run):</div>
     <div class="lot" id="lot"></div>
     <div class="row"><button class="btn" id="run">Run agent</button><span class="hint">Lists the suppliers, checks its own spending policy, buys and verifies each proof, writes the dossier. ~70 s.</span></div>
   </div>
@@ -85,10 +87,13 @@ textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:
 </div>
 <script>
 const $=id=>document.getElementById(id);
-fetch('/config').then(r=>r.json()).then(c=>{$('chip').textContent=c.network;$('lot').innerHTML=c.lot.map(u=>'<span>'+u+'</span>').join('');window.__lot=c.lot;});
+fetch('/config').then(r=>r.json()).then(async c=>{$('chip').textContent=c.network;window.__lot=c.lot;
+ const items=await Promise.all(c.lot.map(async u=>{try{const i=await fetch(u+'/',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());return {u,name:i.name||u,farmer:i.farmer,n:i.attestations};}catch{return {u,name:u,off:true};}}));
+ $('lot').innerHTML=items.map(i=>'<label><input type="checkbox" value="'+i.u+'" '+(i.off?'':'checked')+'/> <b>'+i.name+'</b> <small>'+(i.farmer?i.farmer.slice(0,6)+'…'+i.farmer.slice(-4):i.u)+'</small>'+(i.off?' <span class="off">offline</span>':'')+'</label>').join('');});
+function selectedLot(){return [...document.querySelectorAll('#lot input:checked')].map(i=>i.value);}
 function cls(l){if(/^\\s*⚙/.test(l))return 't';if(/✔/.test(l))return 'ok';if(/✘|NON-COMPLIANT|UNKNOWN/.test(l))return 'bad';if(/^\\s{4,}/.test(l))return 'dim';return 'say';}
-$('run').onclick=()=>{const q=$('q').value.trim();if(!q)return;$('run').disabled=true;$('logcard').hidden=false;$('repcard').hidden=true;$('log').textContent='';$('st').innerHTML='<span class="spin"></span>Agent working…';
- const es=new EventSource('/run?q='+encodeURIComponent(q)+'&lot='+encodeURIComponent((window.__lot||[]).join(',')));
+$('run').onclick=()=>{const q=$('q').value.trim();if(!q)return;const lot=selectedLot();if(!lot.length){alert('Tick at least one supplier');return;}$('run').disabled=true;$('logcard').hidden=false;$('repcard').hidden=true;$('log').textContent='';$('st').innerHTML='<span class="spin"></span>Agent working…';
+ const es=new EventSource('/run?q='+encodeURIComponent(q)+'&lot='+encodeURIComponent(lot.join(',')));
  es.addEventListener('log',e=>{const l=JSON.parse(e.data);if(!l.trim())return;const d=document.createElement('div');d.className=cls(l);d.textContent=l;$('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight;});
  es.addEventListener('done',e=>{es.close();$('run').disabled=false;$('st').textContent='Done';const {report}=JSON.parse(e.data);
    const txt=$('log').textContent;const m=txt.match(/(\\d+) bought · (\\d+) skipped · ([\\d.]+) USDT spent/);
