@@ -119,7 +119,7 @@ iframe{border:0;width:100%;height:100%;background:#fff}
 .pane{position:relative;min-height:0}.pane.farm{border-right:1px solid #2a2f3a}
 .step{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:6px 12px;border-radius:999px;opacity:.92;pointer-events:none}
 </style></head><body><div class="stage">
-<div class="hdr farm"><span class="tag">FARM</span>Fazenda A · Rondônia <small>· picks the property, signs once</small></div>
+<div class="hdr farm"><span class="tag">FARM</span>Farmer console <small>· picks the property, signs once · switch farms with the dropdown</small></div>
 <div class="hdr trader"><span class="tag">TRADER</span>Compliance desk <small>· one sentence, the agent does the rest</small></div>
 <div class="pane farm"><iframe src="http://localhost:5173" title="Farmer console"></iframe></div>
 <div class="pane"><iframe src="http://localhost:4030" title="Buyer desk"></iframe></div>
