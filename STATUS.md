@@ -38,6 +38,9 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
 - **Impostor na demo**: Fazenda C (porta 4022, chave FARMER3, sem gás, não cadastrada) vende o CAR da Fazenda A. Agente marca UNKNOWN + CAR-CONFLICT e recusa. Comando da demo agora tem 3 URLs.
 
+- **Áreas protegidas**: terras indígenas (FUNAI) e unidades de conservação (ICMBio/MMA) dos dois biomas entram na checagem (1.101 polígonos). TI e proteção integral reprovam; APA só alerta. Atestado ganhou `protectedHa100` (esquema novo; tudo re-atestado na HSK).
+- **Pitch**: manchete "portable proof"; slide 8 = caminho de adoção (cooperativas → bancos → tradings).
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).
