@@ -104,7 +104,7 @@ const DEMO = `<!doctype html><html lang="en"><head><meta charset="utf-8"/><title
 <style>
 :root{--ink:oklch(0.2 0.02 260);--line:oklch(0.88 0.006 260);--primary:oklch(0.38 0.14 262);--ok:oklch(0.52 0.15 150)}
 html,body{height:100%;margin:0;font-family:Inter,system-ui,sans-serif;background:#0d0f14}
-.stage{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;height:100%;gap:0}
+.stage{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:auto 1fr;height:100%;gap:0}
 .hdr{display:flex;align-items:center;gap:12px;padding:10px 18px;color:#fff;font-weight:600;font-size:15px;border-bottom:1px solid #2a2f3a}
 .hdr .tag{font-size:11px;letter-spacing:.12em;padding:3px 8px;border-radius:999px;font-weight:700}
 .hdr.farm .tag{background:var(--ok);color:#fff}.hdr.trader .tag{background:var(--primary);color:#fff}

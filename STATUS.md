@@ -43,6 +43,8 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
 - **Buyer desk** (interface do comprador): http://localhost:4030, caixa de texto + log ao vivo + relatório. `./scripts/dev-up.sh` sobe junto. Testado ponta a ponta.
 
+- **DEMO = uma tela**: http://localhost:4030/demo (FARM à esquerda, TRADER à direita). Dois cliques. Roteiro no topo do docs/PITCH.md.
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).
