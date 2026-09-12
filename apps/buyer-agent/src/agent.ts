@@ -40,7 +40,7 @@ const tools = [
     run: async ({ farmerAgentUrls }) => {
       tool('list_lot', `${farmerAgentUrls.length} farmer agent(s)`);
       const { proofs, unreachable } = await listLot(farmerAgentUrls);
-      proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.knownSupplier ? 'known   ' : 'UNKNOWN '}${p.carConflict ? 'CAR-CONFLICT ' : ''}${p.farmerName} · ${p.registered ? 'CAR ' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
+      proofs.forEach((p) => dim(`      ${p.compliant ? 'COMPLIANT    ' : 'NON-COMPLIANT'} ${p.knownSupplier ? 'known   ' : 'UNKNOWN '}${p.carConflict ? 'CAR-CONFLICT ' : ''}${p.farmerName} · ${p.registered ? '' : 'unregistered '}${p.label || p.hash.slice(0, 12)}  ${p.areaHa} ha  ${p.deforestedHa} ha deforested  ${usdt(p.priceUnits)}`));
       unreachable.forEach((u) => console.log(pc.red(`      ✘ unreachable: ${u}`)));
       return JSON.stringify({ proofs: proofs.map((p) => ({ ...p, price: usdt(p.priceUnits) })), unreachable });
     },
