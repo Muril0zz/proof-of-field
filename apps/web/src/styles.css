@@ -145,3 +145,5 @@ code, .mono { font-family: var(--mono); font-size: 12px; }
 
 .legend .toggle { display: flex; align-items: center; gap: 6px; margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--line); cursor: pointer; color: var(--ink-2); }
 .legend .toggle input { margin: 0; accent-color: var(--primary); }
+
+.legend .cov { color: var(--ink-3); font-size: 11px; max-width: 320px; }

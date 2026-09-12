@@ -34,6 +34,8 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 - Deck depersonalizado: sem Nixar/Abunã/nome; slide 2 com as grandes tradings; slide 8 "built to scale".
 - Comando da demo: `NETWORK=hsk-testnet pnpm buyer:ai "Buy the proofs for every farm in this lot. Budget 30 USDT. Reject any farm with deforestation after 2020." http://localhost:4020 http://localhost:4021`
 
+- **PRODES ampliado**: RO, MT, GO (Amazônia + Cerrado), 103k polígonos, `./scripts/fetch-prodes.sh` (150 MB, fora do git). Cobertura por estado×bioma; fora → recusa.
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).

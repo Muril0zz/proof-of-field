@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import * as turf from '@turf/turf';
 import { MapView } from './components/MapView';
 import { api, fmtHa, short, usdt, type AgentInfo, type Attestation, type Payment, type Report } from './lib/api';
 
@@ -9,6 +10,7 @@ export function App() {
   const [info, setInfo] = useState<AgentInfo | null>(null);
   const [offline, setOffline] = useState(false);
   const [prodes, setProdes] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [coverage, setCoverage] = useState<{ regions: string[]; polygons: number } | null>(null);
   const [samples, setSamples] = useState<Sample[]>([]);
   const [list, setList] = useState<Attestation[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -43,16 +45,23 @@ export function App() {
 
   useEffect(() => {
     api.info().then((i) => { setInfo(i); setOffline(false); }).catch(() => setOffline(true));
-    api.prodes().then(setProdes).catch(() => {});
+    api.coverage().then(setCoverage).catch(() => {});
     fetch('/api/samples').then((r) => r.json()).then(setSamples).catch(() => {});
     refresh();
   }, [refresh]);
 
+  const loadProdesAround = useCallback((g: GeoJSON.Geometry) => {
+    const b = turf.bbox({ type: 'Feature', properties: {}, geometry: g } as any);
+    const pad = Math.max(0.15, (b[2] - b[0]) * 1.5, (b[3] - b[1]) * 1.5);
+    api.prodes([b[0] - pad, b[1] - pad, b[2] + pad, b[3] + pad]).then(setProdes).catch(() => {});
+  }, []);
+
   const runCheck = useCallback(async (g: GeoJSON.Geometry, lbl: string) => {
     setSelected(null); setResult(null); setField(g); setLabel(lbl); setPhase('checking'); setReport(null);
+    loadProdesAround(g);
     try { const r = await api.check(g); setReport(r); setPhase('checked'); }
     catch (e: any) { say(`Check failed: ${e.message}`); setPhase('idle'); }
-  }, []);
+  }, [loadProdesAround]);
 
   const onDrawn = useCallback((g: GeoJSON.Polygon) => { setDrawing(false); runCheck(g, `Field drawn ${new Date().toLocaleTimeString()}`); }, [runCheck]);
 
@@ -70,7 +79,7 @@ export function App() {
     setSelected(a.hash); setDrawing(false);
     try {
       const d = await api.privateDetail(a.hash);
-      setField(d.geometry); setLabel(d.label || ''); setReport({ ...d.report, intersections: d.intersections, compliant: d.compliant });
+      setField(d.geometry); setLabel(d.label || ''); loadProdesAround(d.geometry); setReport({ ...d.report, intersections: d.intersections, compliant: d.compliant });
       setResult({ ...d, proofUrl: `${location.origin.replace(/:\d+$/, ':4020')}/proof/${d.hash}` } as any); setPhase('attested');
     } catch (e: any) { say(e.message); }
   };
@@ -116,7 +125,7 @@ export function App() {
           {(phase !== 'idle') && (
             <section className="section">
               <h2>Compliance check <span className="count">INPE / PRODES · baseline 2020</span></h2>
-              {phase === 'checking' && <div className="steps"><div className="step doing"><span className="ic" />Intersecting with {prodes?.features.length.toLocaleString() ?? '…'} PRODES polygons</div></div>}
+              {phase === 'checking' && <div className="steps"><div className="step doing"><span className="ic" />Intersecting with {coverage?.polygons.toLocaleString() ?? '…'} PRODES polygons</div></div>}
               {report && phase !== 'checking' && <Verdict report={report} label={label} />}
               {phase === 'checked' && report?.coverage?.covered !== false && (
                 <>
@@ -188,7 +197,8 @@ export function App() {
           <div className="legend">
             <div><i style={{ background: 'rgba(59,63,182,.2)', border: '1.5px solid #3b3fb6' }} />Your field (private)</div>
             <div><i style={{ background: '#ff3b2f' }} />Deforestation after 2020 inside your field</div>
-            <label className="toggle"><input type="checkbox" checked={showProdes} onChange={(e) => setShowProdes(e.target.checked)} /> Show full PRODES layer ({prodes?.features.length.toLocaleString() ?? '…'} polygons)</label>
+            <label className="toggle"><input type="checkbox" checked={showProdes} onChange={(e) => setShowProdes(e.target.checked)} /> Show PRODES around this field{prodes ? ` (${prodes.features.length.toLocaleString()} of ${coverage?.polygons.toLocaleString() ?? '…'})` : ''}</label>
+            {coverage && coverage.regions.length > 0 && <div className="cov">Coverage: {coverage.regions.join(' · ')}</div>}
           </div>
         </div>
       </main>

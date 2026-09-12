@@ -52,6 +52,7 @@ Prereqs: Node 20+, pnpm, Foundry (`curl -L https://foundry.paradigm.xyz | bash &
 
 ```bash
 pnpm install
+./scripts/fetch-prodes.sh          # PRODES for RO, MT, GO (~150 MB); optional, falls back to a small RO extract
 cp .env.example .env            # fill FARMER_PRIVATE_KEY / BUYER_PRIVATE_KEY (dev keys only)
 
 # 1. local chain
@@ -82,7 +83,7 @@ NETWORK=hsk-testnet pnpm farmer
 NETWORK=hsk-testnet pnpm buyer -- <proofUrl>
 ```
 
-Explorer: https://testnet-explorer.hsk.xyz
+Explorer: https://testnet-explorer.hsk.xyz · Set `HSK_TESTNET_RPC` to a dedicated node (e.g. Chainstack) for the demo; the public RPC is load-balanced and can lag on fresh receipts (handled with retries).
 
 Live deployment (chainId 133):
 
@@ -99,7 +100,7 @@ Example: [attestation anchored](https://testnet-explorer.hsk.xyz/tx/0xd1a37a26ce
 - **x402**: the farmer agent answers `402` with a v1-shaped `accepts[]` (scheme `exact`, network, `payTo`, `asset`, `maxAmountRequired`). Settlement here is an on-chain ERC-20 transfer referenced by tx hash in `X-PAYMENT`; the server verifies the `Transfer` log to its own address and rejects replays. Roadmap: EIP-3009 `transferWithAuthorization` so the buyer never needs gas.
 - **AgentWallet** is the piece that makes autonomous buying safe: a company funds it once, sets a policy, and gives an agent a key that can *only* pay allow-listed sellers within limits.
 - **Privacy**: the attestation commits to the polygon (`fieldId = keccak(canonical GeoJSON)`) but reveals only aggregates. A buyer can verify the farmer's claim without ever learning where the field is. Selective disclosure of the geometry (to an auditor, under a separate paid resource) is a natural extension.
-- **Data**: PRODES is INPE's official yearly deforestation mapping of the Legal Amazon (Landsat/Sentinel, published as polygons; minimum mapping unit 6.25 ha, annual). We fetch it via the TerraBrasilis WFS and intersect client-side with turf. Same first-pass method commercial due-diligence providers use. The bundled extract covers a bbox around Abunã/RO (3,445 polygons, 2020–2025); **fields outside the extract are refused** (`422 no_coverage`) rather than reported as clean.
+- **Data**: PRODES is INPE's official yearly deforestation mapping (Landsat/Sentinel, published as polygons; minimum mapping unit 6.25 ha, annual). `./scripts/fetch-prodes.sh` downloads 2021+ polygons for **Rondônia, Mato Grosso and Goiás across the Amazon and Cerrado biomes** (~103k polygons, ~150 MB, not in git) plus the state×biome polygons used for coverage. The farmer agent indexes them in memory (3 s startup, ~540 MB) and intersects with turf in 0.4–1.8 s. **Fields not fully inside a covered state×biome are refused** (`422 no_coverage`) rather than reported as clean. Without the download it falls back to the bundled Abunã/RO extract.
 
 ## Roadmap
 

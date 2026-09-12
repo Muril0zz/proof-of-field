@@ -184,9 +184,9 @@
 <section class="slide">
   <h2>Under the hood</h2>
   <div class="flow">
-    <div class="step priv"><i>farmer · private</i><b>Field ∩ PRODES</b><p>Pure geometry against INPE's public polygons. No ML, no cloud, runs on a laptop.</p></div>
+    <div class="step priv"><i>farmer · private</i><b>Field ∩ PRODES</b><p>Pure geometry against INPE's PRODES for Rondônia, Mato Grosso and Goiás (Amazon + Cerrado, ~100k polygons). Runs on a laptop.</p></div>
     <div class="step priv"><i>farmer · private</i><b>EIP-712 attestation</b><p>Area, ha deforested after 2020, verdict, source, timestamp. Signed by the farmer.</p></div>
-    <div class="step"><i>HSK Chain</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
+    <div class="step"><i>HSK Chain · RPC by Chainstack</i><b>Anchor</b><p><code>attest(hash, fieldId)</code>. Only commitments on-chain. Revocable by the farmer.</p></div>
     <div class="step pay"><i>buyer · LLM</i><b>402 → AgentWallet.pay</b><p>x402 v1 shape. On-chain USDT transfer, replay-protected, policy-enforced.</p></div>
     <div class="step pay"><i>buyer · LLM</i><b>Verify &amp; report</b><p>Signature → same farmer anchored it → not revoked. Markdown dossier with every tx.</p></div>
   </div>

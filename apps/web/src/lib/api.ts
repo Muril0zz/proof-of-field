@@ -9,7 +9,8 @@ export interface AgentInfo { agent: string; farmer: string; network: string; cha
 const j = async <T,>(r: Response): Promise<T> => { if (!r.ok) throw new Error(`${r.status} ${await r.text()}`); return r.json(); };
 export const api = {
   info: () => fetch('/api/').then(j<AgentInfo>),
-  prodes: () => fetch('/api/prodes').then(j<GeoJSON.FeatureCollection>),
+  prodes: (bbox?: number[]) => fetch(bbox ? `/api/prodes?bbox=${bbox.join(',')}` : '/api/prodes').then(j<GeoJSON.FeatureCollection & { total?: number }>),
+  coverage: () => fetch('/api/coverage').then(j<{ regions: string[]; extent: number[]; polygons: number }>),
   list: () => fetch('/api/attestations').then(j<Attestation[]>),
   payments: () => fetch('/api/payments').then(j<{ payments: Payment[]; totalUnits: string }>),
   privateDetail: (hash: string) => fetch(`/api/attestations/${hash}/private`).then(j<Attestation & { geometry: GeoJSON.Geometry; intersections: GeoJSON.FeatureCollection }>),

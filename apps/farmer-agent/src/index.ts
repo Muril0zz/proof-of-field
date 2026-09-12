@@ -18,7 +18,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import {
   chains, type NetworkName, type Deployment, explorerTx,
   ATTESTATION_TYPES, SCHEMA_ID, attestationHash, domain, fieldIdFromPolygon, serializeAttestation,
-  checkDeforestation, registryAbi, usdtAbi,
+  checkDeforestation, buildProdesIndex, registryAbi, usdtAbi,
   type FieldAttestation, type PaymentRequiredBody, decodePayment,
 } from '@pof/core';
 
@@ -36,8 +36,14 @@ const account = privateKeyToAccount(process.env.FARMER_PRIVATE_KEY as Hex);
 const pub = createPublicClient({ chain, transport: http(rpc) });
 const wallet = createWalletClient({ chain, transport: http(rpc), account });
 
-const prodes = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'prodes_abuna_2020plus.json'), 'utf8'));
-console.log(`[farmer] ${account.address} on ${NETWORK} (chain ${chain.id}) · registry ${dep.registry} · PRODES ${prodes.features.length} polygons`);
+// PRODES extracts: every data/prodes/*_2021plus.json (state × biome) + region polygons for coverage; falls back to the Abunã extract.
+const PRODES_DIR = path.join(ROOT, 'data', 'prodes');
+const extractFiles = fs.existsSync(PRODES_DIR) ? fs.readdirSync(PRODES_DIR).filter((f) => /_20\d\dplus\.json$/.test(f)).map((f) => path.join(PRODES_DIR, f)) : [];
+const collections = (extractFiles.length ? extractFiles : [path.join(ROOT, 'data', 'prodes_abuna_2020plus.json')]).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+const regionFiles = fs.existsSync(PRODES_DIR) ? fs.readdirSync(PRODES_DIR).filter((f) => /^regions_.*\.json$/.test(f)).map((f) => path.join(PRODES_DIR, f)) : [];
+const regions = regionFiles.length ? { type: 'FeatureCollection', features: regionFiles.flatMap((f) => JSON.parse(fs.readFileSync(f, 'utf8')).features) } as any : null;
+const prodes = buildProdesIndex(collections, regions);
+console.log(`[farmer] ${account.address} on ${NETWORK} (chain ${chain.id}) · registry ${dep.registry} · PRODES ${prodes.features.length.toLocaleString()} polygons from ${collections.length} extract(s)${regions ? ` · coverage: ${prodes.regionNames.join(', ')}` : ''}`);
 
 // --- private store (stays on the farmer's machine) ---
 interface Stored {
@@ -67,7 +73,16 @@ app.use('*', cors());
 
 app.get('/', (c) => c.json({ agent: 'proof-of-field/farmer', name: process.env.FARMER_NAME || 'Farmer agent', farmer: account.address, network: NETWORK, chainId: chain.id, registry: dep.registry, usdt: dep.usdt, priceUnits: PRICE.toString(), attestations: Object.keys(store).length }));
 
-app.get('/prodes', (c) => c.json(prodes));
+/** PRODES overlay for the map. Pass ?bbox=minx,miny,maxx,maxy to get only what's in view (the full set can be tens of MB). */
+app.get('/prodes', (c) => {
+  const q = c.req.query('bbox');
+  if (!q) return c.json({ type: 'FeatureCollection', features: prodes.features.length > 8000 ? [] : prodes.features, total: prodes.features.length });
+  const [x0, y0, x1, y1] = q.split(',').map(Number);
+  const out: any[] = [];
+  for (let i = 0; i < prodes.features.length; i++) { const b = prodes.bboxes[i]; if (b[0] <= x1 && b[2] >= x0 && b[1] <= y1 && b[3] >= y0) out.push(prodes.features[i]); }
+  return c.json({ type: 'FeatureCollection', features: out, total: prodes.features.length });
+});
+app.get('/coverage', (c) => c.json({ regions: prodes.regionNames, extent: prodes.extent, polygons: prodes.features.length }));
 
 /** Farmer's own registered properties (CAR polygons). PRIVATE — local UI only. */
 const SAMPLE_IDS = (process.env.FARMER_SAMPLES || '').split(',').map((x) => x.trim()).filter(Boolean);
@@ -103,7 +118,7 @@ app.post('/attest', async (c) => {
   const r = checkDeforestation(feature, prodes, BASELINE_YEAR);
   if (!r.coverage.covered) {
     console.log(`[farmer] refused to attest ${label || ''}: field outside PRODES coverage bbox ${r.coverage.bbox.map((n) => n.toFixed(2)).join(',')}`);
-    return c.json({ error: 'no_coverage', message: `This field lies outside the loaded PRODES extract (bbox ${r.coverage.bbox.map((n) => n.toFixed(2)).join(', ')}). No attestation issued: absence of data is not absence of deforestation.`, coverage: r.coverage }, 422);
+    return c.json({ error: 'no_coverage', message: `This field is not fully inside the loaded PRODES coverage (${prodes.regionNames.length ? prodes.regionNames.join(', ') : 'bbox ' + r.coverage.bbox.map((n) => n.toFixed(2)).join(', ')}). No attestation issued: absence of data is not absence of deforestation.`, coverage: r.coverage }, 422);
   }
 
   const att: FieldAttestation = {
