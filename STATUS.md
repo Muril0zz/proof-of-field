@@ -45,6 +45,11 @@ Precisa de `~/.foundry/bin` no PATH (o script já adiciona).
 
 - **DEMO = uma tela**: http://localhost:4030/demo (FARM à esquerda, TRADER à direita). Dois cliques. Roteiro no topo do docs/PITCH.md.
 
+## PUBLICADO no Devfolio às 12:20 — continua editável até 15:00
+- https://devfolio.co/projects/proof-of-field-a49c · time no Devfolio: você + Afonso Fagundes.
+- Slide 4 = "onde vai o trabalho do intermediário" (coletar / checar / confiar / repetir). Slide 5 = "quem fala com quem, não há marketplace".
+- Demo: http://localhost:4030/demo (dois cliques). Ledger de vendas zerado.
+
 ## VOCÊ precisa fazer (eu não consigo)
 1. **Devfolio**: criar conta e aplicar em https://eag-global-buildathon.devfolio.co (5 min). Na submissão marcar **Brazil Hackathon** + trilha EAG + **HSK Chain**.
 2. **Telegram** do evento (link no Notion).

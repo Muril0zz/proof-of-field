@@ -34,6 +34,19 @@ A soy or cattle buyer (trader, bank, importer) must prove the farm it buys from 
 
 No human in the loop. The farmer is paid at the moment their data is used, and decides who gets it.
 
+## Where the middleman's work goes
+
+Today a paid checker sits between farm and buyer. It does four things; each one goes away for a different reason:
+
+| The checker's job | Today | With Proof of Field |
+|---|---|---|
+| Collecting the farm's papers | e-mails, PDFs, the whole map sent to a stranger | the buyer's agent fetches the proof; the map never leaves the farm |
+| Running the check | a vendor crosses the map with government data, per farm, per fee | open-source software on the farm's side crosses the **official** CAR polygon with the **same public** data |
+| Being trusted | you trust the vendor's PDF | nobody has to be trusted: inputs are public, the stamp is on a public registry, anyone can recompute and verify |
+| Doing it again per buyer, per season | every buyer asks again, paid every time | signed once, reused by every buyer; the farm is paid per use |
+
+What remains is thin and replaceable: someone vouches that a key belongs to the farm (today the buyer's own supplier onboarding; next a co-op, a bank, or gov.br).
+
 ## Repo
 
 ```
