@@ -7,3 +7,4 @@ contracts/broadcast/
 *.log
 data/farmer-store.*.json
 deployments/anvil.json
+.logs/

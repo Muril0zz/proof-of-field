@@ -51,7 +51,7 @@ interface Stored {
   label?: string;
   createdAt: string;
 }
-const STORE = path.join(ROOT, 'data', `farmer-store.${NETWORK}.json`);
+const STORE = path.join(ROOT, 'data', `farmer-store.${NETWORK}.${dep.registry.slice(2, 10)}.json`);
 const store: Record<string, Stored> = fs.existsSync(STORE) ? JSON.parse(fs.readFileSync(STORE, 'utf8'), bigintReviver) : {};
 const usedPayments = new Set<string>();
 const persist = () => fs.writeFileSync(STORE, JSON.stringify(store, (_, v) => (typeof v === 'bigint' ? `${v}n` : v), 1));
@@ -63,6 +63,10 @@ app.use('*', cors());
 app.get('/', (c) => c.json({ agent: 'proof-of-field/farmer', farmer: account.address, network: NETWORK, chainId: chain.id, registry: dep.registry, usdt: dep.usdt, priceUnits: PRICE.toString(), attestations: Object.keys(store).length }));
 
 app.get('/prodes', (c) => c.json(prodes));
+
+/** Farmer's own registered properties (CAR polygons). PRIVATE — local UI only. */
+const samples = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'samples.json'), 'utf8'));
+app.get('/samples', (c) => c.json(samples));
 
 app.get('/attestations', (c) => c.json(Object.values(store).map(publicView)));
 
