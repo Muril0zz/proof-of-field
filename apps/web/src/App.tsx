@@ -97,7 +97,7 @@ export function App() {
               <div className="samples">
                 {samples.map((s) => (
                   <button key={s.id} className="sample" onClick={() => runCheck(s.geometry, s.label)} title={s.car}>
-                    <div><div className="name">{s.label}</div><div className="meta">{s.car}</div></div>
+                    <div><div className="name">{s.label}</div><div className="meta">{s.car.slice(0, 19)}…</div></div>
                     <div className="ha">{fmtHa(s.areaHaCar)}</div>
                   </button>
                 ))}

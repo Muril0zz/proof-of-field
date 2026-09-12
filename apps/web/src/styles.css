@@ -64,7 +64,7 @@ code, .mono { font-family: var(--mono); font-size: 12px; }
 .sample:hover { border-color: var(--line-strong); background: var(--panel); }
 .sample .name { font-weight: 500; }
 .sample .meta { color: var(--ink-3); font-size: 11px; font-family: var(--mono); }
-.sample .ha { margin-left: auto; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.sample .ha { margin-left: auto; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; flex: none; }
 
 /* ---------- result ---------- */
 .verdict { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--line); }
